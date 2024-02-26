@@ -11,4 +11,18 @@
     <h2>Project initialized</h2>
 </body>
 
+<script>
+    function indexedDBStuff() {
+        if (!('indexedDB' in window)) {
+            console.log("This browser doesn't support IndexedDB");
+            return;
+        } else {
+            console.log("This browser supports IndexedDB");
+        }
+    }
+
+    // Run IndexedDB code:
+    indexedDBStuff();
+</script>
+
 </html>
