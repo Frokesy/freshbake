@@ -23,6 +23,14 @@
 
     // Run IndexedDB code:
     indexedDBStuff();
+
+    navigator.serviceWorker.register('/sw.js')
+        .then(function(registration) {
+            console.log('Service worker successfully registered.');
+        })
+        .catch(function(error) {
+            console.log('Service worker registration failed:', error);
+        });
 </script>
 
 </html>
