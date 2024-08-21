@@ -1,36 +1,16 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pomodoro Tracker</title>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/assets/logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fresh Bae</title>
 </head>
 
 <body>
-    <h2>Project initialized</h2>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
 </body>
-
-<script>
-    function indexedDBStuff() {
-        if (!('indexedDB' in window)) {
-            console.log("This browser doesn't support IndexedDB");
-            return;
-        } else {
-            console.log("This browser supports IndexedDB");
-        }
-    }
-
-    // Run IndexedDB code:
-    indexedDBStuff();
-
-    navigator.serviceWorker.register('/sw.js')
-        .then(function(registration) {
-            console.log('Service worker successfully registered.');
-        })
-        .catch(function(error) {
-            console.log('Service worker registration failed:', error);
-        });
-</script>
 
 </html>
