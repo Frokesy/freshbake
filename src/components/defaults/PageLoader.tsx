@@ -1,11 +1,13 @@
-import Container from "./Container"
+import Container from "./Container";
 
 const PageLoader = () => {
   return (
     <Container>
-      <h2>PageLoader</h2>
+      <div className="flex h-screen w-[100%] items-center justify-center">
+        <img src="/assets/logo.png" alt="logo" className="animate-pulse" />
+      </div>
     </Container>
-  )
-}
+  );
+};
 
-export default PageLoader
+export default PageLoader;
