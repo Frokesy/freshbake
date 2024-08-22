@@ -1,10 +1,12 @@
+import Container from '../../defaults/Container'
+import WelcomeScreenThree from './WelcomeScreenThree'
 import WelcomeScreenTwo from './WelcomeScreenTwo'
 
 const WelcomeScreen = () => {
   return (
-    <div>
-      <WelcomeScreenTwo />
-    </div>
+    <Container>
+      <WelcomeScreenThree />
+    </Container>
   )
 }
 

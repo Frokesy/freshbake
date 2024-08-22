@@ -9,8 +9,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       manifest: {
-        name: 'freshbake',
-        short_name: 'RHX',
+        name: 'Freshbake',
+        short_name: 'Freshbake',
         theme_color: '#ffffff',
         icons: [
             {

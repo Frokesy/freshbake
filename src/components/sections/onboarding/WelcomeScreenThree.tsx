@@ -1,19 +1,19 @@
 import Button from "../../defaults/Button";
 
-const WelcomeScreenTwo = () => {
+const WelcomeScreenThree = () => {
   return (
     <div>
       <img
-        src="/assets/welcome_img_one.png"
+        src="/assets/welcome_img_two.png"
         alt="img"
-        className="w-[100%] object-cover h-[300px] max-h-[320px]"
+        className="w-[100%] object-cover h-[320px] max-h-[320px]"
       />
       <h2 className="text-[38px] font-semibold text-center mt-2">
-        Fresh Bread <br /> Just a Tap Away
+        Start Your <br /> Fresh Experience
       </h2>
       <p className="text-center px-6">
-        Enjoy the convenience of preordering your favorite agege breads and have
-        them delivered fresh to your home.
+        Create an account or sign in to start preordering your favorite breads.
+        Freshness is just a tap away!
       </p>
 
       <div className="px-6 mt-6 space-y-6">
@@ -24,4 +24,4 @@ const WelcomeScreenTwo = () => {
   );
 };
 
-export default WelcomeScreenTwo;
+export default WelcomeScreenThree;
