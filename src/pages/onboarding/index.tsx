@@ -10,40 +10,39 @@ const screenVariant = {
   exit: { opacity: 0 },
 };
 
-
 const Onboarding = () => {
   const [activePage, setActivePage] = useState<String>("pageloader");
 
-  setTimeout(() => setActivePage("onboarding"), 4000);
+  setTimeout(() => setActivePage("onboarding"), 3000);
 
   return (
     <Container>
-    <div className="">
-      {activePage === "pageloader" ? (
-        <motion.div
-          key="pageloader"
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          variants={screenVariant}
-          transition={{ duration: 0.8 }}
-        >
-          <PageLoader />
-        </motion.div>
-      ) : (
-        <motion.div
-          key="onboarding"
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          variants={screenVariant}
-          transition={{ duration: 0.8 }}
-        >
-          <WelcomeScreen />
-        </motion.div>
-      )}
-    </div>
-  </Container>
+      <div className="">
+        {activePage === "pageloader" ? (
+          <motion.div
+            key="pageloader"
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            variants={screenVariant}
+            transition={{ duration: 0.8 }}
+          >
+            <PageLoader />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="onboarding"
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            variants={screenVariant}
+            transition={{ duration: 0.8 }}
+          >
+            <WelcomeScreen />
+          </motion.div>
+        )}
+      </div>
+    </Container>
   );
 };
 

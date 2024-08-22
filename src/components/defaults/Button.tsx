@@ -14,8 +14,9 @@ const Button: FC<ButtonProps> = ({ className, filled, content, onClick }) => {
           ? "bg-[#7d6c3a] text-[#fff] border-none"
           : "border border-[#bdb08a] bg-[#fff] text-[#000]"
       } ${className} text-center py-3 rounded-lg font-semibold`}
+      onClick={onClick}
     >
-      <button onClick={onClick}>{content}</button>
+      <button>{content}</button>
     </div>
   );
 };
