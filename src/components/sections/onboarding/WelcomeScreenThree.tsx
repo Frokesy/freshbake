@@ -1,6 +1,10 @@
+import { FC } from "react";
 import Button from "../../defaults/Button";
+import { WelcomeScreenProps } from "./WelcomeScreenTwo";
 
-const WelcomeScreenThree = () => {
+const WelcomeScreenThree: FC<WelcomeScreenProps> = ({ setActivePage }) => {
+  const handlePageSwitch = (screen: string) => setActivePage(screen);
+
   return (
     <div>
       <img
@@ -17,8 +21,18 @@ const WelcomeScreenThree = () => {
       </p>
 
       <div className="px-6 mt-6 space-y-6">
-        <Button filled={true} content="Next" className="text-[18px]" />
-        <Button filled={false} content="Skip" className="text-[18px]" />
+        <Button
+          filled={true}
+          content="Login"
+          onClick={() => handlePageSwitch("login")}
+          className="text-[18px]"
+        />
+        <Button
+          filled={false}
+          content="Create an account"
+          onClick={() => handlePageSwitch("signup")}
+          className="text-[18px]"
+        />
       </div>
     </div>
   );

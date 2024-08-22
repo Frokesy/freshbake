@@ -4,8 +4,9 @@ interface ButtonProps {
   className?: string;
   filled: boolean;
   content: string;
+  onClick?: () => void;
 }
-const Button: FC<ButtonProps> = ({ className, filled, content }) => {
+const Button: FC<ButtonProps> = ({ className, filled, content, onClick }) => {
   return (
     <div
       className={`${
@@ -14,7 +15,7 @@ const Button: FC<ButtonProps> = ({ className, filled, content }) => {
           : "border border-[#bdb08a] bg-[#fff] text-[#000]"
       } ${className} text-center py-3 rounded-lg font-semibold`}
     >
-      <button>{content}</button>
+      <button onClick={onClick}>{content}</button>
     </div>
   );
 };
