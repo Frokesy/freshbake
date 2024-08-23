@@ -11,7 +11,7 @@ const screenVariant = {
 };
 
 const Onboarding = () => {
-  const [activePage, setActivePage] = useState<String>("pageloader");
+  const [activePage, setActivePage] = useState<string>("pageloader");
 
   setTimeout(() => setActivePage("onboarding"), 3000);
 
