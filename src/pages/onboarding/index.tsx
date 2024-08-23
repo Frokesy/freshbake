@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Container from "../../components/defaults/Container";
 import PageLoader from "../../components/defaults/PageLoader";
 import WelcomeScreen from "../../components/sections/onboarding";
+import OnboardingContainer from "../../components/containers/OnboardingContainer";
 
 const screenVariant = {
   hidden: { opacity: 0 },
@@ -16,7 +16,7 @@ const Onboarding = () => {
   setTimeout(() => setActivePage("onboarding"), 3000);
 
   return (
-    <Container>
+    <OnboardingContainer>
       <div className="">
         {activePage === "pageloader" ? (
           <motion.div
@@ -42,7 +42,7 @@ const Onboarding = () => {
           </motion.div>
         )}
       </div>
-    </Container>
+    </OnboardingContainer>
   );
 };
 

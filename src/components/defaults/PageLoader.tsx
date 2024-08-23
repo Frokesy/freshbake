@@ -1,12 +1,12 @@
-import Container from "./Container";
+import OnboardingContainer from "../containers/OnboardingContainer";
 
 const PageLoader = () => {
   return (
-    <Container>
+    <OnboardingContainer>
       <div className="flex h-screen w-[100%] items-center justify-center">
         <img src="/assets/logo.png" alt="logo" className="animate-pulse" />
       </div>
-    </Container>
+    </OnboardingContainer>
   );
 };
 

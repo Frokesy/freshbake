@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Container from "../../defaults/Container";
 import WelcomeScreenThree from "./WelcomeScreenThree";
 import WelcomeScreenTwo from "./WelcomeScreenTwo";
 import Auth from "../auth";
+import OnboardingContainer from "../../containers/OnboardingContainer";
 
 const variants = {
   hidden: { opacity: 0, x: 200 },
@@ -15,7 +15,7 @@ const WelcomeScreen = () => {
   const [activePage, setActivePage] = useState<string>("screenTwo");
 
   return (
-    <Container>
+    <OnboardingContainer>
       <AnimatePresence mode="wait">
         {activePage === "screenTwo" && (
           <motion.div
@@ -54,7 +54,7 @@ const WelcomeScreen = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </Container>
+    </OnboardingContainer>
   );
 };
 
