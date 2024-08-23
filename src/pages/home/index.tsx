@@ -1,8 +1,10 @@
+import MainContainer from "../../components/containers/MainContainer"
+
 const Home = () => {
   return (
-    <div>
+    <MainContainer active="Home">
       <h2>Home</h2>
-    </div>
+    </MainContainer>
   )
 }
 
