@@ -1,16 +1,26 @@
+import { FC } from "react";
 import Button from "../../defaults/Button";
 import Input from "../../defaults/Input";
 
-const Login = () => {
+export interface LoginProps {
+  setActiveScreen: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const Login: FC<LoginProps> = ({ setActiveScreen }) => {
   return (
     <div className="px-6 pt-10">
       <h2 className="text-[24px] font-semibold">Login</h2>
-      <p>
+      <p className="text-[15px]">
         Don&apos;t have an account?{" "}
-        <span className="font-semibold text-[#ccb555]">Register</span>
+        <span
+          className="font-semibold text-[#ccb555]"
+          onClick={() => setActiveScreen("signup")}
+        >
+          Register
+        </span>
       </p>
 
-      <div className="space-y-6">
+      <div className="space-y-6 mt-8">
         <Input label="Email/Phone number" type="text" />
         <Input label="Password" type="password" />
 

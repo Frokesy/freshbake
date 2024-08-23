@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import Signup from "./Signup";
 import Login from "./Login";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,18 +14,20 @@ const variants = {
 };
 
 const Auth: FC<AuthProps> = ({ activePage }) => {
+  const [activeScreen, setActiveScreen] = useState<string>(activePage);
+ 
   return (
     <AnimatePresence mode="wait">
-      {activePage === "signup" ? (
+      {activeScreen === "signup" ? (
         <motion.div
           key="signup"
           initial="hidden"
           animate="visible"
           exit="exit"
           variants={variants}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.3 }}
         >
-          <Signup />
+          <Signup setActiveScreen={setActiveScreen} />
         </motion.div>
       ) : (
         <motion.div
@@ -34,9 +36,9 @@ const Auth: FC<AuthProps> = ({ activePage }) => {
           animate="visible"
           exit="exit"
           variants={variants}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.3 }}
         >
-          <Login />
+          <Login setActiveScreen={setActiveScreen} />
         </motion.div>
       )}
     </AnimatePresence>

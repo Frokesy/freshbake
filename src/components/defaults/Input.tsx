@@ -11,7 +11,7 @@ const Input: FC<FormProps & React.InputHTMLAttributes<HTMLInputElement>> = ({
 }) => {
   return (
     <div>
-      <div className="flex flex-col text-[#333] mt-8">
+      <div className="flex flex-col text-[#333]">
         <label
           htmlFor={label}
           className={`font-semibold mb-1`}
