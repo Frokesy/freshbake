@@ -19,7 +19,7 @@ const BottomNav: FC<BottomNavProps> = ({ active }) => {
     { id: 4, name: "Account", icon: <AccountIcon /> },
   ];
   return (
-    <div className="fixed bottom-0 w-[100%] z-10">
+    <div className="fixed bottom-0 w-[100%] lg:w-[480px] z-10">
       <div className="flex justify-between px-6 border-t-2 border-[#bdb08a] py-2 text-[15px]">
         {items.map((item) => (
           <div
