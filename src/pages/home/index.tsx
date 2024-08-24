@@ -1,6 +1,7 @@
 import MainContainer from "../../components/containers/MainContainer";
 import Search from "../../components/defaults/Search";
 import TopNav from "../../components/defaults/TopNav";
+import Products from "../../components/sections/products";
 
 const Home = () => {
   return (
@@ -9,6 +10,7 @@ const Home = () => {
       <div className="pt-20 px-4">
         <img src="/assets/ad.png" alt="ad" className="w-[100%]" />
         <Search />
+        <Products />
       </div>
     </MainContainer>
   );
