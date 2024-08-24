@@ -8,7 +8,7 @@ import {
 const TopNav = () => {
   return (
     <div className="fixed top-0 w-[100%] z-10">
-      <div className="px-6 py-3 flex items-center justify-between">
+      <div className="px-4 py-3 flex items-center justify-between">
         <div className="">
           <div className="flex items-center space-x-2">
             <LocationIcon />

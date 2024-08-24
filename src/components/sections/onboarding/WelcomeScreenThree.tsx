@@ -15,12 +15,12 @@ const WelcomeScreenThree: FC<WelcomeScreenProps> = ({ setActivePage }) => {
       <h2 className="text-[38px] font-semibold text-center mt-2">
         Start Your <br /> Fresh Experience
       </h2>
-      <p className="text-center px-6">
+      <p className="text-center px-4">
         Create an account or sign in to start preordering your favorite breads.
         Freshness is just a tap away!
       </p>
 
-      <div className="px-6 mt-6 space-y-6">
+      <div className="px-4 mt-6 space-y-6">
         <Button
           filled={true}
           content="Login"

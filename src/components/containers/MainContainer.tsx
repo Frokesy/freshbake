@@ -10,7 +10,7 @@ const MainContainer: FC<MainContainerProps> = ({ children, active }) => {
   return (
     <div className="bg-[#fffaed] min-h-screen lg:w-[480px] mx-auto">
       <PageTransition active={active}>
-        <div className="pt-20">{children}</div>
+        <div>{children}</div>
       </PageTransition>
       <BottomNav active={active} />
     </div>

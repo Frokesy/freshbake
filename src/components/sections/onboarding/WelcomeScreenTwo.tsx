@@ -17,12 +17,12 @@ const WelcomeScreenTwo: FC<WelcomeScreenProps> = ({ setActivePage }) => {
       <h2 className="text-[38px] font-semibold text-center mt-2">
         Fresh Bread <br /> Just a Tap Away
       </h2>
-      <p className="text-center px-6">
+      <p className="text-center px-4">
         Enjoy the convenience of preordering your favorite agege breads and have
         them delivered fresh to your home.
       </p>
 
-      <div className="px-6 mt-6 space-y-6">
+      <div className="px-4 mt-6 space-y-6">
         <Button
           filled={true}
           content="Next"

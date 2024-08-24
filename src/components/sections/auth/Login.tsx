@@ -8,7 +8,7 @@ export interface LoginProps {
 
 const Login: FC<LoginProps> = ({ setActiveScreen }) => {
   return (
-    <div className="px-6 pt-10">
+    <div className="px-4 pt-10">
       <h2 className="text-[24px] font-semibold">Login</h2>
       <p className="text-[15px]">
         Don&apos;t have an account?{" "}

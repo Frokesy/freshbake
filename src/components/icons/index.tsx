@@ -223,3 +223,66 @@ export const NotificationIcon = () => (
     />
   </svg>
 );
+
+export const Hamburger = () => (
+  <svg
+    width="12"
+    height="15"
+    viewBox="0 0 12 15"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M1 1.5H11"
+      stroke="#0B0A0A"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M1 5.5L11 5.50006"
+      stroke="#0B0A0A"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M1 9.5H11"
+      stroke="#0B0A0A"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M1 13.5H11"
+      stroke="#0B0A0A"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const SearchIcon = () => (
+  <svg
+    width="19"
+    height="19"
+    viewBox="0 0 19 19"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M13.8542 13.8542L17.4167 17.4167"
+      stroke="#0B0A0A"
+      strokeWidth="1.1875"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M15.8333 8.70834C15.8333 4.77332 12.6434 1.58334 8.70831 1.58334C4.77329 1.58334 1.58331 4.77332 1.58331 8.70834C1.58331 12.6434 4.77329 15.8333 8.70831 15.8333C12.6434 15.8333 15.8333 12.6434 15.8333 8.70834Z"
+      stroke="#0B0A0A"
+      strokeWidth="1.1875"
+      strokeLinejoin="round"
+    />
+  </svg>
+);

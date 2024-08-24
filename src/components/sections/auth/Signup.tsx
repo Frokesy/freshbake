@@ -5,7 +5,7 @@ import Button from "../../defaults/Button";
 
 const Signup: FC<LoginProps> = ({ setActiveScreen }) => {
   return (
-    <div className="px-6 pt-10">
+    <div className="px-4 pt-10">
       <h2 className="text-[24px] font-semibold">Create Account</h2>
       <p className="text-[15px]">
         Already an existing user?{" "}
