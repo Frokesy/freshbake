@@ -2,7 +2,7 @@ import { Hamburger, SearchIcon } from "../icons";
 
 const Search = () => {
   return (
-    <div className="mt-2 flex items-center px-2 justify-between border border-[#ccc] rounded-md shadow-md py-2">
+    <div className="mt-4 flex items-center p-3 justify-between border border-[#ccc] rounded-md shadow-md">
       <div className="flex items-center w-[90%] space-x-3">
         <SearchIcon />
         <input

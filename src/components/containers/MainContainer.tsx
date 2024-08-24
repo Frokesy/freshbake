@@ -8,7 +8,7 @@ interface MainContainerProps {
 }
 const MainContainer: FC<MainContainerProps> = ({ children, active }) => {
   return (
-    <div className="bg-[#fffaed] min-h-screen lg:w-[480px] mx-auto">
+    <div className="min-h-screen lg:w-[450px] mx-auto">
       <PageTransition active={active}>
         <div>{children}</div>
       </PageTransition>

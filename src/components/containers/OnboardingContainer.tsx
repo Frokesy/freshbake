@@ -6,7 +6,7 @@ interface ContainerProps {
 const OnboardingContainer: FC<ContainerProps> = ({ children }) => {
   return (
     <div className="">
-      <div className="bg-[#fffaed] min-h-screen lg:w-[480px] mx-auto">{children}</div>
+      <div className="bg-[#fffaed] min-h-screen lg:w-[450px] mx-auto">{children}</div>
     </div>
   );
 };

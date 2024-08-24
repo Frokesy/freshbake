@@ -20,7 +20,7 @@ const Selector = () => {
         {varieties.map((variety) => (
           <div
             className={`${
-              activeSelector === variety.name ? "text-[#fff] bg-[#7d6c3a]" : "bg-[#F9F3DB]"
+              activeSelector === variety.name ? "text-[#fff] font-semibold bg-[#7d6c3a]" : "bg-[#F9F3DB]"
             } text-center py-1 rounded-lg mt-2 text-[14px] transition-all duration-500 ease-in-out`}
             key={variety.id}
             onClick={() => changeSelector(variety.name)}
