@@ -302,3 +302,21 @@ export const Heart = () => (
     />
   </svg>
 );
+
+export const CancelIcon = () => (
+  <svg
+    width="8"
+    height="8"
+    viewBox="0 0 8 8"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M6.9994 7L1 1M1.00064 7L7 1"
+      stroke="#0B0A0A"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
