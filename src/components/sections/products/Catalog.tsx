@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Heart } from "../../icons";
 import ViewProductModal from "../../modals/ViewProductModal";
 
@@ -149,7 +149,14 @@ const Catalog: FC<CatalogProps> = ({ activeTab }) => {
           </motion.div>
         ))}
       </motion.div>
-      {openModal && <ViewProductModal setOpenModal={setOpenModal} viewedProduct={viewedProduct} />}
+      <AnimatePresence>
+        {openModal && (
+          <ViewProductModal
+            setOpenModal={setOpenModal}
+            viewedProduct={viewedProduct}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };

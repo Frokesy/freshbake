@@ -1,24 +1,41 @@
 import { FC } from "react";
+import { motion } from "framer-motion";
 import ModalContainer from "../containers/ModalContainer";
 import { ProductItemProps } from "../sections/products/Catalog";
 import { CancelIcon } from "../icons";
 
 interface ViewedProductModalProps {
   viewedProduct: ProductItemProps | undefined;
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ViewProductModal: FC<ViewedProductModalProps> = ({ viewedProduct, setOpenModal }) => {
+  const modalVariants = {
+    hidden: { y: "100%", opacity: 0 },
+    visible: { y: 0, opacity: 1 },
+    exit: { y: "100%", opacity: 0 }
+  };
+
   return (
     <ModalContainer>
-      <div className="bg-[#fff] w-full h-full rounded-t-[50px] flex flex-col">
+      <motion.div
+        className="bg-[#fff] w-full h-full rounded-t-[50px] flex flex-col"
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        variants={modalVariants}
+        transition={{ type: "spring", damping: 20, stiffness: 200 }}
+      >
         <div className="relative">
           <img
             src={viewedProduct?.img}
             alt="img"
             className="w-full h-[250px] object-cover rounded-t-[50px]"
           />
-          <div onClick={() => setOpenModal(false)} className="p-3 bg-[#fff] rounded-full absolute top-10 right-6">
+          <div
+            onClick={() => setOpenModal(false)}
+            className="p-3 bg-[#fff] rounded-full absolute top-10 right-6"
+          >
             <CancelIcon />
           </div>
         </div>
@@ -74,18 +91,18 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({ viewedProduct, setOpenM
             <hr />
           </div>
 
-          <div className="px-4 fixed bottom-0 bg-[#fff] w-[100%] flex justify-between py-2">
+          <div className="px-4 fixed bottom-0 bg-[#fff] w-full flex justify-between py-2">
             <div className="w-[35%] rounded-lg flex items-center justify-center py-2 space-x-3 border border-[#bdb08a]">
-                <p className="border border-[#ccc] px-2 py-0.5 rounded-full">-</p>
-                <p>1</p>
-                <p className="border border-[#ccc] px-2 py-0.5 rounded-full">+</p>
+              <p className="border border-[#ccc] px-2 py-0.5 rounded-full">-</p>
+              <p>1</p>
+              <p className="border border-[#ccc] px-2 py-0.5 rounded-full">+</p>
             </div>
             <div className="w-[60%] bg-[#7d6c3a] text-[#fff] items-center justify-center flex font-semibold rounded-xl">
-                <p>Add to cart - $4</p>
+              <p>Add to cart - ${viewedProduct?.price}</p>
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </ModalContainer>
   );
 };
