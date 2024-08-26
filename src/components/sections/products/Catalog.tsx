@@ -85,6 +85,8 @@ const Catalog: FC<CatalogProps> = ({ activeTab }) => {
       },
     ];
 
+    console.log(products);
+
     const filteredProducts = products.reduce(
       (acc: { [key: string]: ProductItemProps[] }, product) => {
         if (activeTab === "All" || product.tag === activeTab) {
