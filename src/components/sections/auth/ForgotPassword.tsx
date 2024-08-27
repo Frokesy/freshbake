@@ -1,7 +1,12 @@
+import { FC } from 'react';
 import Button from '../../defaults/Button'
 import Input from '../../defaults/Input'
 
-const ForgotPassword = () => {
+export interface PasswordResetPros {
+    setActiveScreen: React.Dispatch<React.SetStateAction<string>>;
+  }  
+
+const ForgotPassword: FC<PasswordResetPros> = ({ setActiveScreen }) => {
   return (
     <div>
       <div className="px-4 pt-10">
@@ -20,6 +25,7 @@ const ForgotPassword = () => {
         <div className="fixed px-4 bottom-6 w-[100%] space-y-6">
         <Button
           filled={true}
+          onClick={() => setActiveScreen("otp")}
           content="Continue"
           className="text-[18px]"
         />
