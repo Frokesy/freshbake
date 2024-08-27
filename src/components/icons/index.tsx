@@ -320,3 +320,63 @@ export const CancelIcon = () => (
     />
   </svg>
 );
+
+export const ArrowLeft = () => (
+  <svg
+    width="19"
+    height="19"
+    viewBox="0 0 19 19"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M3.16681 9.49976H15.8335"
+      stroke="#0B0A0A"
+      strokeWidth="1.1875"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M7.12466 13.4584C7.12466 13.4584 3.16637 10.5432 3.16635 9.50008C3.16634 8.45698 7.12468 5.54175 7.12468 5.54175"
+      stroke="#0B0A0A"
+      strokeWidth="1.1875"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const DeleteIcon = () => (
+  <svg
+    width="15"
+    height="16"
+    viewBox="0 0 15 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M12.1875 3.9375L11.8002 10.2032C11.7012 11.804 11.6517 12.6044 11.2505 13.1799C11.0521 13.4644 10.7967 13.7046 10.5004 13.885C9.90131 14.25 9.09937 14.25 7.49544 14.25C5.88945 14.25 5.08644 14.25 4.48691 13.8843C4.1905 13.7036 3.935 13.463 3.73668 13.178C3.33555 12.6016 3.28716 11.8001 3.19038 10.197L2.8125 3.9375"
+      stroke="#BC1323"
+      strokeWidth="0.9375"
+      strokeLinecap="round"
+    />
+    <path
+      d="M1.875 3.9375H13.125M10.0348 3.9375L9.60819 3.05733C9.32475 2.47266 9.183 2.18033 8.93856 1.99801C8.88437 1.95756 8.82694 1.92159 8.76688 1.89044C8.49619 1.75 8.17131 1.75 7.52156 1.75C6.8555 1.75 6.5225 1.75 6.2473 1.89632C6.18631 1.92876 6.12811 1.96619 6.07331 2.00823C5.82602 2.19794 5.68789 2.50097 5.41163 3.10704L5.03308 3.9375"
+      stroke="#BC1323"
+      strokeWidth="0.9375"
+      strokeLinecap="round"
+    />
+    <path
+      d="M5.93701 10.8125V7.0625"
+      stroke="#BC1323"
+      strokeWidth="0.9375"
+      strokeLinecap="round"
+    />
+    <path
+      d="M9.06299 10.8125V7.0625"
+      stroke="#BC1323"
+      strokeWidth="0.9375"
+      strokeLinecap="round"
+    />
+  </svg>
+);
