@@ -2,6 +2,7 @@ import { useState } from "react";
 import MainContainer from "../../../components/containers/MainContainer";
 import Button from "../../../components/defaults/Button";
 import { ArrowLeft, PenEdit } from "../../../components/icons";
+import { NavLink } from "react-router-dom";
 
 const Checkout = () => {
   const [activeTab, setActiveTab] = useState<string>("delivery");
@@ -10,9 +11,9 @@ const Checkout = () => {
       <div className="px-4 pt-10">
         <div className="flex items-center space-x-4">
           <div className="flex">
-            <div className="bg-[#d9d9d9] p-1.5 rounded-full">
+            <NavLink to="/cart" className="bg-[#d9d9d9] p-1.5 rounded-full">
               <ArrowLeft />
-            </div>
+            </NavLink>
           </div>
           <h2 className="font-semibold text-[24px]">Checkout</h2>
         </div>

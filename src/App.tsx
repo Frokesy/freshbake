@@ -5,6 +5,7 @@ import Home from "./pages/home";
 import ResetPassword from "./pages/reset-password";
 import Cart from "./pages/cart";
 import Checkout from "./pages/cart/checkout";
+import Orders from "./pages/orders";
 
 function App() {
   const router = createBrowserRouter([
@@ -12,6 +13,7 @@ function App() {
     { path: "/home", element: <Home /> },
     { path: "/cart", element: <Cart /> },
     { path: "/checkout", element: <Checkout /> },
+    { path: "/orders", element: <Orders /> },
     { path: "/reset-password", element: <ResetPassword /> }
   ])
 
