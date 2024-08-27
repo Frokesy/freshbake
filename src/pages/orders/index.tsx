@@ -1,7 +1,9 @@
+import { useState } from "react";
 import MainContainer from "../../components/containers/MainContainer";
-import { ArrowLeft } from "../../components/icons";
+import OrderDetails from "./OrderDetails";
+import OrderOverview from "./OrderOverview";
 
-interface OrderItemProps {
+export interface OrderItemProps {
   id: number;
   type: string;
   category: string;
@@ -16,6 +18,7 @@ interface OrderItemProps {
 }
 
 const Orders = () => {
+  const [clickedOrder, setClickedOrder] = useState<OrderItemProps>();
   const orderItems: OrderItemProps[] = [
     {
       id: 1,
@@ -72,40 +75,17 @@ const Orders = () => {
   ];
   return (
     <MainContainer active="Orders">
-      <div className="flex items-center space-x-4 px-4 pt-10">
-        <div className="flex">
-          <div className="bg-[#ccc] p-1.5 rounded-full">
-            <ArrowLeft />
-          </div>
-        </div>
-        <h2 className="font-semibold text-[24px]">Orders</h2>
-      </div>
-
-      <div className="space-y-6 mt-10">
-        {orderItems.map((item) => (
-          <div className="space-y-3 text-[14px] px-4" key={item.id}>
-            <div className="flex justify-between">
-              <h2 className="font-semibold">
-                {item.type} - {item.weight} {item.category}
-              </h2>
-              <p className="text-[12px]">Order {item.orderNo}</p>
-            </div>
-            <div className="flex justify-between">
-              <p className="text-[12px]">{item.orderDate}</p>
-              <p
-                className={`${
-                  item.orderStatus === "Pending" && "text-[#F55B0A]"
-                } ${item.orderStatus === "Completed" && "text-[#005246]"} ${
-                  item.orderStatus === "Failed" && "text-[#FF0000]"
-                } text-[12px]`}
-              >
-                {item.orderStatus}
-              </p>
-            </div>
-            <hr />
-          </div>
-        ))}
-      </div>
+      {clickedOrder ? (
+        <OrderDetails
+          clickedOrder={clickedOrder}
+          setClickedOrder={setClickedOrder}
+        />
+      ) : (
+        <OrderOverview
+          orderItems={orderItems}
+          setClickedOrder={setClickedOrder}
+        />
+      )}
     </MainContainer>
   );
 };
