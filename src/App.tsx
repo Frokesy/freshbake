@@ -4,12 +4,14 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/home";
 import ResetPassword from "./pages/reset-password";
 import Cart from "./pages/cart";
+import Checkout from "./pages/cart/checkout";
 
 function App() {
   const router = createBrowserRouter([
     { path: "/", element: <Onboarding /> },
     { path: "/home", element: <Home /> },
     { path: "/cart", element: <Cart /> },
+    { path: "/checkout", element: <Checkout /> },
     { path: "/reset-password", element: <ResetPassword /> }
   ])
 

@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 import MainContainer from "../../components/containers/MainContainer";
 import Button from "../../components/defaults/Button";
 import { ArrowLeft, DeleteIcon } from "../../components/icons";
@@ -65,7 +66,9 @@ const Cart = () => {
             </div>
           ))}
           <div className="pt-10 pb-[20vh]">
-            <Button filled content="Checkout" />
+            <NavLink to="/checkout">
+              <Button filled content="Checkout" />
+            </NavLink>
           </div>
         </div>
       </div>
