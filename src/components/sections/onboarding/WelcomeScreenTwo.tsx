@@ -12,7 +12,7 @@ const WelcomeScreenTwo: FC<WelcomeScreenProps> = ({ setActivePage }) => {
       <img
         src="/assets/welcome_img_one.png"
         alt="img"
-        className="w-[100%] object-cover h-[300px] max-h-[320px]"
+        className="w-[100%] object-cover h-[400px] max-h-[400px]"
       />
       <h2 className="text-[38px] font-semibold text-center mt-2">
         Fresh Bread <br /> Just a Tap Away
@@ -22,7 +22,7 @@ const WelcomeScreenTwo: FC<WelcomeScreenProps> = ({ setActivePage }) => {
         them delivered fresh to your home.
       </p>
 
-      <div className="px-4 mt-6 space-y-6">
+      <div className="px-4 mt-6 space-y-6 pb-20">
         <Button
           filled={true}
           content="Next"

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import MainContainer from "../../components/containers/MainContainer";
-import OrderDetails from "./OrderDetails";
-import OrderOverview from "./OrderOverview";
+import OrderDetails from "../../components/sections/orders/OrderDetails";
+import OrderOverview from "../../components/sections/orders/OrderOverview";
 
 export interface OrderItemProps {
   id: number;
@@ -30,7 +30,7 @@ const Orders = () => {
       desc: "Soft, fluffy and perfect for any meal",
       price: "4",
       orderNo: 18245,
-      orderStatus: "Pending",
+      orderStatus: "Shipped",
       orderDate: "16th Aug 2024. 12:15",
     },
     {

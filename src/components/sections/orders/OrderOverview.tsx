@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { OrderItemProps } from '.'
-import { ArrowLeft } from '../../components/icons'
+import { OrderItemProps } from '../../../pages/orders'
+import { ArrowLeft } from '../../icons'
 interface OrderOverviewProps {
     orderItems: OrderItemProps[];
     setClickedOrder: React.Dispatch<React.SetStateAction<OrderItemProps | undefined>>;
@@ -33,7 +33,7 @@ const OrderOverview: FC<OrderOverviewProps> = ({ orderItems, setClickedOrder }) 
                   item.orderStatus === "Pending" && "text-[#F55B0A]"
                 } ${item.orderStatus === "Completed" && "text-[#005246]"} ${
                   item.orderStatus === "Failed" && "text-[#FF0000]"
-                } text-[12px]`}
+                }  ${item.orderStatus === "Shipped" && "text-[#d04c95]"} text-[12px]`}
               >
                 {item.orderStatus}
               </p>
