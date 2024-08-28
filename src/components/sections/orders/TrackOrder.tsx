@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { OrderItemProps } from "../../../pages/orders";
 import { ArrowLeft, OrderCheck, UncheckedOrder } from "../../icons";
+import PageTransition from "../../defaults/PageTransition";
 
 interface TrackOrderProps {
   order: OrderItemProps | undefined;
@@ -8,7 +9,7 @@ interface TrackOrderProps {
 }
 const TrackOrder: FC<TrackOrderProps> = ({ order, isTracked }) => {
   return (
-    <div className="">
+    <PageTransition active="Orders">
       <div className="bg-[#ccc] h-[400px]">
         <div
           onClick={() => isTracked(false)}
@@ -90,7 +91,7 @@ const TrackOrder: FC<TrackOrderProps> = ({ order, isTracked }) => {
           </div>
         </div>
       </div>
-    </div>
+    </PageTransition>
   );
 };
 
