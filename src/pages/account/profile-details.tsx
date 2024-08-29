@@ -4,7 +4,7 @@ import { ArrowLeft, Pen } from "../../components/icons";
 
 const ProfileDetails = () => {
   return (
-    <MainContainer active="Home">
+    <MainContainer active="Account">
       <div className="flex items-center px-4 pt-10 space-x-4">
         <div className="flex">
           <NavLink to="/account" className="bg-[#ccc] p-1.5 rounded-full">
