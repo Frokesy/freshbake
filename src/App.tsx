@@ -7,6 +7,7 @@ import Cart from "./pages/cart";
 import Checkout from "./pages/cart/checkout";
 import Orders from "./pages/orders";
 import Account from "./pages/account";
+import ProfileDetails from "./pages/account/profile-details";
 
 function App() {
   const router = createBrowserRouter([
@@ -16,6 +17,7 @@ function App() {
     { path: "/checkout", element: <Checkout /> },
     { path: "/orders", element: <Orders /> },
     { path: "/account", element: <Account /> },
+    { path: "/account/profile-details", element: <ProfileDetails /> },
     { path: "/reset-password", element: <ResetPassword /> }
   ])
 

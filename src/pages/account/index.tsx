@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 import MainContainer from "../../components/containers/MainContainer";
 import {
   AccountProfile,
@@ -34,7 +35,7 @@ const Account = () => {
 
           <div className="mt-3">
             {accountItems.map((item) => (
-              <div
+              <NavLink to={item.route as string}
                 className="flex justify-between text-[14px] py-5 px-4 hover:bg-[#f1f1f1] transition-all duration-300 ease-in-out border-b-2 border-[#f1f1f1]"
                 key={item.id}
               >
@@ -43,7 +44,7 @@ const Account = () => {
                   <h2>{item.name}</h2>
                 </div>
                 {item.name !== "Logout" && <CaretRight />}
-              </div>
+              </NavLink>
             ))}
           </div>
         </div>
