@@ -1,3 +1,5 @@
+import { supabase } from "./supabaseClient";
+
 export async function handleLogin(
     validateField: (value: string) => boolean,
     user: { input: string, password: string},
@@ -12,5 +14,5 @@ export async function handleLogin(
       input: isInputValid ? "" : "Field is required",
       password: isPasswordValid ? "" : "Password must be at least 6 characters",
     });
-  
+  console.log(supabase)
 }
