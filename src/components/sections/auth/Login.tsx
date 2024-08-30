@@ -2,6 +2,10 @@ import { FC, useState } from "react";
 import Button from "../../defaults/Button";
 import Input from "../../defaults/Input";
 import { handleLogin } from "../../../../utils/loginService";
+import { useNavigate } from "react-router-dom";
+import Spinner from "../../defaults/Spinner";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export interface LoginProps {
   setActiveScreen: React.Dispatch<React.SetStateAction<string>>;
@@ -16,6 +20,8 @@ const Login: FC<LoginProps> = ({ setActiveScreen }) => {
     input: "",
     password: "",
   });
+  const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const validateField = (value: string) => {
     if (value === "") {
@@ -26,11 +32,11 @@ const Login: FC<LoginProps> = ({ setActiveScreen }) => {
   };
 
   const validateLogin = async () => {
-    console.log(user, error);
-    await handleLogin(validateField, user, setError)
+    await handleLogin(validateField, user, setError, setLoading, navigate);
   };
   return (
     <div className="px-4 pt-10">
+      <ToastContainer />
       <h2 className="text-[24px] font-semibold">Login</h2>
       <p className="text-[15px]">
         Don&apos;t have an account?{" "}
@@ -44,7 +50,7 @@ const Login: FC<LoginProps> = ({ setActiveScreen }) => {
 
       <div className="space-y-6 mt-8">
         <Input
-          label="Email/Phone number"
+          label="Email"
           type="text"
           value={user.input}
           onChange={(e) => setUser({ ...user, input: e.target.value })}
@@ -68,7 +74,11 @@ const Login: FC<LoginProps> = ({ setActiveScreen }) => {
         </div>
 
         <div className="pt-10">
-          <Button onClick={validateLogin} filled content="Login" />
+          <Button
+            onClick={validateLogin}
+            filled
+            content={loading ? <Spinner /> : "Login"}
+          />
         </div>
       </div>
     </div>

@@ -78,7 +78,7 @@ export async function handleSignup(
           toast.success(`Welcome ${user.firstname}!`, {
             position: "top-right",
             theme: "light",
-            autoClose: 2500,
+            autoClose: 2000,
             hideProgressBar: false,
             pauseOnHover: true,
             draggable: true,
@@ -87,7 +87,7 @@ export async function handleSignup(
           setLoading(false);
           setTimeout(() => {
             navigate("/home");
-          }, 3000);
+          }, 2200);
         }
       }
     } catch (error) {
@@ -95,7 +95,7 @@ export async function handleSignup(
       toast.error(error as string, {
         position: "top-right",
         theme: "light",
-        autoClose: 2500,
+        autoClose: 2000,
         hideProgressBar: false,
         pauseOnHover: true,
         draggable: true,
