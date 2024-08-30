@@ -4,7 +4,7 @@ import Button from "../../components/defaults/Button";
 import { ArrowLeft, DeleteIcon } from "../../components/icons";
 import { useEffect, useState } from "react";
 
-interface CartItemProps {
+export interface CartItemProps {
   id: number;
   type: string;
   category: string;
