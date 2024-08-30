@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Heart } from "../../icons";
 import ViewProductModal from "../../modals/ViewProductModal";
+import { supabase } from "../../../../utils/supabaseClient";
 
 interface CatalogProps {
   activeTab: string;
@@ -34,56 +35,30 @@ const Catalog: FC<CatalogProps> = ({ activeTab }) => {
   }>({});
 
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [products, setProducts] = useState<ProductItemProps[]>([]);
   const [viewedProduct, setViewedProduct] = useState<ProductItemProps>();
 
   const handleClick = (product: ProductItemProps) => {
     setViewedProduct(product);
     setOpenModal(true);
   };
-  useEffect(() => {
-    const products: ProductItemProps[] = [
-      {
-        id: 1,
-        type: "Family Loaf",
-        category: "Agege Bread",
-        tag: "Agege",
-        img: "/assets/products/img_two.jpeg",
-        weight: "800g",
-        desc: "Soft, fluffy and perfect for any meal",
-        price: "4",
-      },
-      {
-        id: 2,
-        type: "Jumbo Loaf",
-        category: "Agege Bread",
-        tag: "Agege",
-        img: "/assets/products/img_one.png",
-        weight: "1000g",
-        desc: "Soft, fluffy and perfect for any meal",
-        price: "4.5",
-      },
-      {
-        id: 3,
-        type: "Family loaf",
-        category: "Sardine Bread",
-        tag: "Sardine",
-        img: "/assets/products/img_three.jpeg",
-        weight: "800g",
-        desc: "A savory twist with rich sardines in every soft bite",
-        price: "6",
-      },
-      {
-        id: 4,
-        type: "Family Loaf",
-        category: "Coconut Bread",
-        tag: "Coconut",
-        img: "/assets/products/img_four.png",
-        weight: "700g",
-        desc: "Soft and rich, with a delightful coconut essence",
-        price: "6",
-      },
-    ];
 
+  useEffect(() => {
+    const getProducts = async () => {
+      const { data, error } = await supabase
+        .from("product-catalog")
+        .select("*");
+
+      if (!error) {
+        setProducts(data);
+      } else {
+        console.log(error);
+      }
+    };
+
+    getProducts();
+  }, []);
+  useEffect(() => {
     const filteredProducts = products.reduce(
       (acc: { [key: string]: ProductItemProps[] }, product) => {
         if (activeTab === "All" || product.tag === activeTab) {
@@ -98,7 +73,7 @@ const Catalog: FC<CatalogProps> = ({ activeTab }) => {
     );
 
     setProductsPerCategory(filteredProducts);
-  }, [activeTab]);
+  }, [activeTab, products]);
 
   return (
     <div className="">
