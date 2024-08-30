@@ -37,6 +37,66 @@ const Catalog: FC<CatalogProps> = ({ activeTab }) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [products, setProducts] = useState<ProductItemProps[]>([]);
   const [viewedProduct, setViewedProduct] = useState<ProductItemProps>();
+  const [favoritedProducts, setFavoritedProducts] = useState<
+    ProductItemProps[]
+  >([]);
+
+  const idb = window.indexedDB;
+  const request = idb.open("freshbake", 1);
+  request.onerror = (event) => {
+    console.error("An error occurred with IndexedDB:", event);
+  };
+
+  request.onupgradeneeded = () => {
+    const db = request.result;
+
+    if (!db.objectStoreNames.contains("favorites")) {
+      const objectStore = db.createObjectStore("favorites", { keyPath: "id" });
+      console.log(objectStore);
+    }
+  };
+
+  const handleLikedAnimation = (product: ProductItemProps) => {
+    const isLiked = favoritedProducts.some((p) => p.id === product.id);
+    const dbPromise = idb.open("freshbake", 1);
+
+    if (isLiked) {
+      setFavoritedProducts((prevFavoritedProducts) =>
+        prevFavoritedProducts.filter((p) => p.id !== product.id)
+      );
+
+      dbPromise.onsuccess = function () {
+        const db = dbPromise.result;
+        const tx = db.transaction("favorites", "readwrite");
+        const favorites = tx.objectStore("favorites");
+        const deleteData = favorites.delete(product.id);
+
+        deleteData.onsuccess = () => {
+          tx.oncomplete = function () {
+            db.close();
+          };
+        };
+      };
+    } else {
+      setFavoritedProducts((prevFavoritedProducts) => [
+        ...prevFavoritedProducts,
+        product,
+      ]);
+
+      dbPromise.onsuccess = () => {
+        const db = dbPromise.result;
+        const tx = db.transaction("favorites", "readwrite");
+        const favorites = tx.objectStore("favorites");
+        const addData = favorites.put(product);
+
+        addData.onsuccess = () => {
+          tx.oncomplete = () => {
+            db.close();
+          };
+        };
+      };
+    }
+  };
 
   const handleClick = (product: ProductItemProps) => {
     setViewedProduct(product);
@@ -75,6 +135,7 @@ const Catalog: FC<CatalogProps> = ({ activeTab }) => {
     setProductsPerCategory(filteredProducts);
   }, [activeTab, products]);
 
+  console.log(favoritedProducts)
   return (
     <div className="">
       <motion.div
@@ -110,7 +171,19 @@ const Catalog: FC<CatalogProps> = ({ activeTab }) => {
                   <div className="p-3 text-[14px] space-y-3">
                     <div className="flex justify-between items-center">
                       <h2 className="font-semibold">{product.type}</h2>
-                      <Heart />
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleLikedAnimation(product);
+                        }}
+                        className="cursor-pointer transition-colors duration-500 ease-in-out"
+                      >
+                        <Heart
+                          liked={favoritedProducts.some(
+                            (p) => p.id === product.id
+                          )}
+                        />
+                      </div>
                     </div>
                     <div className="flex justify-between">
                       <span className="italic">{product.weight}</span>
