@@ -54,7 +54,7 @@ const Catalog: FC<CatalogProps> = ({ activeTab }) => {
       db.createObjectStore("favorites", { keyPath: "id" });
     }
     if (!db.objectStoreNames.contains("cart")) {
-      db.createObjectStore("cart", { keyPath: "id", autoIncrement: true});
+      db.createObjectStore("cart", { keyPath: "id" });
     }
   };
 

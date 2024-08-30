@@ -20,7 +20,9 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
   const [deliveryTime, setDeliveryTime] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [quantity, setQuantity] = useState<number>(1);
-  const [totalCost, setTotalCost] = useState<number>(parseFloat(viewedProduct?.price as string));
+  const [totalCost, setTotalCost] = useState<number>(
+    parseFloat(viewedProduct?.price as string)
+  );
 
   const idb = window.indexedDB;
 
@@ -41,9 +43,9 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
   };
 
   useEffect(() => {
-    setTotalCost(parseFloat(viewedProduct?.price as string) * quantity)
+    setTotalCost(parseFloat(viewedProduct?.price as string) * quantity);
   }, [quantity, viewedProduct]);
-  
+
   const handleAddToCart = () => {
     setLoading(true);
     if (!deliveryDay || !deliveryTime) {
@@ -57,33 +59,34 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
           draggable: true,
         }
       );
-      setLoading(false)
+      setLoading(false);
       return;
     }
     if (quantity === 0) {
-      toast.error(
-        "You can't order 0 quantity",
-        {
-          position: "top-right",
-          theme: "light",
-          autoClose: 2000,
-          hideProgressBar: true,
-          draggable: true,
-        }
-      );
-      setLoading(false)
+      toast.error("You can't order 0 quantity", {
+        position: "top-right",
+        theme: "light",
+        autoClose: 2000,
+        hideProgressBar: true,
+        draggable: true,
+      });
+      setLoading(false);
       return;
     }
     const orderDetails = {
-      product: viewedProduct,
+      id: viewedProduct?.id,
+      type: viewedProduct?.type,
+      category: viewedProduct?.category,
+      tag: viewedProduct?.tag,
+      img: viewedProduct?.img,
+      weight: viewedProduct?.weight,
+      desc: viewedProduct?.weight,
+      price: viewedProduct?.price,
       deliveryDay,
       deliveryTime,
       quantity,
-      totalCost
+      totalCost,
     };
-
-    console.log(orderDetails)
-
     const dbPromise = idb.open("freshbake", 1);
 
     dbPromise.onsuccess = () => {
@@ -198,19 +201,25 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
 
           <div className="px-4 fixed bottom-0 bg-[#fff] w-full flex justify-between py-2">
             <div className="w-[35%] rounded-lg flex items-center justify-center py-2 space-x-3 border border-[#bdb08a]">
-              <p onClick={() => handleClick("decrement")} className="border border-[#ccc] px-2 py-0.5 rounded-full">-</p>
+              <p
+                onClick={() => handleClick("decrement")}
+                className="border border-[#ccc] px-2 py-0.5 rounded-full"
+              >
+                -
+              </p>
               <p>{quantity}</p>
-              <p onClick={() => handleClick("increment")} className="border border-[#ccc] px-2 py-0.5 rounded-full">+</p>
+              <p
+                onClick={() => handleClick("increment")}
+                className="border border-[#ccc] px-2 py-0.5 rounded-full"
+              >
+                +
+              </p>
             </div>
             <div
               onClick={handleAddToCart}
               className="w-[60%] bg-[#7d6c3a] text-[#fff] items-center justify-center flex font-semibold rounded-xl cursor-pointer"
             >
-              {loading ? (
-                <Spinner />
-              ) : (
-                <p>Add to cart - ${totalCost}</p>
-              )}
+              {loading ? <Spinner /> : <p>Add to cart - ${totalCost}</p>}
             </div>
           </div>
         </div>
