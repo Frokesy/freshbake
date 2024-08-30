@@ -34,7 +34,7 @@ const Signup: FC<LoginProps> = ({ setActiveScreen }) => {
     return passwordRegex.test(password);
   };
 
-  const handleAuth = async () => {
+  const validateSignup = async () => {
     await handleSignup(validateField, user, validatePassword, setError);
   };
   return (
@@ -95,7 +95,7 @@ const Signup: FC<LoginProps> = ({ setActiveScreen }) => {
           pwdErr={error.password}
         />
         <div className="pt-10">
-          <Button onClick={handleAuth} filled content="Signup" />
+          <Button onClick={validateSignup} filled content="Signup" />
         </div>
       </div>
     </div>

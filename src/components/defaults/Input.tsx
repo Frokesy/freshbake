@@ -9,6 +9,7 @@ interface FormProps {
   emailErr?: string;
   phoneErr?: string;
   pwdErr?: string;
+  loginInputErr?: string;
 }
 
 const Input: FC<FormProps & React.InputHTMLAttributes<HTMLInputElement>> = ({
@@ -19,6 +20,7 @@ const Input: FC<FormProps & React.InputHTMLAttributes<HTMLInputElement>> = ({
   emailErr,
   phoneErr,
   pwdErr,
+  loginInputErr,
   ...props
 }) => {
   const errorVariants = {
@@ -41,6 +43,7 @@ const Input: FC<FormProps & React.InputHTMLAttributes<HTMLInputElement>> = ({
             ${emailErr && "border border-red-500 text-red-500"}
             ${phoneErr && "border border-red-500 text-red-500"}
             ${pwdErr && "border border-red-500 text-red-500"}
+            ${loginInputErr && "border border-red-500 text-red-500"}
             border border-[#ccc] bg-inherit py-2 hover:shadow-xl transition-all duration-500 ease-in-out rounded-md shadow-md outline-none px-3`}
           {...props}
         />
@@ -104,6 +107,18 @@ const Input: FC<FormProps & React.InputHTMLAttributes<HTMLInputElement>> = ({
           transition={{ duration: 0.3 }}
         >
           {pwdErr}
+        </motion.small>
+      ) : null}
+      {loginInputErr ? (
+        <motion.small
+          className="text-red-500 text-[12px] mt-1 flex justify-start"
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+          variants={errorVariants}
+          transition={{ duration: 0.3 }}
+        >
+          {loginInputErr}
         </motion.small>
       ) : null}
     </div>
