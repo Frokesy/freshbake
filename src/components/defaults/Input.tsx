@@ -55,6 +55,7 @@ const Input: FC<FormProps & React.InputHTMLAttributes<HTMLInputElement>> = ({
           initial="hidden"
           animate="visible"
           exit="hidden"
+          key={fnErr}
           variants={errorVariants}
           transition={{ duration: 0.3 }}
         >
@@ -67,6 +68,7 @@ const Input: FC<FormProps & React.InputHTMLAttributes<HTMLInputElement>> = ({
           initial="hidden"
           animate="visible"
           exit="hidden"
+          key={lnErr}
           variants={errorVariants}
           transition={{ duration: 0.3 }}
         >
@@ -79,6 +81,7 @@ const Input: FC<FormProps & React.InputHTMLAttributes<HTMLInputElement>> = ({
           initial="hidden"
           animate="visible"
           exit="hidden"
+          key={emailErr}
           variants={errorVariants}
           transition={{ duration: 0.3 }}
         >
@@ -91,6 +94,7 @@ const Input: FC<FormProps & React.InputHTMLAttributes<HTMLInputElement>> = ({
           initial="hidden"
           animate="visible"
           exit="hidden"
+          key={phoneErr}
           variants={errorVariants}
           transition={{ duration: 0.3 }}
         >
@@ -103,6 +107,7 @@ const Input: FC<FormProps & React.InputHTMLAttributes<HTMLInputElement>> = ({
           initial="hidden"
           animate="visible"
           exit="hidden"
+          key={pwdErr}
           variants={errorVariants}
           transition={{ duration: 0.3 }}
         >
@@ -115,6 +120,7 @@ const Input: FC<FormProps & React.InputHTMLAttributes<HTMLInputElement>> = ({
           initial="hidden"
           animate="visible"
           exit="hidden"
+          key={loginInputErr}
           variants={errorVariants}
           transition={{ duration: 0.3 }}
         >

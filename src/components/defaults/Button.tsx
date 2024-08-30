@@ -3,10 +3,11 @@ import { FC } from "react";
 interface ButtonProps {
   className?: string;
   filled: boolean;
-  content: string;
+  content: string | JSX.Element;
   onClick?: () => void;
+  disabled?: boolean
 }
-const Button: FC<ButtonProps> = ({ className, filled, content, onClick }) => {
+const Button: FC<ButtonProps> = ({ className, filled, content, onClick, disabled}) => {
   return (
     <div
       className={`${
@@ -16,7 +17,7 @@ const Button: FC<ButtonProps> = ({ className, filled, content, onClick }) => {
       } ${className} h-[48px] flex items-center justify-center rounded-lg font-semibold`}
       onClick={onClick}
     >
-      <button>{content}</button>
+      <button disabled={disabled}>{content}</button>
     </div>
   );
 };

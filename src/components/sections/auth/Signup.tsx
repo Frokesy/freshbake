@@ -3,6 +3,10 @@ import Input from "../../defaults/Input";
 import { LoginProps } from "./Login";
 import Button from "../../defaults/Button";
 import { handleSignup } from "../../../../utils/signupService";
+import Spinner from "../../defaults/Spinner";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Signup: FC<LoginProps> = ({ setActiveScreen }) => {
   const [user, setUser] = useState({
@@ -19,6 +23,8 @@ const Signup: FC<LoginProps> = ({ setActiveScreen }) => {
     phone: "",
     password: "",
   });
+  const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const validateField = (value: string) => {
     if (value === "") {
@@ -35,10 +41,18 @@ const Signup: FC<LoginProps> = ({ setActiveScreen }) => {
   };
 
   const validateSignup = async () => {
-    await handleSignup(validateField, user, validatePassword, setError);
+    await handleSignup(
+      validateField,
+      user,
+      validatePassword,
+      setError,
+      setLoading,
+      navigate
+    );
   };
   return (
     <div className="px-4 pt-10">
+      <ToastContainer />
       <h2 className="text-[24px] font-semibold">Create Account</h2>
       <p className="text-[15px]">
         Already an existing user?{" "}
@@ -95,7 +109,12 @@ const Signup: FC<LoginProps> = ({ setActiveScreen }) => {
           pwdErr={error.password}
         />
         <div className="pt-10">
-          <Button onClick={validateSignup} filled content="Signup" />
+          <Button
+            onClick={validateSignup}
+            filled
+            disabled={loading}
+            content={loading ? <Spinner /> : "Signup"}
+          />
         </div>
       </div>
     </div>
