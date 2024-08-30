@@ -1,23 +1,93 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { motion } from "framer-motion";
 import ModalContainer from "../containers/ModalContainer";
 import { ProductItemProps } from "../sections/products/Catalog";
 import { CancelIcon } from "../icons";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Spinner from "../defaults/Spinner";
 
 interface ViewedProductModalProps {
   viewedProduct: ProductItemProps | undefined;
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ViewProductModal: FC<ViewedProductModalProps> = ({ viewedProduct, setOpenModal }) => {
+const ViewProductModal: FC<ViewedProductModalProps> = ({
+  viewedProduct,
+  setOpenModal,
+}) => {
+  const [deliveryDay, setDeliveryDay] = useState<string | null>(null);
+  const [deliveryTime, setDeliveryTime] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const idb = window.indexedDB;
+
+  const handleDayChange = (day: string) => {
+    setDeliveryDay(day);
+  };
+
+  const handleTimeChange = (time: string) => {
+    setDeliveryTime(time);
+  };
+
+  const handleAddToCart = () => {
+    setLoading(true);
+    if (!deliveryDay || !deliveryTime) {
+      toast.error(
+        "Please select a delivery day and time before adding to the cart.",
+        {
+          position: "top-right",
+          theme: "light",
+          autoClose: 2000,
+          hideProgressBar: true,
+          draggable: true,
+        }
+      );
+      setLoading(false)
+      return;
+    }
+    const orderDetails = {
+      product: viewedProduct,
+      deliveryDay,
+      deliveryTime,
+    };
+
+    const dbPromise = idb.open("freshbake", 1);
+
+    dbPromise.onsuccess = () => {
+      const db = dbPromise.result;
+      const tx = db.transaction("cart", "readwrite");
+      const carts = tx.objectStore("cart");
+      const addData = carts.put(orderDetails);
+
+      addData.onsuccess = () => {
+        tx.oncomplete = () => {
+          setLoading(false);
+          toast.success("Added to Cart!", {
+            position: "top-right",
+            theme: "light",
+            autoClose: 500,
+            hideProgressBar: true,
+            draggable: true,
+          });
+          setTimeout(() => {
+            setOpenModal(false);
+          }, 1000);
+          db.close();
+        };
+      };
+    };
+  };
+
   const modalVariants = {
     hidden: { y: "100%", opacity: 0 },
     visible: { y: 0, opacity: 1 },
-    exit: { y: "100%", opacity: 0 }
+    exit: { y: "100%", opacity: 0 },
   };
 
   return (
     <ModalContainer>
+      <ToastContainer />
       <motion.div
         className="bg-[#fff] w-full h-full rounded-t-[50px] flex flex-col"
         initial="hidden"
@@ -61,18 +131,16 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({ viewedProduct, setOpenM
             <h2 className="text-[16px] font-semibold mt-6">
               Delivery Schedule
             </h2>
-            <div className="flex justify-between items-center mt-4">
-              <label htmlFor="wednesday">Wednesday</label>
-              <input type="checkbox" />
-            </div>
-            <div className="flex justify-between items-center mt-4">
-              <label htmlFor="saturday">Saturday</label>
-              <input type="checkbox" />
-            </div>
-            <div className="flex justify-between items-center mt-4">
-              <label htmlFor="sunday">Sunday</label>
-              <input type="checkbox" />
-            </div>
+            {["Wednesday", "Saturday", "Sunday"].map((day) => (
+              <div className="flex justify-between items-center mt-4" key={day}>
+                <label htmlFor={day}>{day}</label>
+                <input
+                  type="checkbox"
+                  checked={deliveryDay === day}
+                  onChange={() => handleDayChange(day)}
+                />
+              </div>
+            ))}
             <hr />
           </div>
 
@@ -80,14 +148,19 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({ viewedProduct, setOpenM
             <h2 className="text-[16px] font-semibold mt-6">
               Time of Delivery/Pickup
             </h2>
-            <div className="flex justify-between items-center mt-4">
-              <label htmlFor="time1">09:00 am</label>
-              <input type="checkbox" />
-            </div>
-            <div className="flex justify-between items-center mt-4">
-              <label htmlFor="time2">06:00 pm</label>
-              <input type="checkbox" />
-            </div>
+            {["09:00 am", "06:00 pm"].map((time) => (
+              <div
+                className="flex justify-between items-center mt-4"
+                key={time}
+              >
+                <label htmlFor={time}>{time}</label>
+                <input
+                  type="checkbox"
+                  checked={deliveryTime === time}
+                  onChange={() => handleTimeChange(time)}
+                />
+              </div>
+            ))}
             <hr />
           </div>
 
@@ -97,8 +170,15 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({ viewedProduct, setOpenM
               <p>1</p>
               <p className="border border-[#ccc] px-2 py-0.5 rounded-full">+</p>
             </div>
-            <div className="w-[60%] bg-[#7d6c3a] text-[#fff] items-center justify-center flex font-semibold rounded-xl">
-              <p>Add to cart - ${viewedProduct?.price}</p>
+            <div
+              onClick={handleAddToCart}
+              className="w-[60%] bg-[#7d6c3a] text-[#fff] items-center justify-center flex font-semibold rounded-xl cursor-pointer"
+            >
+              {loading ? (
+                <Spinner />
+              ) : (
+                <p>Add to cart - ${viewedProduct?.price}</p>
+              )}
             </div>
           </div>
         </div>

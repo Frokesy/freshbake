@@ -51,8 +51,10 @@ const Catalog: FC<CatalogProps> = ({ activeTab }) => {
     const db = request.result;
 
     if (!db.objectStoreNames.contains("favorites")) {
-      const objectStore = db.createObjectStore("favorites", { keyPath: "id" });
-      console.log(objectStore);
+      db.createObjectStore("favorites", { keyPath: "id" });
+    }
+    if (!db.objectStoreNames.contains("cart")) {
+      db.createObjectStore("cart", { keyPath: "id", autoIncrement: true});
     }
   };
 
@@ -135,7 +137,6 @@ const Catalog: FC<CatalogProps> = ({ activeTab }) => {
     setProductsPerCategory(filteredProducts);
   }, [activeTab, products]);
 
-  console.log(favoritedProducts)
   return (
     <div className="">
       <motion.div
