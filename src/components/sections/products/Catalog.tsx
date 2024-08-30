@@ -137,6 +137,31 @@ const Catalog: FC<CatalogProps> = ({ activeTab }) => {
     setProductsPerCategory(filteredProducts);
   }, [activeTab, products]);
 
+  useEffect(() => {
+    const getFavoritedProducts = () => {
+      const dbPromise = idb.open("freshbake", 1);
+      dbPromise.onsuccess = () => {
+        const db = dbPromise.result;
+
+        const tx = db.transaction("favorites", "readonly");
+        const favorites = tx.objectStore("favorites");
+        const data = favorites.getAll();
+
+        data.onsuccess = (query) => {
+          if (query.srcElement) {
+            setFavoritedProducts((query.srcElement as IDBRequest).result);
+          }
+        };
+
+        tx.oncomplete = function () {
+          db.close();
+        };
+      };
+    };
+
+    getFavoritedProducts();
+  }, [idb]);
+
   return (
     <div className="">
       <motion.div

@@ -24,32 +24,46 @@ const Cart = () => {
 
   const idb = window.indexedDB;
 
+  const getCartItems = () => {
+    const dbPromise = idb.open("freshbake", 1);
+    dbPromise.onsuccess = () => {
+      const db = dbPromise.result;
+
+      const tx = db.transaction("cart", "readonly");
+      const cart = tx.objectStore("cart");
+      const data = cart.getAll();
+
+      data.onsuccess = (query) => {
+        if (query.srcElement) {
+          setCartItems((query.srcElement as IDBRequest).result);
+        }
+      };
+
+      tx.oncomplete = function () {
+        db.close();
+      };
+    };
+  };
   useEffect(() => {
-    const getCartItems = () => {
-      const dbPromise = idb.open("freshbake", 1);
-      dbPromise.onsuccess = () => {
-        const db = dbPromise.result;
+    getCartItems();
+  });
 
-        const tx = db.transaction("cart", "readonly");
-        const cart = tx.objectStore("cart");
-        const data = cart.getAll();
+  const handleDelete = (item: CartItemProps) => {
+    const dbPromise = idb.open("freshbake", 1);
+    dbPromise.onsuccess = function () {
+      const db = dbPromise.result;
+      const tx = db.transaction("cart", "readwrite");
+      const cart = tx.objectStore("cart");
+      const deleteData = cart.delete(item.id);
 
-        data.onsuccess = (query) => {
-          if (query.srcElement) {
-            setCartItems((query.srcElement as IDBRequest).result);
-          }
-        };
-
+      deleteData.onsuccess = () => {
         tx.oncomplete = function () {
+          getCartItems();
           db.close();
         };
       };
     };
-    getCartItems();
-  }, [idb]);
-
-  console.log(cartItems)
-
+  };
   return (
     <MainContainer active="Cart">
       <div className="px-4 pt-10">
@@ -61,39 +75,44 @@ const Cart = () => {
           </div>
           <h2 className="font-semibold text-[24px]">My Cart</h2>
         </div>
-
-        <div className="mt-10 space-y-10">
-          {cartItems.map((product) => (
-                <div
-                  className="flex items-center justify-between border-b-2 pb-4 border-[#ccc]"
-                  key={product.id}
-                >
-                  <div className="flex items-center space-x-6">
-                    <img
-                      src={product.img}
-                      alt={product.tag}
-                      className="w-[52px] h-[52px] rounded-full"
-                    />
-                    <div className="space-y-2">
-                      <h2 className="text-[16px]">{product.category}</h2>
-                      <p className="text-[14px]">
-                        {product.weight} {product.type}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="bg-[#fae0e2] p-2 rounded-full">
-                    <DeleteIcon />
+        {cartItems.length > 0 ? (
+          <div className="mt-10 space-y-10">
+            {cartItems.map((product) => (
+              <div
+                className="flex items-center justify-between border-b-2 pb-4 border-[#ccc]"
+                key={product.id}
+              >
+                <div className="flex items-center space-x-6">
+                  <img
+                    src={product.img}
+                    alt={product.tag}
+                    className="w-[52px] h-[52px] rounded-full"
+                  />
+                  <div className="space-y-2">
+                    <h2 className="text-[16px]">{product.category}</h2>
+                    <p className="text-[14px]">
+                      {product.weight} {product.type}
+                    </p>
                   </div>
                 </div>
-             
-          ))}
-          <div className="pt-10 pb-[20vh]">
-            <NavLink to="/checkout">
-              <Button filled content="Checkout" />
-            </NavLink>
+
+                <div
+                  onClick={() => handleDelete(product)}
+                  className="bg-[#fae0e2] p-2 rounded-full"
+                >
+                  <DeleteIcon />
+                </div>
+              </div>
+            ))}
+            <div className="pt-10 pb-[20vh]">
+              <NavLink to="/checkout">
+                <Button filled content="Checkout" />
+              </NavLink>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="h-[70vh] flex items-center justify-center"><p className="text-[#808080] font-semibold italic">No items in cart</p></div>
+        )}
       </div>
     </MainContainer>
   );
