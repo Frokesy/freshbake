@@ -2,7 +2,6 @@ import { FC, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Heart } from "../../icons";
 import ViewProductModal from "../../modals/ViewProductModal";
-import { supabase } from "../../../../utils/supabaseClient";
 
 interface CatalogProps {
   activeTab: string;
@@ -41,15 +40,6 @@ const Catalog: FC<CatalogProps> = ({ activeTab }) => {
     setViewedProduct(product);
     setOpenModal(true);
   };
-
-
-  useEffect(() => {
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      console.log(user)
-    }
-    getUser()
-  }, [])
   useEffect(() => {
     const products: ProductItemProps[] = [
       {
