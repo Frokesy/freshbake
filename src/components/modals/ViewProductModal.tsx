@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import ModalContainer from "../containers/ModalContainer";
 import { ProductItemProps } from "../sections/products/Catalog";
@@ -19,6 +19,8 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
   const [deliveryDay, setDeliveryDay] = useState<string | null>(null);
   const [deliveryTime, setDeliveryTime] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [quantity, setQuantity] = useState<number>(1);
+  const [totalCost, setTotalCost] = useState<number>(parseFloat(viewedProduct?.price as string));
 
   const idb = window.indexedDB;
 
@@ -30,6 +32,18 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
     setDeliveryTime(time);
   };
 
+  const handleClick = (cmd: string) => {
+    if (cmd === "increment") {
+      setQuantity(quantity + 1);
+    } else {
+      setQuantity(quantity <= 0 ? 0 : quantity - 1);
+    }
+  };
+
+  useEffect(() => {
+    setTotalCost(parseFloat(viewedProduct?.price as string) * quantity)
+  }, [quantity, viewedProduct]);
+  
   const handleAddToCart = () => {
     setLoading(true);
     if (!deliveryDay || !deliveryTime) {
@@ -46,11 +60,29 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
       setLoading(false)
       return;
     }
+    if (quantity === 0) {
+      toast.error(
+        "You can't order 0 quantity",
+        {
+          position: "top-right",
+          theme: "light",
+          autoClose: 2000,
+          hideProgressBar: true,
+          draggable: true,
+        }
+      );
+      setLoading(false)
+      return;
+    }
     const orderDetails = {
       product: viewedProduct,
       deliveryDay,
       deliveryTime,
+      quantity,
+      totalCost
     };
+
+    console.log(orderDetails)
 
     const dbPromise = idb.open("freshbake", 1);
 
@@ -166,9 +198,9 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
 
           <div className="px-4 fixed bottom-0 bg-[#fff] w-full flex justify-between py-2">
             <div className="w-[35%] rounded-lg flex items-center justify-center py-2 space-x-3 border border-[#bdb08a]">
-              <p className="border border-[#ccc] px-2 py-0.5 rounded-full">-</p>
-              <p>1</p>
-              <p className="border border-[#ccc] px-2 py-0.5 rounded-full">+</p>
+              <p onClick={() => handleClick("decrement")} className="border border-[#ccc] px-2 py-0.5 rounded-full">-</p>
+              <p>{quantity}</p>
+              <p onClick={() => handleClick("increment")} className="border border-[#ccc] px-2 py-0.5 rounded-full">+</p>
             </div>
             <div
               onClick={handleAddToCart}
@@ -177,7 +209,7 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
               {loading ? (
                 <Spinner />
               ) : (
-                <p>Add to cart - ${viewedProduct?.price}</p>
+                <p>Add to cart - ${totalCost}</p>
               )}
             </div>
           </div>
