@@ -8,6 +8,10 @@ import { UserDataProps } from "../../home";
 import { supabase } from "../../../../utils/supabaseClient";
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 
+import Plunk from "@plunk/node";
+
+const plunk = new Plunk("YOUR_PLUNK_API_KEY");
+
 const Checkout = () => {
   const [userData, setUserData] = useState<UserDataProps>();
   const [activeTab, setActiveTab] = useState<string>("delivery");
@@ -223,15 +227,70 @@ const Checkout = () => {
       </div>
 
       <div
-        onClick={() =>
-          handleFlutterPayment({
-            callback: (response) => {
-              console.log(response);
-              closePaymentModal();
+onClick={() =>
+  handleFlutterPayment({
+    callback: async (response) => {
+      if (response.status === "successful") {
+        try {
+          const { data, error } = await supabase.from("orders").insert([
+            {
+              userId: userData?.userId,
+              items: cartItems,
+              totalCost: finalTotal,
+              paymentStatus: response.status,
+              transactionId: response.transaction_id,
+              deliveryOption: activeTab,
+              deliveryFee: deliveryFee,
             },
-            onClose: () => {},
-          })
+          ]);
+
+          if (error) {
+            console.error("Error adding order to Supabase:", error);
+          } else {
+            console.log("Order added successfully:", data);
+          }
+
+           // Send email using Plunk
+           try {
+            await plunk.emails.send({
+              to: userData?.email as string,
+              subject: "Payment Successful",
+              template: "your-template-id", // Use your Plunk template ID
+              variables: {
+                name: userData?.firstname,
+                total: finalTotal,
+                orderId: response.transaction_id,
+              },
+            });
+            console.log("Email sent successfully");
+          } catch (emailError) {
+            console.error("Error sending email:", emailError);
+          }
+
+
+          const dbPromise = idb.open("freshbake", 1);
+          dbPromise.onsuccess = () => {
+            const db = dbPromise.result;
+            const tx = db.transaction("cart", "readwrite");
+            const cart = tx.objectStore("cart");
+            cart.clear();
+            tx.oncomplete = () => {
+              db.close();
+            };
+          };
+
+          window.location.href = "/success";
+        } catch (err) {
+          console.error("Error processing order:", err);
         }
+      }
+
+      closePaymentModal();
+    },
+    onClose: () => {},
+  })
+}
+
         className="fixed px-4 bottom-2 lg:w-[450px] w-[100%] z-50 space-y-6"
       >
         <Button
