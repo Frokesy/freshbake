@@ -4,8 +4,12 @@ import Button from "../../../components/defaults/Button";
 import { ArrowLeft, PenEdit } from "../../../components/icons";
 import { NavLink } from "react-router-dom";
 import { CartItemProps } from "..";
+import { UserDataProps } from "../../home";
+import { supabase } from "../../../../utils/supabaseClient";
+import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 
 const Checkout = () => {
+  const [userData, setUserData] = useState<UserDataProps>();
   const [activeTab, setActiveTab] = useState<string>("delivery");
   const [cartItems, setCartItems] = useState<CartItemProps[]>([]);
 
@@ -31,7 +35,25 @@ const Checkout = () => {
       };
     };
   };
-  
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        const { data, error } = await supabase
+          .from("users")
+          .select("*")
+          .eq("userId", user.id);
+        if (!error) {
+          data.map((data) => setUserData(data));
+        } else {
+          console.log(error);
+        }
+      }
+    };
+    getUser();
+  }, []);
   useEffect(() => {
     getCartItems();
   });
@@ -39,6 +61,26 @@ const Checkout = () => {
   const totalCost = cartItems.reduce((sum, item) => sum + item.totalCost, 0);
   const deliveryFee = activeTab === "delivery" ? 4 : 0;
   const finalTotal = totalCost + deliveryFee;
+
+  const config = {
+    public_key: "FLWPUBK_TEST-7fb6d77c1dd8f4f4b933f84b1bb51e0d-X",
+    tx_ref: `${Date.now()}`,
+    amount: finalTotal,
+    currency: "NGN",
+    payment_options: "card,mobilemoney,ussd",
+    customer: {
+      email: userData?.email as string,
+      phone_number: userData?.phone as string,
+      name: `${userData?.firstname} ${userData?.lastname}` as string,
+    },
+    customizations: {
+      title: "Freshbake",
+      description: "Payment for items in cart",
+      logo: "https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg",
+    },
+  };
+
+  const handleFlutterPayment = useFlutterwave(config);
 
   return (
     <MainContainer active="Cart">
@@ -121,7 +163,7 @@ const Checkout = () => {
                   <div className="space-y-2">
                     <h2 className="font-semibold">Delivery Address</h2>
                     <div className="flex justify-between items-center">
-                      <p className="text-[14px]">7890 Maple Ridge Road, SK</p>
+                      <p className="text-[14px]">{userData?.defaultAddress}</p>
                       <PenEdit />
                     </div>
                   </div>
@@ -142,8 +184,10 @@ const Checkout = () => {
             <div className="space-y-2">
               <h2 className="font-semibold">Customer Information</h2>
               <div className="flex justify-between items-center text-[14px]">
-                <p className="">Jackson Adeolu</p>
-                <p>+432-657-3953</p>
+                <p className="">
+                  {userData?.firstname} {userData?.lastname}
+                </p>
+                <p>+{userData?.phone}</p>
               </div>
             </div>
           ) : (
@@ -178,7 +222,18 @@ const Checkout = () => {
         </div>
       </div>
 
-      <div className="fixed px-4 bottom-2 lg:w-[450px] w-[100%] z-50 space-y-6">
+      <div
+        onClick={() =>
+          handleFlutterPayment({
+            callback: (response) => {
+              console.log(response);
+              closePaymentModal();
+            },
+            onClose: () => {},
+          })
+        }
+        className="fixed px-4 bottom-2 lg:w-[450px] w-[100%] z-50 space-y-6"
+      >
         <Button
           filled={true}
           content={`Place Order ($${finalTotal})`}
