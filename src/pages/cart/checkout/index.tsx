@@ -7,17 +7,22 @@ import { CartItemProps } from "..";
 import { UserDataProps } from "../../home";
 import { supabase } from "../../../../utils/supabaseClient";
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
-
+import { PaymentSuccessful } from "../../../components/email-templates/PaymentSuccessful";
+import { render } from "@react-email/render";
 import Plunk from "@plunk/node";
-
-const plunk = new Plunk("YOUR_PLUNK_API_KEY");
+import Spinner from "../../../components/defaults/Spinner";
 
 const Checkout = () => {
   const [userData, setUserData] = useState<UserDataProps>();
   const [activeTab, setActiveTab] = useState<string>("delivery");
   const [cartItems, setCartItems] = useState<CartItemProps[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const idb = window.indexedDB;
+
+  const plunkClient = new Plunk(
+    "sk_be82d7ea662e6422f5b77d4f9f17153cdf7e2aedd142e35e"
+  );
 
   const getCartItems = () => {
     const dbPromise = idb.open("freshbake", 1);
@@ -85,6 +90,38 @@ const Checkout = () => {
   };
 
   const handleFlutterPayment = useFlutterwave(config);
+
+  const sendOrderConfirmationEmail = async (
+    userData: UserDataProps | undefined,
+    cartItems: CartItemProps[],
+    finalTotal: number,
+    orderId: number,
+    activeTab: string,
+    deliveryFee: number
+  ) => {
+    try {
+      const emailHtml = render(
+        <PaymentSuccessful
+          userData={userData}
+          cartItems={cartItems}
+          finalTotal={finalTotal}
+          orderId={orderId}
+          activeTab={activeTab}
+          deliveryFee={deliveryFee}
+        />
+      );
+
+      const response = await plunkClient.emails.send({
+        to: userData?.email as string,
+        subject: "Your FreshBake Order Confirmation",
+        body: await emailHtml,
+      });
+
+      console.log("Order confirmation email sent successfully:", response);
+    } catch (error) {
+      console.error("Failed to send order confirmation email:", error);
+    }
+  };
 
   return (
     <MainContainer active="Cart">
@@ -227,75 +264,66 @@ const Checkout = () => {
       </div>
 
       <div
-onClick={() =>
-  handleFlutterPayment({
-    callback: async (response) => {
-      if (response.status === "successful") {
-        try {
-          const { data, error } = await supabase.from("orders").insert([
-            {
-              userId: userData?.userId,
-              items: cartItems,
-              totalCost: finalTotal,
-              paymentStatus: response.status,
-              transactionId: response.transaction_id,
-              deliveryOption: activeTab,
-              deliveryFee: deliveryFee,
+        onClick={() =>
+          handleFlutterPayment({
+            callback: async (response) => {
+              if (response.status === "successful") {
+                setLoading(false)
+                try {
+                  const { data, error } = await supabase.from("orders").insert([
+                    {
+                      userId: userData?.userId,
+                      items: cartItems,
+                      totalCost: finalTotal,
+                      paymentStatus: response.status,
+                      transactionId: response.transaction_id,
+                      deliveryOption: activeTab,
+                      deliveryFee: deliveryFee,
+                    },
+                  ]);
+
+                  if (error) {
+                    console.error("Error adding order to Supabase:", error);
+                  } else {
+                    console.log("Order added successfully:", data);
+                  }
+
+                  const dbPromise = idb.open("freshbake", 1);
+                  dbPromise.onsuccess = () => {
+                    const db = dbPromise.result;
+                    const tx = db.transaction("cart", "readwrite");
+                    const cart = tx.objectStore("cart");
+                    cart.clear();
+                    tx.oncomplete = () => {
+                      db.close();
+                    };
+                  };
+
+                  await sendOrderConfirmationEmail(
+                    userData,
+                    cartItems,
+                    finalTotal,
+                    response.transaction_id,
+                    activeTab,
+                    deliveryFee
+                  );
+
+                  window.location.href = "/success";
+                } catch (err) {
+                  console.error("Error processing order:", err);
+                }
+              }
+
+              closePaymentModal();
             },
-          ]);
-
-          if (error) {
-            console.error("Error adding order to Supabase:", error);
-          } else {
-            console.log("Order added successfully:", data);
-          }
-
-           // Send email using Plunk
-           try {
-            await plunk.emails.send({
-              to: userData?.email as string,
-              subject: "Payment Successful",
-              template: "your-template-id", // Use your Plunk template ID
-              variables: {
-                name: userData?.firstname,
-                total: finalTotal,
-                orderId: response.transaction_id,
-              },
-            });
-            console.log("Email sent successfully");
-          } catch (emailError) {
-            console.error("Error sending email:", emailError);
-          }
-
-
-          const dbPromise = idb.open("freshbake", 1);
-          dbPromise.onsuccess = () => {
-            const db = dbPromise.result;
-            const tx = db.transaction("cart", "readwrite");
-            const cart = tx.objectStore("cart");
-            cart.clear();
-            tx.oncomplete = () => {
-              db.close();
-            };
-          };
-
-          window.location.href = "/success";
-        } catch (err) {
-          console.error("Error processing order:", err);
+            onClose: () => {},
+          })
         }
-      }
-
-      closePaymentModal();
-    },
-    onClose: () => {},
-  })
-}
-
         className="fixed px-4 bottom-2 lg:w-[450px] w-[100%] z-50 space-y-6"
       >
         <Button
           filled={true}
-          content={`Place Order ($${finalTotal})`}
+          content={loading ? <Spinner /> : `Place Order ($${finalTotal})`}
           className="text-[18px]"
         />
       </div>
