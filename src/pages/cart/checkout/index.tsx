@@ -268,7 +268,6 @@ const Checkout = () => {
           handleFlutterPayment({
             callback: async (response) => {
               if (response.status === "successful") {
-                setLoading(false)
                 try {
                   const { data, error } = await supabase.from("orders").insert([
                     {
@@ -281,10 +280,11 @@ const Checkout = () => {
                       deliveryFee: deliveryFee,
                     },
                   ]);
-
+                  
                   if (error) {
                     console.error("Error adding order to Supabase:", error);
                   } else {
+                    setLoading(false)
                     console.log("Order added successfully:", data);
                   }
 

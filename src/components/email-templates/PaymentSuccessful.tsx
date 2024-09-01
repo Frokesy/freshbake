@@ -29,7 +29,7 @@ export const PaymentSuccessful: FC<EmailTemplateProps> = ({
   finalTotal,
   orderId,
   activeTab,
-  deliveryFee
+  deliveryFee,
 }) => {
   return (
     <Html>
@@ -67,11 +67,6 @@ export const PaymentSuccessful: FC<EmailTemplateProps> = ({
                   <Text>
                     <strong>Delivery Fee:</strong> ${deliveryFee}
                   </Text>
-                  <Section style={{ marginTop: "20px" }}>
-                    <Text>
-                      <strong>Total Paid:</strong> ${finalTotal}
-                    </Text>
-                  </Section>
                   <Section style={styles.section}>
                     <Heading style={styles.subheading}>
                       Delivery Information
@@ -89,6 +84,11 @@ export const PaymentSuccessful: FC<EmailTemplateProps> = ({
                   </Section>
                 </div>
               ))}
+            </Section>
+            <Section style={{ marginTop: "20px" }}>
+              <Text>
+                <strong>Total Paid:</strong> ${finalTotal}
+              </Text>
             </Section>
             <Section style={{ marginTop: "20px" }}>
               <Text>
@@ -113,7 +113,6 @@ export const PaymentSuccessful: FC<EmailTemplateProps> = ({
 };
 
 const styles = {
-
   subheading: {
     fontSize: "18px",
     color: "#333333",
