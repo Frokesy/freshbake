@@ -28,9 +28,10 @@ const Account = () => {
     { id: 4, name: "Logout", icon: <LogoutIcon /> },
   ];
   const [userData, setUserData] = useState<UserDataProps>();
+  const [isOpen, setIsOpen] = useState<boolean>(false)
   useEffect(() => {
     const getUser = async () => {
-      const {
+      const {                                                                                                                                                                                                                                 
         data: { user },
       } = await supabase.auth.getUser();
       if (user) {
@@ -59,6 +60,7 @@ const Account = () => {
             {accountItems.map((item) => (
               <NavLink
                 to={item.route as string}
+                // onClick={item.name === "logout" && setIsOpen(true)}
                 className="flex justify-between text-[14px] py-5 px-4 hover:bg-[#f1f1f1] transition-all duration-300 ease-in-out border-b-2 border-[#f1f1f1]"
                 key={item.id}
               >

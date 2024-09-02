@@ -9,7 +9,7 @@ interface ModalProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const LogoutModal: FC<ModalProps> = ({  setIsOpen }) => {
+const LogoutModal: FC<ModalProps> = ({ setIsOpen }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate()
   return (

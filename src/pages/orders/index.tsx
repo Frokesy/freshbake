@@ -46,13 +46,20 @@ const Orders = () => {
   const [orderItems, setOrderItems] = useState<OrderItemProps[]>();
   useEffect(() => {
     const getOrder = async () => {
-      const { data, error } = await supabase
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        const { data, error } = await supabase
         .from("orders")
         .select("*")
+        .eq("userId", user.id);
       if (!error) {
          setOrderItems(data);
       } else {
         console.log(error);
+      }
       }
     };
     getOrder();
