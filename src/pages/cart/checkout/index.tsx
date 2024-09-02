@@ -280,7 +280,7 @@ const Checkout = () => {
                       transactionId: response.transaction_id,
                       deliveryOption: activeTab,
                       deliveryFee: deliveryFee,
-                      orderStatus: "Shipped",
+                      orderStatus: "Pending",
                     },
                   ]);
                   

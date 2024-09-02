@@ -1,13 +1,35 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { OrderItemProps } from "../../../pages/orders";
 import { ArrowLeft, OrderCheck, UncheckedOrder } from "../../icons";
 import PageTransition from "../../defaults/PageTransition";
+import { supabase } from "../../../../utils/supabaseClient";
+import { UserDataProps } from "../../../pages/home";
 
 interface TrackOrderProps {
   order: OrderItemProps | undefined;
   isTracked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const TrackOrder: FC<TrackOrderProps> = ({ order, isTracked }) => {
+  const [userData, setUserData] = useState<UserDataProps>()
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        const { data, error } = await supabase
+          .from("users")
+          .select("*")
+          .eq("userId", user.id);
+          if (!error) {
+            data.map((data) => setUserData(data))
+          } else {
+            console.log(error)
+          }
+      }
+    };
+    getUser();
+  }, []);
   return (
     <PageTransition active="Orders">
       <div className="bg-[#ccc] h-[400px]">
@@ -17,12 +39,12 @@ const TrackOrder: FC<TrackOrderProps> = ({ order, isTracked }) => {
         >
           <ArrowLeft />
         </div>
-        <img src="/assets/dummyMap.png" alt="img" />
+        <img src="/assets/dummyMap.png" alt="img" className="w-[100%]" />
       </div>
 
       <div className="px-4 pt-10 pb-[20vh]">
-        <h2 className="font-semibold text-[20px]">Delivery</h2>
-        <p className="text-[14px]">Estimated Arrival: 3 Days, 14 Hours</p>
+        <h2 className="font-semibold text-[20px]">Delivery Day and time</h2>
+        <p className="text-[14px]">Next {order?.items[0].deliveryDay} - {order?.items[0].deliveryTime}</p>
 
         <div className="pt-8 flex justify-between items-center text-[14px] space-x-4">
           <div className="">
@@ -86,8 +108,8 @@ const TrackOrder: FC<TrackOrderProps> = ({ order, isTracked }) => {
           <h2 className="font-semibold">Customer Information</h2>
 
           <div className="flex justify-between mt-2 text-[14px]">
-            <p className="">Jackson Adeolu</p>
-            <p className="">+432-657-3953</p>
+            <p className="">{userData?.firstname} {userData?.lastname}</p>
+            <p className="">{userData?.phone}</p>
           </div>
         </div>
       </div>

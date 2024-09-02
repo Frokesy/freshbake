@@ -20,7 +20,9 @@ const Success = () => {
         Your order #{response.transaction_id} is successfully placed
       </p>
       <div className="px-4 mt-6 space-y-6 pt-10 pb-20 w-[100%]">
-        <Button filled={true} content="Track Order" className="text-[18px]" />
+        <NavLink to={`/orders/track-order/${response.transaction_id}`}>
+          <Button filled={true} content="Track Order" className="text-[18px]" />
+        </NavLink>
         <div className="">
           <NavLink to="/home">
             <Button

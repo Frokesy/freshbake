@@ -10,6 +10,7 @@ import Account from "./pages/account";
 import ProfileDetails from "./pages/account/profile-details";
 import Address from "./pages/account/address";
 import Success from "./pages/res/Success";
+import Order from "./pages/orders/Order";
 
 function App() {
   const router = createBrowserRouter([
@@ -22,6 +23,7 @@ function App() {
     { path: "/account/profile-details", element: <ProfileDetails /> },
     { path: "/account/address", element: <Address /> },
     { path: "/success", element: <Success /> },
+    { path:"/orders/track-order/:transactionId", element:<Order />},
     { path: "/reset-password", element: <ResetPassword /> }
   ])
 
