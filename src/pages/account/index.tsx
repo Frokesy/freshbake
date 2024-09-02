@@ -10,6 +10,7 @@ import {
 import { UserDataProps } from "../home";
 import { useEffect, useState } from "react";
 import { supabase } from "../../../utils/supabaseClient";
+import LogoutModal from "../../components/modals/LogoutModal";
 
 const Account = () => {
   const accountItems = [
@@ -28,10 +29,10 @@ const Account = () => {
     { id: 4, name: "Logout", icon: <LogoutIcon /> },
   ];
   const [userData, setUserData] = useState<UserDataProps>();
-  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   useEffect(() => {
     const getUser = async () => {
-      const {                                                                                                                                                                                                                                 
+      const {
         data: { user },
       } = await supabase.auth.getUser();
       if (user) {
@@ -48,10 +49,13 @@ const Account = () => {
     };
     getUser();
   }, []);
+
   return (
     <MainContainer active="Account">
       <div className="bg-[#ffbb1d] min-h-screen pt-[15vh]">
-        <h2 className="px-4 text-[24px] font-semibold">Hello {userData?.firstname},</h2>
+        <h2 className="px-4 text-[24px] font-semibold">
+          Hello {userData?.firstname},
+        </h2>
 
         <div className="min-h-[80vh] mt-4 bg-[#fff] rounded-t-[40px] pt-6">
           <h2 className="font-semibold text-[20px] px-4">Account</h2>
@@ -60,7 +64,7 @@ const Account = () => {
             {accountItems.map((item) => (
               <NavLink
                 to={item.route as string}
-                // onClick={item.name === "logout" && setIsOpen(true)}
+                onClick={() => item.name === "Logout" && setIsOpen(true)}
                 className="flex justify-between text-[14px] py-5 px-4 hover:bg-[#f1f1f1] transition-all duration-300 ease-in-out border-b-2 border-[#f1f1f1]"
                 key={item.id}
               >
@@ -74,6 +78,8 @@ const Account = () => {
           </div>
         </div>
       </div>
+
+      {isOpen && <LogoutModal setIsOpen={setIsOpen} />}
     </MainContainer>
   );
 };
