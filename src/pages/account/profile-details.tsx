@@ -7,6 +7,7 @@ import { supabase } from "../../../utils/supabaseClient";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import Button from "../../components/defaults/Button";
 import Spinner from "../../components/defaults/Spinner";
+import { motion } from "framer-motion";
 
 const ProfileDetails = () => {
   const [edit, setEdit] = useState<string>("");
@@ -17,30 +18,32 @@ const ProfileDetails = () => {
     email: "",
     phone: "",
   });
-const [loading, setLoading] = useState<boolean>(false)
-const getUser = async () => {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (user) {
-    const { data, error } = await supabase
-      .from("users")
-      .select("*")
-      .eq("userId", user.id)
-      .single();
-    if (!error) {
-      setUserData(data);
-      setInputValues({
-        firstname: data.firstname || "",
-        lastname: data.lastname || "",
-        email: data.email || "",
-        phone: data.phone || "",
-      });
-    } else {
-      console.log(error);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const getUser = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (user) {
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("userId", user.id)
+        .single();
+      if (!error) {
+        setUserData(data);
+        setInputValues({
+          firstname: data.firstname || "",
+          lastname: data.lastname || "",
+          email: data.email || "",
+          phone: data.phone || "",
+        });
+      } else {
+        console.log(error);
+      }
     }
-  }
-};
+  };
+
   useEffect(() => {
     getUser();
   }, []);
@@ -53,7 +56,7 @@ const getUser = async () => {
   };
 
   const handleSave = async () => {
-    setLoading(true)
+    setLoading(true);
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -65,9 +68,9 @@ const getUser = async () => {
       if (error) {
         console.log(error);
       } else {
-        setEdit("")
-        setLoading(false)
-        getUser()
+        setEdit("");
+        setLoading(false);
+        getUser();
         toast.success(`Profile Updated!!`, {
           position: "top-right",
           theme: "light",
@@ -94,13 +97,20 @@ const getUser = async () => {
       </div>
 
       <div className="mt-8 space-y-3">
-        <div className="px-4 border border-[#E4E4E4] flex justify-between items-center py-3">
-          <div className="">
+        <motion.div
+          key="firstname"
+          className="px-4 border border-[#E4E4E4] flex justify-between items-center py-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="w-[100%]">
             <h2 className="text-[12px]">First name</h2>
             {edit === "firstname" ? (
-              <div className="">
+              <div className="w-[100%]">
                 <input
                   type="text"
+                  className="w-[100%] outline-none"
                   value={inputValues.firstname}
                   onChange={(e) =>
                     handleInputChange("firstname", e.target.value)
@@ -116,14 +126,22 @@ const getUser = async () => {
           <div className="" onClick={() => setEdit("firstname")}>
             {edit !== "firstname" && <Pen />}
           </div>
-        </div>
-        <div className="px-4 border border-[#E4E4E4] flex justify-between items-center py-3">
-          <div className="">
+        </motion.div>
+
+        <motion.div
+          key="lastname"
+          className="px-4 border border-[#E4E4E4] flex justify-between items-center py-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="w-[100%]">
             <h2 className="text-[12px]">Last name</h2>
             {edit === "lastname" ? (
-              <div className="">
+              <div className="w-[100%]">
                 <input
                   type="text"
+                  className="w-[100%] outline-none"
                   value={inputValues.lastname}
                   onChange={(e) =>
                     handleInputChange("lastname", e.target.value)
@@ -137,14 +155,22 @@ const getUser = async () => {
           <div className="" onClick={() => setEdit("lastname")}>
             {edit !== "lastname" && <Pen />}
           </div>
-        </div>
-        <div className="px-4 border border-[#E4E4E4] flex justify-between items-center py-3">
-          <div className="">
+        </motion.div>
+
+        <motion.div
+          key="email"
+          className="px-4 border border-[#E4E4E4] flex justify-between items-center py-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="w-[100%]">
             <h2 className="text-[12px]">Email Address</h2>
             {edit === "email" ? (
-              <div className="">
+              <div className="w-[100%]">
                 <input
                   type="text"
+                  className="w-[100%] outline-none"
                   value={inputValues.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
                 />
@@ -156,14 +182,22 @@ const getUser = async () => {
           <div className="" onClick={() => setEdit("email")}>
             {edit !== "email" && <Pen />}
           </div>
-        </div>
-        <div className="px-4 border border-[#E4E4E4] flex justify-between items-center py-3">
-          <div className="">
+        </motion.div>
+
+        <motion.div
+          key="phone"
+          className="px-4 border border-[#E4E4E4] flex justify-between items-center py-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="w-[100%]">
             <h2 className="text-[12px]">Phone number</h2>
             {edit === "phone" ? (
-              <div className="">
+              <div className="w-[100%]">
                 <input
                   type="text"
+                  className="w-[100%] outline-none"
                   value={inputValues.phone}
                   onChange={(e) => handleInputChange("phone", e.target.value)}
                 />
@@ -175,11 +209,25 @@ const getUser = async () => {
           <div className="" onClick={() => setEdit("phone")}>
             {edit !== "phone" && <Pen />}
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {edit && (
-        <Button filled className="mx-4 mt-10" onClick={handleSave} content={loading ? <Spinner /> : "Save Changes"} />
+        <motion.div
+          key="save-button"
+          className=""
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Button
+            filled
+            className="mx-4 mt-10"
+            onClick={handleSave}
+            content={loading ? <Spinner /> : "Save Changes"}
+          />
+        </motion.div>
       )}
     </MainContainer>
   );
