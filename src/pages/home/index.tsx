@@ -14,6 +14,7 @@ export interface UserDataProps {
   lastname: string;
   phone: string;
   userId: string;
+  password?:string;
 }
 
 const Home = () => {

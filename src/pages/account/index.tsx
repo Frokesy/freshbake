@@ -21,7 +21,6 @@ const Account = () => {
       id: 3,
       name: "Customer Service",
       icon: <CustomerCareIcon />,
-      route: "/customer-service",
     },
     { id: 4, name: "Logout", icon: <LogoutIcon /> },
   ];
