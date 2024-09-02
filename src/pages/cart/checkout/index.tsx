@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import MainContainer from "../../../components/containers/MainContainer";
 import Button from "../../../components/defaults/Button";
 import { ArrowLeft, PenEdit } from "../../../components/icons";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { CartItemProps } from "..";
 import { UserDataProps } from "../../home";
 import { supabase } from "../../../../utils/supabaseClient";
@@ -19,6 +19,8 @@ const Checkout = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const idb = window.indexedDB;
+
+  const navigate = useNavigate();
 
   const plunkClient = new Plunk(
     "sk_be82d7ea662e6422f5b77d4f9f17153cdf7e2aedd142e35e"
@@ -111,13 +113,13 @@ const Checkout = () => {
         />
       );
 
-      const response = await plunkClient.emails.send({
+      await plunkClient.emails.send({
         to: userData?.email as string,
         subject: "Your FreshBake Order Confirmation",
         body: await emailHtml,
       });
 
-      console.log("Order confirmation email sent successfully:", response);
+      console.log("Order confirmation email sent successfully:");
     } catch (error) {
       console.error("Failed to send order confirmation email:", error);
     }
@@ -269,7 +271,7 @@ const Checkout = () => {
             callback: async (response) => {
               if (response.status === "successful") {
                 try {
-                  const { data, error } = await supabase.from("orders").insert([
+                  const { error } = await supabase.from("orders").insert([
                     {
                       userId: userData?.userId,
                       items: cartItems,
@@ -278,6 +280,7 @@ const Checkout = () => {
                       transactionId: response.transaction_id,
                       deliveryOption: activeTab,
                       deliveryFee: deliveryFee,
+                      orderStatus: "Shipped",
                     },
                   ]);
                   
@@ -285,7 +288,15 @@ const Checkout = () => {
                     console.error("Error adding order to Supabase:", error);
                   } else {
                     setLoading(false)
-                    console.log("Order added successfully:", data);
+                    console.log("Order added successfully:");
+                    await sendOrderConfirmationEmail(
+                      userData,
+                      cartItems,
+                      finalTotal,
+                      response.transaction_id,
+                      activeTab,
+                      deliveryFee
+                    );
                   }
 
                   const dbPromise = idb.open("freshbake", 1);
@@ -299,16 +310,8 @@ const Checkout = () => {
                     };
                   };
 
-                  await sendOrderConfirmationEmail(
-                    userData,
-                    cartItems,
-                    finalTotal,
-                    response.transaction_id,
-                    activeTab,
-                    deliveryFee
-                  );
 
-                  window.location.href = "/success";
+                  navigate("/success", { state: { response } });
                 } catch (err) {
                   console.error("Error processing order:", err);
                 }
