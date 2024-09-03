@@ -5,7 +5,8 @@ import {
   LocationIcon,
   NotificationIcon,
 } from "../icons";
-import { FC } from "react"
+import { FC } from "react";
+import TextSkeleton from "../skeletons/TextSkeleton";
 
 interface TopNavProps {
   data: UserDataProps | undefined;
@@ -21,7 +22,11 @@ const TopNav: FC<TopNavProps> = ({ data }) => {
             <p className="font-semibold">Delivery Address</p>
             <ArrowDown />
           </div>
-          <p className="text-[14px] mt-1">{data?.defaultAddress}</p>
+          {!data?.defaultAddress ? (
+            <TextSkeleton />
+          ) : (
+            <p className="text-[14px] mt-1">{data?.defaultAddress}</p>
+          )}
         </div>
         <div className="flex items-center space-x-3">
           <CustomerCareIcon />

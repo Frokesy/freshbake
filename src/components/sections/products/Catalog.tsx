@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Heart } from "../../icons";
 import ViewProductModal from "../../modals/ViewProductModal";
 import { supabase } from "../../../../utils/supabaseClient";
+import ProductSkeleton from "../../skeletons/ProductsSkeleton";
 
 interface CatalogProps {
   activeTab: string;
@@ -37,9 +38,8 @@ const Catalog: FC<CatalogProps> = ({ activeTab }) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [products, setProducts] = useState<ProductItemProps[]>([]);
   const [viewedProduct, setViewedProduct] = useState<ProductItemProps>();
-  const [favoritedProducts, setFavoritedProducts] = useState<
-    ProductItemProps[]
-  >([]);
+  const [favoritedProducts, setFavoritedProducts] = useState<ProductItemProps[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const idb = window.indexedDB;
   const request = idb.open("freshbake", 1);
@@ -107,6 +107,7 @@ const Catalog: FC<CatalogProps> = ({ activeTab }) => {
 
   useEffect(() => {
     const getProducts = async () => {
+      setLoading(true);
       const { data, error } = await supabase
         .from("product-catalog")
         .select("*");
@@ -116,10 +117,12 @@ const Catalog: FC<CatalogProps> = ({ activeTab }) => {
       } else {
         console.log(error);
       }
+      setLoading(false);
     };
 
     getProducts();
   }, []);
+
   useEffect(() => {
     const filteredProducts = products.reduce(
       (acc: { [key: string]: ProductItemProps[] }, product) => {
@@ -171,56 +174,60 @@ const Catalog: FC<CatalogProps> = ({ activeTab }) => {
         variants={containerVariants}
         className="mt-6 space-y-8 pb-[15vh]"
       >
-        {Object.keys(productsPerCategory).map((category) => (
-          <motion.div
-            key={category}
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            variants={containerVariants}
-            className="space-y-3"
-          >
-            <h2 className="font-bold">{category}</h2>
-            <div className="grid grid-cols-2 gap-3">
-              {productsPerCategory[category].map((product) => (
-                <motion.div
-                  key={product.id}
-                  variants={itemVariants}
-                  onClick={() => handleClick(product)}
-                  className="bg-[#fff] border border-[#808080] shadow-md rounded-md"
-                >
-                  <img
-                    src={product.img}
-                    alt="img"
-                    className="w-[100%] h-[117px] object-cover"
-                  />
-                  <div className="p-3 text-[14px] space-y-3">
-                    <div className="flex justify-between items-center">
-                      <h2 className="font-semibold">{product.type}</h2>
-                      <div
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleLikedAnimation(product);
-                        }}
-                        className="cursor-pointer transition-colors duration-500 ease-in-out"
-                      >
-                        <Heart
-                          liked={favoritedProducts.some(
-                            (p) => p.id === product.id
-                          )}
-                        />
+        {loading ? (
+          <ProductSkeleton />
+        ) : (
+          Object.keys(productsPerCategory).map((category) => (
+            <motion.div
+              key={category}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={containerVariants}
+              className="space-y-3"
+            >
+              <h2 className="font-bold">{category}</h2>
+              <div className="grid grid-cols-2 gap-3">
+                {productsPerCategory[category].map((product) => (
+                  <motion.div
+                    key={product.id}
+                    variants={itemVariants}
+                    onClick={() => handleClick(product)}
+                    className="bg-[#fff] border border-[#808080] shadow-md rounded-md"
+                  >
+                    <img
+                      src={product.img}
+                      alt="img"
+                      className="w-[100%] h-[117px] object-cover"
+                    />
+                    <div className="p-3 text-[14px] space-y-3">
+                      <div className="flex justify-between items-center">
+                        <h2 className="font-semibold">{product.type}</h2>
+                        <div
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleLikedAnimation(product);
+                          }}
+                          className="cursor-pointer transition-colors duration-500 ease-in-out"
+                        >
+                          <Heart
+                            liked={favoritedProducts.some(
+                              (p) => p.id === product.id
+                            )}
+                          />
+                        </div>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="italic">{product.weight}</span>
+                        <span>${product.price}</span>
                       </div>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="italic">{product.weight}</span>
-                      <span>${product.price}</span>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        ))}
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          ))
+        )}
       </motion.div>
       <AnimatePresence>
         {openModal && (

@@ -1,8 +1,9 @@
-import { FC, useState } from "react";
-import { motion } from "framer-motion"; // Import Framer Motion for animations
+import { FC, useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { OrderItemProps } from "../../../pages/orders";
 import { ArrowLeft, ArrowDown } from "../../icons";
 import { NavLink } from "react-router-dom";
+import OrdersSkeleton from "../../skeletons/OrdersSkeleton";
 
 interface OrderOverviewProps {
   orderItems: OrderItemProps[] | undefined;
@@ -18,14 +19,20 @@ const OrderOverview: FC<OrderOverviewProps> = ({
   const [expandedTransaction, setExpandedTransaction] = useState<string | null>(
     null
   );
+  const [groupedOrders, setGroupedOrders] = useState<Record<string, OrderItemProps[]> | null>(null);
 
-  const groupedOrders = orderItems?.reduce((acc, order) => {
-    if (!acc[order.transactionId]) {
-      acc[order.transactionId] = [];
+  useEffect(() => {
+    if (orderItems) {
+      const grouped = orderItems.reduce((acc, order) => {
+        if (!acc[order.transactionId]) {
+          acc[order.transactionId] = [];
+        }
+        acc[order.transactionId].push(order);
+        return acc;
+      }, {} as Record<string, OrderItemProps[]>);
+      setGroupedOrders(grouped);
     }
-    acc[order.transactionId].push(order);
-    return acc;
-  }, {} as Record<string, OrderItemProps[]>);
+  }, [orderItems]);
 
   return (
     <div>
@@ -38,7 +45,9 @@ const OrderOverview: FC<OrderOverviewProps> = ({
         <h2 className="font-semibold text-[24px]">Orders</h2>
       </div>
 
-      {orderItems?.length === 0 ? (
+      {!orderItems ? (
+        <OrdersSkeleton />
+      ) : orderItems.length === 0 ? (
         <div className="h-[70vh] flex items-center justify-center">
           <p className="text-[#808080] font-semibold italic">
             No recent orders
