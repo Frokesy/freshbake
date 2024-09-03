@@ -28,6 +28,8 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
 
   const handleDayChange = (day: string) => {
     setDeliveryDay(day);
+    // Reset delivery time when day changes
+    setDeliveryTime(null);
   };
 
   const handleTimeChange = (time: string) => {
@@ -80,7 +82,7 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
       tag: viewedProduct?.tag,
       img: viewedProduct?.img,
       weight: viewedProduct?.weight,
-      desc: viewedProduct?.weight,
+      desc: viewedProduct?.desc,
       price: viewedProduct?.price,
       deliveryDay,
       deliveryTime,
@@ -112,6 +114,18 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
         };
       };
     };
+  };
+
+  const availableTimes = () => {
+    switch (deliveryDay) {
+      case "Saturday":
+        return ["09:00 am", "06:00 pm"];
+      case "Wednesday":
+      case "Sunday":
+        return ["06:00 pm"];
+      default:
+        return [];
+    }
   };
 
   const modalVariants = {
@@ -183,7 +197,7 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
             <h2 className="text-[16px] font-semibold mt-6">
               Time of Delivery/Pickup
             </h2>
-            {["09:00 am", "06:00 pm"].map((time) => (
+            {availableTimes().map((time) => (
               <div
                 className="flex justify-between items-center mt-4"
                 key={time}
