@@ -23,8 +23,6 @@ const Order = () => {
     getOrder();
   }, [transactionId]);
 
-  console.log(data);
-  console.log("Transaction ID:", transactionId);
   return (
     <div>
       <OrderDetails fromOrderPage clickedOrder={data as OrderItemProps} setClickedOrder={setData} />

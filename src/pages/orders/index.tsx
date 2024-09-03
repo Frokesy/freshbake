@@ -18,6 +18,7 @@ export interface OrderItemProps {
   totalCost: string;
   transactionId: number;
   userId: string;
+  deliveryAddress: string;
 }
 
 interface ItemProps {

@@ -281,6 +281,7 @@ const Checkout = () => {
                       deliveryOption: activeTab,
                       deliveryFee: deliveryFee,
                       orderStatus: "Pending",
+                      deliveryAddress: userData?.defaultAddress
                     },
                   ]);
                   

@@ -83,7 +83,7 @@ const OrderDetails: FC<OrderDetailsProps> = ({
                 </div>
                 <div className="flex justify-between">
                   <p className="">Delivery Address</p>
-                  <p className="">7890 Maple Ridge Road, SK</p>
+                  <p className="">{clickedOrder?.deliveryAddress}</p>
                 </div>
                 <div className="flex justify-between">
                   <p className="font-semibold">Status</p>
