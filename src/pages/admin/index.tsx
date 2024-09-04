@@ -1,8 +1,10 @@
+import AdminContainer from "../../components/containers/AdminContainer";
+
 const AdminDashboard = () => {
   return (
-    <div>
+    <AdminContainer active="Dashboard">
       <h2>Dashboard h2</h2>
-    </div>
+    </AdminContainer>
   )
 }
 
