@@ -11,6 +11,7 @@ import { UserDataProps } from "../home";
 import { useEffect, useState } from "react";
 import { supabase } from "../../../utils/supabaseClient";
 import LogoutModal from "../../components/modals/LogoutModal";
+import TextSkeleton from "../../components/skeletons/TextSkeleton";
 
 const Account = () => {
   const accountItems = [
@@ -53,9 +54,13 @@ const Account = () => {
   return (
     <MainContainer active="Account">
       <div className="bg-[#ffbb1d] min-h-screen pt-[15vh]">
-        <h2 className="px-4 text-[24px] font-semibold">
-          Hello {userData?.firstname},
-        </h2>
+        {userData?.firstname ? (
+          <h2 className="px-4 text-[24px] font-semibold">
+            Hello {userData?.firstname},
+          </h2>
+        ) : (
+          <div className="px-4 w-[70%]"><TextSkeleton /></div>
+        )}
 
         <div className="min-h-[80vh] mt-4 bg-[#fff] rounded-t-[40px] pt-6">
           <h2 className="font-semibold text-[20px] px-4">Account</h2>
