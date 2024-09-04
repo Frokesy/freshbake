@@ -12,6 +12,7 @@ import Address from "./pages/account/address";
 import Success from "./pages/res/Success";
 import Order from "./pages/orders/Order";
 import PrivateRoute from "./components/defaults/PrivateRoute";
+import AdminDashboard from "./pages/admin";
 
 function App() {
   const router = createBrowserRouter([
@@ -95,6 +96,12 @@ function App() {
           <ResetPassword />
         </PrivateRoute>
       ),
+    },
+
+    //admin routes
+    {
+      path: "/admin/dashboard",
+      element: <AdminDashboard />,
     },
   ]);
 
