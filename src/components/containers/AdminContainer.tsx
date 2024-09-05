@@ -8,7 +8,7 @@ interface AdminContainerProps {
 }
 const AdminContainer: FC<AdminContainerProps> = ({ children, active }) => {
   return (
-    <div className="min-h-screen lg:w-[450px] mx-auto">
+    <div className="min-h-screen lg:w-[450px] bg-[#fafafa] mx-auto">
       <PageTransition active={active}>
         <div>{children}</div>
       </PageTransition>
