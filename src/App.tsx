@@ -16,6 +16,7 @@ import AdminDashboard from "./pages/admin";
 import AllOrders from "./pages/admin/AllOrders";
 import AllProducts from "./pages/admin/AllProducts";
 import AdminProfile from "./pages/admin/AdminProfile";
+import UserInfo from "./pages/admin/UserInfo";
 
 function App() {
   const router = createBrowserRouter([
@@ -117,6 +118,10 @@ function App() {
     {
       path: "/admin/admin-profile",
       element: <AdminProfile />
+    },
+    {
+      path: "/admin/users-info",
+      element: <UserInfo />
     }
   ]);
 

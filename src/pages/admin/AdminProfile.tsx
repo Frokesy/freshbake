@@ -25,6 +25,7 @@ const AdminProfile = () => {
       id: 3,
       name: "Admin Details",
       icon: <AdminDetailsIcon />,
+      route: "/admin/users-info"
     },
   ];
   return (
