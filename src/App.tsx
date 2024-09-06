@@ -13,6 +13,7 @@ import Success from "./pages/res/Success";
 import Order from "./pages/orders/Order";
 import PrivateRoute from "./components/defaults/PrivateRoute";
 import AdminDashboard from "./pages/admin";
+import AllOrders from "./pages/admin/AllOrders";
 
 function App() {
   const router = createBrowserRouter([
@@ -103,6 +104,10 @@ function App() {
       path: "/admin/dashboard",
       element: <AdminDashboard />,
     },
+    {
+      path: "/admin/all-orders",
+      element: <AllOrders />
+    }
   ]);
 
   return (
