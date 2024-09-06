@@ -29,7 +29,13 @@ export const DashboardIcon = () => (
   </svg>
 );
 
-export const OrderIcon = ({ color, size } : { color?: string, size?: string }) => (
+export const OrderIcon = ({
+  color,
+  size,
+}: {
+  color?: string;
+  size?: string;
+}) => (
   <svg
     width={size ? size : "24"}
     height={size ? size : "24"}
@@ -94,6 +100,24 @@ export const ProductsIcon = () => (
       d="M16.5 7H17.5"
       stroke="#4E4949"
       strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const PlusIcon = () => (
+  <svg
+    width="13"
+    height="13"
+    viewBox="0 0 13 13"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M6.5 1V12M12 6.5H1"
+      stroke="#704E00"
+      strokeWidth="1.03125"
       strokeLinecap="round"
       strokeLinejoin="round"
     />

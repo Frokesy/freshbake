@@ -14,6 +14,7 @@ import Order from "./pages/orders/Order";
 import PrivateRoute from "./components/defaults/PrivateRoute";
 import AdminDashboard from "./pages/admin";
 import AllOrders from "./pages/admin/AllOrders";
+import AllProducts from "./pages/admin/AllProducts";
 
 function App() {
   const router = createBrowserRouter([
@@ -107,6 +108,10 @@ function App() {
     {
       path: "/admin/all-orders",
       element: <AllOrders />
+    },
+    {
+      path: "/admin/all-products",
+      element: <AllProducts />
     }
   ]);
 
