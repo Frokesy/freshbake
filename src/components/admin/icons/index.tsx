@@ -123,3 +123,28 @@ export const PlusIcon = () => (
     />
   </svg>
 );
+
+export const BrokenImage = () => (
+  <svg
+    width="110"
+    height="110"
+    viewBox="0 0 110 110"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M34.8004 69.7441L42.3667 57.9217C42.9819 56.9605 44.3168 56.7897 45.1541 57.565L50.0909 62.1361C50.8431 62.8326 52.0206 62.7762 52.7028 62.0109L61.2832 52.3854C62.0906 51.4797 63.5394 51.595 64.1935 52.6169L75.1549 69.7441C75.9352 70.9634 75.0596 72.5633 73.612 72.5633H36.3433C34.8957 72.5633 34.0201 70.9634 34.8004 69.7441Z"
+      stroke="black"
+      strokeWidth="1.65"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <circle
+      cx="48.3998"
+      cy="43.9997"
+      r="5.775"
+      stroke="black"
+      strokeWidth="1.65"
+    />
+  </svg>
+);

@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { motion } from "framer-motion";
 
 interface FormProps {
-  label: string;
+  label?: string;
   type: string;
   fnErr?: string;
   lnErr?: string;
