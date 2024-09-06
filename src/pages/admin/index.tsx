@@ -1,3 +1,4 @@
+import Graph from "../../components/admin/defaults/Chart";
 import { OrderIcon } from "../../components/admin/icons";
 import AdminContainer from "../../components/containers/AdminContainer";
 
@@ -61,6 +62,8 @@ const AdminDashboard = () => {
             </div>
           </div>
         </div>
+
+        <Graph />
       </div>
     </AdminContainer>
   );
