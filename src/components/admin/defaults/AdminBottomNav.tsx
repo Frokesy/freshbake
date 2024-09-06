@@ -19,7 +19,7 @@ const AdminBottomNav: FC<BottomNavProps> = ({ active }) => {
     { id: 1, name: "Dashboard", icon: <DashboardIcon />, route: "/admin/dashboard" },
     { id: 2, name: "All Orders", icon: <OrderIcon />, route: "/admin/all-orders" },
     { id: 3, name: "Products", icon: <ProductsIcon />, route: "/admin/all-products" },
-    { id: 4, name: "Account", icon: <AccountIcon />, route: "/admin-profile" },
+    { id: 4, name: "Account", icon: <AccountIcon />, route: "/admin/admin-profile" },
   ];
   return (
     <div className="fixed bottom-0 w-[100%] lg:w-[450px] bg-[#fff] z-10">
