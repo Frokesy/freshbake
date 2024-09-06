@@ -3,6 +3,14 @@ import AdminContainer from "../../components/containers/AdminContainer";
 import { ArrowLeft } from "../../components/icons";
 import { useState } from "react";
 import NewOrders from "../../components/admin/orders/NewOrders";
+import CompleteOrders from "../../components/admin/orders/CompleteOrders";
+import { motion } from "framer-motion";
+
+const variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+  exit: { opacity: 0 },
+};
 
 const AllOrders = () => {
   const [activeTab, setActiveTab] = useState<string>("newOrders");
@@ -42,7 +50,29 @@ const AllOrders = () => {
         </p>
       </div>
 
-        <NewOrders />
+      {activeTab === "newOrders" ? (
+        <motion.div
+          key={activeTab}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          variants={variants}
+          transition={{ duration: 0.3 }}
+        >
+          <NewOrders />
+        </motion.div>
+      ) : (
+        <motion.div
+          key={activeTab}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          variants={variants}
+          transition={{ duration: 0.3 }}
+        >
+          <CompleteOrders />
+        </motion.div>
+      )}
     </AdminContainer>
   );
 };
