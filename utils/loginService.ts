@@ -31,7 +31,7 @@ export async function handleLogin(
           setLoading(false);
           throw error.message
         }
-        toast.success(`Welcome back!!`, {
+        toast.success(`Welcome back!`, {
           position: "top-right",
           theme: "light",
           autoClose: 2000,

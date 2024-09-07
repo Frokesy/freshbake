@@ -11,12 +11,22 @@ import { PaymentSuccessful } from "../../../components/email-templates/PaymentSu
 import { render } from "@react-email/render";
 import Plunk from "@plunk/node";
 import Spinner from "../../../components/defaults/Spinner";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
+interface VendorDetailsProps {
+  vendorName: string;
+  pickupAddress: string;
+  phoneNumber: string;
+}
 const Checkout = () => {
   const [userData, setUserData] = useState<UserDataProps>();
   const [activeTab, setActiveTab] = useState<string>("delivery");
   const [cartItems, setCartItems] = useState<CartItemProps[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [vendorDetails, setVendorDetails] = useState<VendorDetailsProps>();
+
+  const [isEditingAddress, setIsEditingAddress] = useState(false);
+  const [editedAddress, setEditedAddress] = useState("");
 
   const idb = window.indexedDB;
 
@@ -46,6 +56,35 @@ const Checkout = () => {
       };
     };
   };
+
+  const toggleEditAddress = () => setIsEditingAddress((prev) => !prev);
+
+  const saveAddress = async () => {
+    if (!editedAddress) {
+      toast.error("Delivery Address cannot be left empty", {
+        position: "top-right",
+        theme: "light",
+        autoClose: 2000,
+        hideProgressBar: false,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Bounce,
+      });
+    } else {
+      try {
+        const { data, error } = await supabase
+          .from("users")
+          .update({ defaultAddress: editedAddress })
+          .eq("userId", userData?.userId);
+
+        if (error) throw error;
+        console.log("Address updated:", data);
+      } catch (error) {
+        console.error("Error updating address:", error);
+      }
+      setIsEditingAddress(false);
+    }
+  };
   useEffect(() => {
     const getUser = async () => {
       const {
@@ -64,6 +103,17 @@ const Checkout = () => {
       }
     };
     getUser();
+  }, []);
+  useEffect(() => {
+    const fetchVendorDetails = async () => {
+      const { data, error } = await supabase.from("admin").select("*");
+
+      if (!error) {
+        data.map((data) => setVendorDetails(data));
+      }
+    };
+
+    fetchVendorDetails();
   }, []);
   useEffect(() => {
     getCartItems();
@@ -127,6 +177,7 @@ const Checkout = () => {
 
   return (
     <MainContainer active="Cart">
+      <ToastContainer />
       <div className="">
         <div className="fixed top-0 bg-[#fff] w-[100%]">
           <div className="flex items-center space-x-4 px-4 pt-10">
@@ -170,13 +221,7 @@ const Checkout = () => {
                 <div className="flex justify-between text-[14px]">
                   <p className="">{item.category}</p>
                   <div className="flex items-center space-x-3">
-                    <p className="border border-[#ccc] px-1.5 text-[#808080] rounded-full">
-                      -
-                    </p>
                     <p className="">{item.quantity}</p>
-                    <p className="border border-[#ccc] px-1.5 text-[#808080] rounded-full">
-                      +
-                    </p>
                   </div>
                 </div>
                 <div className="flex text-[14px] items-center justify-between">
@@ -206,14 +251,42 @@ const Checkout = () => {
                   <div className="space-y-2">
                     <h2 className="font-semibold">Delivery Address</h2>
                     <div className="flex justify-between items-center">
-                      <p className="text-[14px]">{userData?.defaultAddress}</p>
-                      <PenEdit />
+                      {isEditingAddress ? (
+                        <div className="items-center flex justify-between w-[100%]">
+                          <input
+                            type="text"
+                            value={editedAddress}
+                            autoFocus
+                            onChange={(e) => setEditedAddress(e.target.value)}
+                            className="outline-none"
+                          />
+                          <button
+                            onClick={saveAddress}
+                            className="text-[#bd9e1e] font-semibold"
+                          >
+                            Save
+                          </button>
+                        </div>
+                      ) : (
+                        <>
+                          <p className="text-[14px]">
+                            {editedAddress
+                              ? editedAddress
+                              : userData?.defaultAddress}
+                          </p>
+                          <button onClick={toggleEditAddress}>
+                            <PenEdit />
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
                 ) : (
                   <div className="space-y-2">
                     <h2 className="font-semibold">Pickup Address</h2>
-                    <p className="text-[14px]">4088 Kinsella Way SW Edmonton</p>
+                    <p className="text-[14px]">
+                      {vendorDetails?.pickupAddress}
+                    </p>
                   </div>
                 )}
                 <hr />
@@ -230,15 +303,15 @@ const Checkout = () => {
                 <p className="">
                   {userData?.firstname} {userData?.lastname}
                 </p>
-                <p>+{userData?.phone}</p>
+                <p>{userData?.phone}</p>
               </div>
             </div>
           ) : (
             <div className="space-y-2">
               <h2 className="font-semibold">Vendor Information</h2>
               <div className="flex justify-between items-center text-[14px]">
-                <p className="">Ayo Ilaro</p>
-                <p>+639-382-5684</p>
+                <p className="">{vendorDetails?.vendorName}</p>
+                <p>{vendorDetails?.phoneNumber}</p>
               </div>
             </div>
           )}
@@ -281,14 +354,16 @@ const Checkout = () => {
                       deliveryOption: activeTab,
                       deliveryFee: deliveryFee,
                       orderStatus: "Processing",
-                      deliveryAddress: userData?.defaultAddress
+                      deliveryAddress: editedAddress
+                        ? editedAddress
+                        : userData?.defaultAddress,
                     },
                   ]);
-                  
+
                   if (error) {
                     console.error("Error adding order to Supabase:", error);
                   } else {
-                    setLoading(false)
+                    setLoading(false);
                     console.log("Order added successfully:");
                     await sendOrderConfirmationEmail(
                       userData,
@@ -311,7 +386,6 @@ const Checkout = () => {
                     };
                   };
 
-
                   navigate("/success", { state: { response } });
                 } catch (err) {
                   console.error("Error processing order:", err);
@@ -323,7 +397,7 @@ const Checkout = () => {
             onClose: () => {},
           })
         }
-        className="fixed px-4 bottom-2 lg:w-[450px] w-[100%] z-50 space-y-6"
+        className="fixed px-4 bottom-6 lg:w-[450px] w-[100%] z-50 space-y-6"
       >
         <Button
           filled={true}
