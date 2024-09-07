@@ -13,19 +13,18 @@ const AdminProfile = () => {
       id: 1,
       name: "Customer Support",
       icon: <CustomerCareIcon />,
-      route: "profile-details",
     },
     {
       id: 2,
       name: "Users Information",
       icon: <AccountIcon />,
-      route: "address",
+      route: "/admin/users-info"
     },
     {
       id: 3,
       name: "Admin Details",
       icon: <AdminDetailsIcon />,
-      route: "/admin/users-info"
+      route: "/admin/admin-details"
     },
   ];
   return (

@@ -8,7 +8,7 @@ const UserInfo = () => {
       <div className="flex items-center space-x-4 px-4 pt-10">
         <div className="flex">
           <NavLink
-            to="/admin/dashboard"
+            to="/admin/admin-profile"
             className="bg-[#ccc] p-1.5 rounded-full"
           >
             <ArrowLeft />
