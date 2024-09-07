@@ -26,7 +26,7 @@ const modalVariants = {
 const ConfirmOrderStatusChange: FC<StatusChangeProps> = ({ getResponse }) => {
   return (
     <motion.div
-      className="absolute top-0 h-screen w-screen z-50 flex items-center justify-center"
+      className="fixed top-0 h-screen w-screen z-50 flex items-center justify-center"
       initial="hidden"
       animate="visible"
       key={"logout"}
