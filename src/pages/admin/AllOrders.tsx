@@ -1,10 +1,13 @@
 import { NavLink } from "react-router-dom";
 import AdminContainer from "../../components/containers/AdminContainer";
 import { ArrowLeft } from "../../components/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NewOrders from "../../components/admin/orders/NewOrders";
 import CompleteOrders from "../../components/admin/orders/CompleteOrders";
 import { motion } from "framer-motion";
+import { OrderItemProps } from "../orders";
+import { supabase } from "../../../utils/supabaseClient";
+import { UserDataProps } from "../home";
 
 const variants = {
   hidden: { opacity: 0 },
@@ -14,6 +17,52 @@ const variants = {
 
 const AllOrders = () => {
   const [activeTab, setActiveTab] = useState<string>("newOrders");
+  const [orderItems, setOrderItems] = useState<OrderItemProps[]>([]);
+  const [users, setUsers] = useState<UserDataProps[]>([]);
+  const [ordersWithUsers, setOrdersWithUsers] = useState<
+    { order: OrderItemProps; user: UserDataProps | undefined }[]
+  >([]);
+
+  const getOrders = async () => {
+    const { data, error } = await supabase.from("orders").select("*");
+    if (error) {
+      console.error(error);
+    } else {
+      setOrderItems(data);
+    }
+  };
+
+  const getUsers = async () => {
+    const { data, error } = await supabase.from("users").select("*");
+    if (error) {
+      console.error(error);
+    } else {
+      setUsers(data);
+    }
+  };
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      await Promise.all([getOrders(), getUsers()]);
+    };
+
+    fetchData();
+  }, []);
+  
+  useEffect(() => {
+    const matchOrdersToUsers = () => {
+      const matchedOrders = orderItems.map((order) => ({
+        order,
+        user: users.find((user) => user.userId === order.userId),
+      }));
+      setOrdersWithUsers(matchedOrders);
+    };
+    if (orderItems.length && users.length) {
+      matchOrdersToUsers();
+    }
+  }, [orderItems, users]);
+  console.log(ordersWithUsers)
+
   return (
     <AdminContainer active="All Orders">
       <div className="flex items-center space-x-4 px-4 pt-10">
@@ -59,7 +108,7 @@ const AllOrders = () => {
           variants={variants}
           transition={{ duration: 0.3 }}
         >
-          <NewOrders />
+          <NewOrders data={ordersWithUsers} />
         </motion.div>
       ) : (
         <motion.div
