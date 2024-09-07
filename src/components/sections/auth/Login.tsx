@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import Button from "../../defaults/Button";
 import Input from "../../defaults/Input";
 import { handleLogin } from "../../../../utils/loginService";
@@ -42,6 +42,15 @@ const Login: FC<LoginProps> = ({ setActiveScreen }) => {
       keepLoggedIn
     );
   };
+
+  useEffect(() => {
+    const token =
+      localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+
+    if (token) {
+      navigate("/home");
+    }
+  }, [navigate]);
   return (
     <div className="px-4 pt-10">
       <ToastContainer />
