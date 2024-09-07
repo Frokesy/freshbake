@@ -19,7 +19,6 @@ const UserInfo = () => {
     getUsers();
   }, []);
 
-  console.log(users);
 
   return (
     <AdminContainer active="Account">
