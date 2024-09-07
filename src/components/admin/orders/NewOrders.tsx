@@ -36,7 +36,6 @@ const NewOrders: FC<AllOrdersProps> = ({ data }) => {
           .update({ orderStatus: newStatus })
           .eq("transactionId", orderId);
         if (!error) {
-          console.log(newStatus)
           toast.success(
             "The order status has been updated, the user will be sent a mail to this effect",
             {

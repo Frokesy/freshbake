@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, FC } from "react";
 import Button from "../../defaults/Button";
 import Input from "../../defaults/Input";
 import { ArrowLeft } from "../../icons";
@@ -6,8 +6,9 @@ import { BrokenImage } from "../icons";
 import { supabase } from "../../../../utils/supabaseClient"; // Ensure this path is correct
 import Spinner from "../../defaults/Spinner";
 import { Bounce, toast, ToastContainer } from "react-toastify";
+import { ProductsOverviewProps } from "./ProductsOverview";
 
-const AddProduct = () => {
+const AddProduct: FC<ProductsOverviewProps> = ({ setActiveTab }) => {
   const [formData, setFormData] = useState({
     name: "",
     category: "",
@@ -153,7 +154,7 @@ const AddProduct = () => {
       <ToastContainer />
       <div className="flex items-center space-x-4 px-4 pt-10">
         <div className="flex">
-          <div className="bg-[#ccc] p-1.5 rounded-full">
+          <div onClick={() => setActiveTab("productOverview")} className="bg-[#ccc] p-1.5 rounded-full">
             <ArrowLeft />
           </div>
         </div>
@@ -166,7 +167,7 @@ const AddProduct = () => {
           onClick={handleImageClick}
         >
           {pic ? (
-            <img src={pic} alt="Product" className="w-[100px]" />
+            <img src={pic} alt="Product" className="w-[300px] h-[200px]" />
           ) : (
             <div className="">{picLoading ? <Spinner /> : <BrokenImage />}</div>
           )}
@@ -181,7 +182,7 @@ const AddProduct = () => {
         />
 
         <div className="text-[14px] mt-4 space-y-5">
-          <h2 className="text-center">Upload Product Category</h2>
+          <h2 className="text-center font-semibold">Upload Product Category</h2>
           <Input
             placeholder="Enter Product Name"
             type="text"
