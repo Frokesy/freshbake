@@ -19,7 +19,7 @@ const CompleteOrders: FC<AllOrdersProps> = ({ data }) => {
         <div>
           {data.map(({ order, user }) => (
             <div className="" key={order.id}>
-              {order.orderStatus === "Completed" ? (
+              {order.orderStatus === "Delivered" ? (
                 <div className="" key={user?.id}>
                   <div className="px-4 mt-6 mb-3 text-[14px] flex items-center space-x-3">
                     <h2 className="bg-[#ccc] p-2 rounded-full">

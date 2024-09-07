@@ -108,13 +108,13 @@ const OrderOverview: FC<OrderOverviewProps> = ({
                                 order.orderStatus === "Processing" &&
                                 "text-[#F55B0A]"
                               } ${
-                                order.orderStatus === "Completed" &&
+                                order.orderStatus === "Delivered" &&
                                 "text-[#005246]"
                               } ${
                                 order.orderStatus === "Failed" &&
                                 "text-[#FF0000]"
                               }  ${
-                                order.orderStatus === "Shipped" &&
+                                order.orderStatus === "Out for Delivery" &&
                                 "text-[#d04c95]"
                               } text-[12px]`}
                             >

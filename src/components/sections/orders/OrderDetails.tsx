@@ -91,12 +91,12 @@ const OrderDetails: FC<OrderDetailsProps> = ({
                     className={`${
                       clickedOrder.orderStatus === "Processing" && "text-[#F55B0A]"
                     } ${
-                      clickedOrder.orderStatus === "Completed" &&
+                      clickedOrder.orderStatus === "Delivered" &&
                       "text-[#005246]"
                     } ${
                       clickedOrder.orderStatus === "Failed" && "text-[#FF0000]"
                     }  ${
-                      clickedOrder.orderStatus === "Shipped" && "text-[#d04c95]"
+                      clickedOrder.orderStatus === "Out for Delivery" && "text-[#d04c95]"
                     } text-[12px]`}
                   >
                     {clickedOrder?.orderStatus}

@@ -62,15 +62,15 @@ const TrackOrder: FC<TrackOrderProps> = ({ order, isTracked }) => {
           </div>
           <div
             className={`${
-              order?.orderStatus === "Shipped" ||
-              order?.orderStatus === "Completed"
+              order?.orderStatus === "Out for Delivery" ||
+              order?.orderStatus === "Delivered"
                 ? "bg-[#C68A00]"
                 : "bg-[#d8cdab]"
             } w-[60px] h-[8px] rounded-full`}
           ></div>
           <div>
-            {order?.orderStatus === "Shipped" ||
-            order?.orderStatus === "Completed" ? (
+            {order?.orderStatus === "Out for Delivery" ||
+            order?.orderStatus === "Delivered" ? (
               <div className="flex flex-col items-center text-center space-y-2 font-light">
                 <OrderCheck />
                 <p>Out for Delivery</p>
@@ -84,13 +84,13 @@ const TrackOrder: FC<TrackOrderProps> = ({ order, isTracked }) => {
           </div>
           <div
             className={`${
-              order?.orderStatus === "Completed"
+              order?.orderStatus === "Delivered"
                 ? "bg-[#C68A00]"
                 : "bg-[#d8cdab]"
             } w-[60px] h-[8px] rounded-full`}
           ></div>{" "}
           <div>
-            {order?.orderStatus === "Completed" ? (
+            {order?.orderStatus === "Delivered" ? (
               <div className="flex flex-col items-center text-center space-y-2 font-light">
                 <OrderCheck />
                 <p>Delivered</p>
