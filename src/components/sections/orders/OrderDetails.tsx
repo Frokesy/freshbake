@@ -89,7 +89,7 @@ const OrderDetails: FC<OrderDetailsProps> = ({
                   <p className="font-semibold">Status</p>
                   <p
                     className={`${
-                      clickedOrder.orderStatus === "Pending" && "text-[#F55B0A]"
+                      clickedOrder.orderStatus === "Processing" && "text-[#F55B0A]"
                     } ${
                       clickedOrder.orderStatus === "Completed" &&
                       "text-[#005246]"

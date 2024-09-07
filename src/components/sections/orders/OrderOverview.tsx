@@ -105,7 +105,7 @@ const OrderOverview: FC<OrderOverviewProps> = ({
                             </div>
                             <p
                               className={`${
-                                order.orderStatus === "Pending" &&
+                                order.orderStatus === "Processing" &&
                                 "text-[#F55B0A]"
                               } ${
                                 order.orderStatus === "Completed" &&

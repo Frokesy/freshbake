@@ -42,7 +42,7 @@ const AdminDashboard = () => {
                   <h2>15%</h2>
                 </div>
               </div>
-              <h2 className="text-[15px] text-center font-semibold mt-2">Pending</h2>
+              <h2 className="text-[15px] text-center font-semibold mt-2">Processing</h2>
             </div>
             <div className="">
               <div className="py-1 px-1 relative border-8 border-t-[#bd9e1e] rotate-45 border-b-[#bd9e1e] border-r-[#bd9e1e] border-l-[#7d6c3a] rounded-full flex items-center">
