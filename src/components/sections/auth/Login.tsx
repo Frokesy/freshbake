@@ -21,6 +21,7 @@ const Login: FC<LoginProps> = ({ setActiveScreen }) => {
     password: "",
   });
   const [loading, setLoading] = useState<boolean>(false);
+  const [keepLoggedIn, setKeepLoggedIn] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const validateField = (value: string) => {
@@ -32,7 +33,14 @@ const Login: FC<LoginProps> = ({ setActiveScreen }) => {
   };
 
   const validateLogin = async () => {
-    await handleLogin(validateField, user, setError, setLoading, navigate);
+    await handleLogin(
+      validateField,
+      user,
+      setError,
+      setLoading,
+      navigate,
+      keepLoggedIn
+    );
   };
   return (
     <div className="px-4 pt-10">
@@ -66,7 +74,13 @@ const Login: FC<LoginProps> = ({ setActiveScreen }) => {
 
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-3 text-[15px] font-semibold">
-            <input type="checkbox" name="isLoggedIn" id="isLoggedIn" />
+            <input
+              type="checkbox"
+              checked={keepLoggedIn}
+              onChange={(e) => setKeepLoggedIn(e.target.checked)}
+              name="isLoggedIn"
+              id="isLoggedIn"
+            />
             <label htmlFor="isLoggedIn">Keep me logged in</label>
           </div>
 

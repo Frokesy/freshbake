@@ -14,7 +14,7 @@ const WelcomeScreenTwo: FC<WelcomeScreenProps> = ({ setActivePage }) => {
         alt="img"
         className="w-[100%] object-cover h-[400px] max-h-[400px]"
       />
-      <h2 className="text-[38px] font-semibold text-center mt-2">
+      <h2 className="text-[38px] font-semibold text-center mt-2 leading-tight mb-2">
         Fresh Bread <br /> Just a Tap Away
       </h2>
       <p className="text-center px-4">
@@ -32,7 +32,7 @@ const WelcomeScreenTwo: FC<WelcomeScreenProps> = ({ setActivePage }) => {
         <Button
           filled={false}
           content="Skip"
-          onClick={() => handlePageSwitch("signup")}
+          onClick={() => handlePageSwitch("login")}
           className="text-[18px]"
         />
       </div>

@@ -12,7 +12,7 @@ const WelcomeScreenThree: FC<WelcomeScreenProps> = ({ setActivePage }) => {
         alt="img"
         className="w-[100%] object-cover h-[400px] max-h-[400px]"
       />
-      <h2 className="text-[38px] font-semibold text-center mt-2">
+      <h2 className="text-[38px] font-semibold text-center mt-2 leading-tight mb-2">
         Start Your <br /> Fresh Experience
       </h2>
       <p className="text-center px-4">

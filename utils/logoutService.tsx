@@ -13,6 +13,8 @@ export async function handleLogout(
   }
   if (!error) {
     navigate("/")
+    localStorage.removeItem("authToken");
+    sessionStorage.removeItem("authToken");
     setLoading(false);
     
   }

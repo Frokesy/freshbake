@@ -12,14 +12,22 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const token =
+        localStorage.getItem("authToken") ||
+        sessionStorage.getItem("authToken");
 
-      if (user) {
-        setAuthenticated(true);
+      if (token) {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (user) {
+          setAuthenticated(true);
+        } else {
+          setAuthenticated(false);
+        }
       } else {
-        setAuthenticated(false);
+        setAuthenticated(false)
       }
     };
 
