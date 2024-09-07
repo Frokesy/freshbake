@@ -22,7 +22,7 @@ const BottomNav: FC<BottomNavProps> = ({ active }) => {
   ];
   return (
     <div className="fixed bottom-0 w-[100%] lg:w-[450px] bg-[#fff] z-10">
-      <div className="flex justify-between px-4 border-t-2 border-[#bdb08a] py-2 text-[15px]">
+      <div className="flex justify-between px-4 border-t-2 border-[#bdb08a] pt-3 pb-6 text-[15px]">
         {items.map((item) => (
           <NavLink to={item.route}
             key={item.id}
