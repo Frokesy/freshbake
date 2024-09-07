@@ -6,7 +6,14 @@ export interface WelcomeScreenProps {
 }
 
 const WelcomeScreenTwo: FC<WelcomeScreenProps> = ({ setActivePage }) => {
-  const handlePageSwitch = (screen: string) => setActivePage(screen);
+  const handlePageSwitch = (screen: string) => {
+    if (screen === "Login") {
+      setActivePage(screen)
+      localStorage.setItem("hasVisited", "true");
+    } else {
+      setActivePage(screen)
+    }
+  };
   return (
     <div>
       <img

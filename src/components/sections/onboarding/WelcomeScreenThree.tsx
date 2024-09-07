@@ -2,8 +2,11 @@ import { FC } from "react";
 import Button from "../../defaults/Button";
 import { WelcomeScreenProps } from "./WelcomeScreenTwo";
 
-const WelcomeScreenThree: FC<WelcomeScreenProps> = ({ setActivePage }) => {
-  const handlePageSwitch = (screen: string) => setActivePage(screen);
+const WelcomeScreenThree: FC<WelcomeScreenProps> = ({ setActivePage, }) => {
+  const handlePageSwitch = (screen: string) => {
+    setActivePage(screen)
+    localStorage.setItem("hasVisited", "true");
+  };
 
   return (
     <div>

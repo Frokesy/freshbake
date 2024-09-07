@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import WelcomeScreenThree from "./WelcomeScreenThree";
 import WelcomeScreenTwo from "./WelcomeScreenTwo";
@@ -13,6 +13,14 @@ const variants = {
 
 const WelcomeScreen = () => {
   const [activePage, setActivePage] = useState<string>("screenTwo");
+
+  useEffect(() => {
+    const hasVisited = localStorage.getItem("hasVisited");
+
+    if (hasVisited) {
+      setActivePage("login");
+    }
+  }, []);
 
   return (
     <OnboardingContainer>
