@@ -29,30 +29,36 @@ export const DashboardIcon = () => (
   </svg>
 );
 
-export const OrderIcon = () => (
+export const OrderIcon = ({
+  color,
+  size,
+}: {
+  color?: string;
+  size?: string;
+}) => (
   <svg
-    width="24"
-    height="24"
+    width={size ? size : "24"}
+    height={size ? size : "24"}
     viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
       d="M11.5 8H20.196C20.8208 8 21.1332 8 21.3619 8.10084C22.3736 8.5469 21.9213 9.67075 21.7511 10.4784C21.7205 10.6235 21.621 10.747 21.4816 10.8132C20.9033 11.0876 20.4982 11.6081 20.3919 12.2134L19.7993 15.5878C19.5386 17.0725 19.4495 19.1943 18.1484 20.2402C17.1938 21 15.8184 21 13.0675 21H10.9325C8.18162 21 6.8062 21 5.8516 20.2402C4.55052 19.1942 4.46138 17.0725 4.20066 15.5878L3.60807 12.2134C3.50177 11.6081 3.09673 11.0876 2.51841 10.8132C2.37896 10.747 2.27952 10.6235 2.24894 10.4784C2.07874 9.67075 1.6264 8.5469 2.63812 8.10084C2.86684 8 3.17922 8 3.80397 8H7.5"
-      stroke="#4E4949"
+      stroke={color ? color : "#4E4949"}
       strokeWidth="1.5"
       strokeLinecap="round"
     />
     <path
       d="M14 12H10"
-      stroke="#4E4949"
+      stroke={color ? color : "#4E4949"}
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
       d="M6.5 11L10 3M15 3L17.5 8"
-      stroke="#4E4949"
+      stroke={color ? color : "#4E4949"}
       strokeWidth="1.5"
       strokeLinecap="round"
     />
@@ -95,6 +101,78 @@ export const ProductsIcon = () => (
       stroke="#4E4949"
       strokeWidth="1.5"
       strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const PlusIcon = () => (
+  <svg
+    width="13"
+    height="13"
+    viewBox="0 0 13 13"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M6.5 1V12M12 6.5H1"
+      stroke="#704E00"
+      strokeWidth="1.03125"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const BrokenImage = () => (
+  <svg
+    width="110"
+    height="110"
+    viewBox="0 0 110 110"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M34.8004 69.7441L42.3667 57.9217C42.9819 56.9605 44.3168 56.7897 45.1541 57.565L50.0909 62.1361C50.8431 62.8326 52.0206 62.7762 52.7028 62.0109L61.2832 52.3854C62.0906 51.4797 63.5394 51.595 64.1935 52.6169L75.1549 69.7441C75.9352 70.9634 75.0596 72.5633 73.612 72.5633H36.3433C34.8957 72.5633 34.0201 70.9634 34.8004 69.7441Z"
+      stroke="black"
+      strokeWidth="1.65"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <circle
+      cx="48.3998"
+      cy="43.9997"
+      r="5.775"
+      stroke="black"
+      strokeWidth="1.65"
+    />
+  </svg>
+);
+
+export const AdminDetailsIcon = () => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M5.18007 15.2964C3.92249 16.0335 0.625212 17.5386 2.63348 19.422C3.6145 20.342 4.7071 21 6.08077 21H13.9192C15.2929 21 16.3855 20.342 17.3665 19.422C19.3748 17.5386 16.0775 16.0335 14.8199 15.2964C11.8709 13.5679 8.12906 13.5679 5.18007 15.2964Z"
+      stroke="#0B0A0A"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M14 7C14 9.20914 12.2091 11 10 11C7.79086 11 6 9.20914 6 7C6 4.79086 7.79086 3 10 3C12.2091 3 14 4.79086 14 7Z"
+      stroke="#0B0A0A"
+      strokeWidth="1.5"
+    />
+    <path
+      d="M19.6221 4.56564C19.8457 4.32342 19.9574 4.20232 20.0762 4.13168C20.3628 3.96123 20.7157 3.95593 21.0071 4.1177C21.1279 4.18474 21.2431 4.30244 21.4735 4.53783C21.7039 4.77322 21.8192 4.89092 21.8848 5.01428C22.0431 5.31194 22.038 5.67244 21.8711 5.96521C21.8019 6.08655 21.6834 6.20073 21.4463 6.4291L18.6252 9.14629C18.1759 9.57906 17.9512 9.79545 17.6704 9.90512C17.3896 10.0148 17.081 10.0067 16.4636 9.99057L16.3796 9.98838C16.1917 9.98346 16.0977 9.98101 16.0431 9.91901C15.9885 9.85702 15.9959 9.7613 16.0108 9.56985L16.0189 9.4659C16.0609 8.92706 16.0819 8.65765 16.1871 8.41547C16.2923 8.17328 16.4738 7.97664 16.8368 7.58335L19.6221 4.56564Z"
+      stroke="#0B0A0A"
+      strokeWidth="1.5"
       strokeLinejoin="round"
     />
   </svg>

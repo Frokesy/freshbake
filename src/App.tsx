@@ -13,6 +13,11 @@ import Success from "./pages/res/Success";
 import Order from "./pages/orders/Order";
 import PrivateRoute from "./components/defaults/PrivateRoute";
 import AdminDashboard from "./pages/admin";
+import AllOrders from "./pages/admin/AllOrders";
+import AllProducts from "./pages/admin/AllProducts";
+import AdminProfile from "./pages/admin/AdminProfile";
+import UserInfo from "./pages/admin/UserInfo";
+import AdminDetails from "./pages/admin/AdminDetails";
 
 function App() {
   const router = createBrowserRouter([
@@ -103,6 +108,26 @@ function App() {
       path: "/admin/dashboard",
       element: <AdminDashboard />,
     },
+    {
+      path: "/admin/all-orders",
+      element: <AllOrders />
+    },
+    {
+      path: "/admin/all-products",
+      element: <AllProducts />
+    },
+    {
+      path: "/admin/admin-profile",
+      element: <AdminProfile />
+    },
+    {
+      path: "/admin/users-info",
+      element: <UserInfo />
+    },
+    {
+      path: "/admin/admin-details",
+      element: <AdminDetails />
+    }
   ]);
 
   return (
