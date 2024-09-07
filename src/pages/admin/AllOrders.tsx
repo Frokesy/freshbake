@@ -61,7 +61,6 @@ const AllOrders = () => {
       matchOrdersToUsers();
     }
   }, [orderItems, users]);
-  console.log(ordersWithUsers)
 
   return (
     <AdminContainer active="All Orders">
@@ -119,7 +118,7 @@ const AllOrders = () => {
           variants={variants}
           transition={{ duration: 0.3 }}
         >
-          <CompleteOrders />
+          <CompleteOrders data={ordersWithUsers} />
         </motion.div>
       )}
     </AdminContainer>
