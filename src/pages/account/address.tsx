@@ -24,34 +24,32 @@ const Address = () => {
         async (position) => {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
-          
+
           try {
             const response = await axios.get(
               `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json`,
-            {
-              params: {
-                access_token: "pk.eyJ1IjoiZnJva2VzIiwiYSI6ImNsN2tnODRoMTA2Z28zb25sbTA3aWk1Z2EifQ.g_6YVlr32dq2k9DB1fFLcA",
-              },
+              {
+                params: {
+                  access_token:
+                    "pk.eyJ1IjoiZnJva2VzIiwiYSI6ImNtMHRndW05ejBydnMycnMwd2I4YXk5djkifQ.hA8jg13LL-k2YGFmJXtbRQ",
+                },
               }
             );
-
-            const result = response.data.features[0];
-          if (result) {
-            console.log("lat",lat)
-            console.log("lng",lng)
-            console.log("position",position)
-            console.log(result)
-            const address = result.place_name;
-            setLocation(address);
-            setNewAddress(address);
-            setError(null);
+            const place = response.data.features[0];
+            if (place) {
+              console.log(place)
+              console.log(response)
+              const address = place.place_name;
+              setLocation(address);
+              setNewAddress(address);
+              setError(null);
             } else {
               setLocation(null);
               setError("Location information not available.");
             }
           } catch (error) {
             setLocation(null);
-            console.log(error)
+            console.log(error);
             setError("Error fetching location details.");
           } finally {
             setLocLoading(false);
@@ -132,7 +130,7 @@ const Address = () => {
     setLoading(false);
   };
 
-  console.log(location)
+  console.log(location);
 
   return (
     <MainContainer active="Account">
