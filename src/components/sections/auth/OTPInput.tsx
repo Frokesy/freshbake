@@ -29,7 +29,7 @@ const OTPInput: FC<OTPInputProps> = ({ length, onChange }) => {
   };
 
   return (
-    <div className="flex space-x-2 justify-center">
+    <div className="flex space-x-2">
       {otp.map((_, index) => (
         <input
           key={index}

@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react";
 import Button from "../../defaults/Button";
 import Input from "../../defaults/Input";
 import { handleLogin } from "../../../../utils/loginService";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Spinner from "../../defaults/Spinner";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -93,7 +93,9 @@ const Login: FC<LoginProps> = ({ setActiveScreen }) => {
             <label htmlFor="isLoggedIn">Keep me logged in</label>
           </div>
 
-          <p className="text-[#ccb555] text-[15px]">Forgot Password?</p>
+          <NavLink to="/reset-password" className="text-[#ccb555] text-[15px]">
+            Forgot Password?
+          </NavLink>
         </div>
 
         <div className="pt-10">

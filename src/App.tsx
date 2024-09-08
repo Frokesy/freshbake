@@ -96,11 +96,7 @@ function App() {
     },
     {
       path: "/reset-password",
-      element: (
-        <PrivateRoute>
-          <ResetPassword />
-        </PrivateRoute>
-      ),
+      element: <ResetPassword />,
     },
 
     //admin routes
@@ -110,24 +106,24 @@ function App() {
     },
     {
       path: "/admin/all-orders",
-      element: <AllOrders />
+      element: <AllOrders />,
     },
     {
       path: "/admin/all-products",
-      element: <AllProducts />
+      element: <AllProducts />,
     },
     {
       path: "/admin/admin-profile",
-      element: <AdminProfile />
+      element: <AdminProfile />,
     },
     {
       path: "/admin/users-info",
-      element: <UserInfo />
+      element: <UserInfo />,
     },
     {
       path: "/admin/admin-details",
-      element: <AdminDetails />
-    }
+      element: <AdminDetails />,
+    },
   ]);
 
   return (

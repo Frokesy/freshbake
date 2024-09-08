@@ -27,19 +27,17 @@ const Address = () => {
 
           try {
             const response = await axios.get(
-              `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json`,
+              `https://maps.googleapis.com/maps/api/geocode/json`,
               {
                 params: {
-                  access_token:
-                    "pk.eyJ1IjoiZnJva2VzIiwiYSI6ImNtMHRndW05ejBydnMycnMwd2I4YXk5djkifQ.hA8jg13LL-k2YGFmJXtbRQ",
+                  latlng: `${lat},${lng}`,
+                  key: "AIzaSyCCXlIglqqq9Bv5buKFFFAmXq5cayRly8M",
                 },
               }
             );
-            const place = response.data.features[0];
-            if (place) {
-              console.log(place)
-              console.log(response)
-              const address = place.place_name;
+            const result = response.data.results[0];
+            if (result) {
+              const address = result.formatted_address;
               setLocation(address);
               setNewAddress(address);
               setError(null);
@@ -131,7 +129,6 @@ const Address = () => {
   };
 
   console.log(location);
-
   return (
     <MainContainer active="Account">
       <ToastContainer />
@@ -145,7 +142,7 @@ const Address = () => {
       </div>
 
       <div className="px-4 mt-6">
-        <div className="bg-[#e8e8e8] flex items-center px-4 py-3 space-x-3 text-[14px] rounded-md border border-[#ccc]">
+        <div className="bg-[#e8e8e8] flex items-center px-3 py-2 space-x-3 text-[14px] rounded-md border border-[#ccc]">
           <MinAddressIcon />
           <input
             type="text"
@@ -156,7 +153,7 @@ const Address = () => {
           />
           <Button
             filled
-            className="ml-4 px-6 h-[35px]"
+            className="ml-4 px-6 h-[34px]"
             onClick={handleSaveAddress}
             content={loading ? <Spinner /> : "Save"}
           />

@@ -15,10 +15,10 @@ const ForgotPassword: FC<PasswordResetPros> = ({ setActiveScreen }) => {
           <div className="w-[50%] bg-[#F4E8B7] h-[100%] rounded-md"></div>
         </div>
         <h2 className="text-[24px] font-semibold mt-6">Forgot Password</h2>
-        <p className="text-[15px] mt-2">Enter your phone number</p>
+        <p className="text-[15px] mt-2">Enter your email</p>
 
         <div className="mt-4">
-            <Input label="Phone number" type="number" />
+            <Input label="Email" type="text" />
         </div>
 
       </div>
@@ -27,11 +27,6 @@ const ForgotPassword: FC<PasswordResetPros> = ({ setActiveScreen }) => {
           filled={true}
           onClick={() => setActiveScreen("otp")}
           content="Continue"
-          className="text-[18px]"
-        />
-        <Button
-          filled={false}
-          content="Or make use of your email"
           className="text-[18px]"
         />
         </div>
