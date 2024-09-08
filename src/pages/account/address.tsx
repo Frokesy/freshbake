@@ -12,7 +12,7 @@ import axios from "axios";
 const Address = () => {
   const [newAddress, setNewAddress] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [locLoading, setLocLoading] = useState<boolean>(false); // New state for location loading
+  const [locLoading, setLocLoading] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserDataProps>();
   const [location, setLocation] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -24,27 +24,27 @@ const Address = () => {
         async (position) => {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
-
+          
           try {
             const response = await axios.get(
-              `https://api.opencagedata.com/geocode/v1/json`,
-              {
-                params: {
-                  q: `${lat}+${lng}`,
-                  key: "b5c5f08e58344deb940ca12b3ea1d20f",
-                },
+              `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json`,
+            {
+              params: {
+                access_token: "pk.eyJ1IjoiZnJva2VzIiwiYSI6ImNsN2tnODRoMTA2Z28zb25sbTA3aWk1Z2EifQ.g_6YVlr32dq2k9DB1fFLcA",
+              },
               }
             );
 
-            const result = response.data.results[0];
-            if (result) {
-              const city = result.components.city || result.components.county;
-              const state = result.components.state;
-              const country = result.components.country;
-              const loc = `${city}, ${state}, ${country}`;
-              setLocation(loc);
-              setNewAddress(loc);
-              setError(null);
+            const result = response.data.features[0];
+          if (result) {
+            console.log("lat",lat)
+            console.log("lng",lng)
+            console.log("position",position)
+            console.log(result)
+            const address = result.place_name;
+            setLocation(address);
+            setNewAddress(address);
+            setError(null);
             } else {
               setLocation(null);
               setError("Location information not available.");
