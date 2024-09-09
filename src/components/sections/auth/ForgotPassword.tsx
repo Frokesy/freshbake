@@ -106,7 +106,6 @@ const ForgotPassword: FC<PasswordResetPros> = ({
       
       if (!error) {
         data.map((data) => setUserData(data));
-        console.log(email);
     } else {
       console.log(error);
     }
@@ -132,7 +131,6 @@ const ForgotPassword: FC<PasswordResetPros> = ({
     generateOTP();
   }, []);
 
-  console.log(userData)
 
   return (
     <div>
