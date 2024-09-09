@@ -11,10 +11,6 @@
         "generate-pwa-assets": "pwa-assets-generator --preset minimal public/assets/logo.png"
     },
     "dependencies": {
-        "@emotion/react": "^11.13.3",
-        "@emotion/styled": "^11.13.0",
-        "@mui/material": "^6.0.2",
-        "@mui/x-charts": "^7.16.0",
         "@plunk/node": "^3.0.2",
         "@react-email/components": "^0.0.24",
         "@react-email/render": "^1.0.1",
