@@ -1,51 +1,41 @@
-import { useEffect } from "react";
-import Chart from "chart.js/auto";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
-function Graph(): JSX.Element {
-  useEffect(() => {
-    const canvas = document.getElementById("myChart") as HTMLCanvasElement;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) {
-      throw new Error("Unable to get 2D context for canvas");
-    }
 
-    const myChart = new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: ["Mar", "Apr", "May", "Jun", "Jul", "Aug"],
-        datasets: [
-          {
-            data: [50, 150, 300, 500, 750, 1100],
-            label: "Revenue",
-            borderColor: "#bd9e1e",
-            backgroundColor: "#bd9e1e",
-          },
-        ],
-      },
-    });
-
-    return () => {
-      myChart.destroy();
-    };
-  }, []);
-
+function Graph({ data } : { data: any[]})  {
   return (
-    <div className={`flex flex-col pb-20`}>
-      <div className="mb-6 flex justify-between mt-6 rounded-lg py-2 px-4">
-        <h2>General Revenue</h2>
-
-        <select name="months" id="months" className="bg-inherit outline-none">
-          <option value="">Monthly</option>
-          <option value="">Bi-weekly</option>
-          <option value="">Weekly</option>
-          <option value="">Daily</option>
-        </select>
-      </div>
-      {/* line chart */}
-      <div className="bg-white mx-4 px-4 pb-[3vh] pt-2">
-        <div className="">
-          <canvas id="myChart"></canvas>
-        </div>
+    <div className={`flex flex-col pb-[20vh]`}>
+      <div className="w-[100%]">
+        <ResponsiveContainer width="100%" height={300}>
+          <AreaChart
+            data={data}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          >
+            <defs>
+              <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="60%" stopColor="#bd9e1e" stopOpacity={0.8} />
+                <stop offset="100%" stopColor="#bd9e1e" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <XAxis dataKey="label" interval={0} className="text-[10px]" />
+            <YAxis className="text-[12px]" />
+            <Tooltip />
+            <Area
+              type="monotone"
+              dataKey="revenue"
+              stroke="#bd9e1e"
+              fillOpacity={1}
+              fill="url(#colorRevenue)"
+            />
+          </AreaChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );
