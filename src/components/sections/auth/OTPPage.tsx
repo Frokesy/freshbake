@@ -17,6 +17,7 @@ const OTPPage: FC<OTPProps> = ({ user }) => {
   const handleOtpChange = (otp: string) => {
     setOtp(otp);
   };
+  const webUrl = import.meta.env.VITE_WEB_URL;
 
   const validateOTP = async (enteredOtp: string) => {
     try {
@@ -69,7 +70,7 @@ const OTPPage: FC<OTPProps> = ({ user }) => {
         }
       );
       const { error } = await supabase.auth.resetPasswordForEmail(user?.email as string, {
-        redirectTo: "http://localhost:5173/new-password",
+        redirectTo: `${webUrl}/new-password`,
       });
 
       if (error) {

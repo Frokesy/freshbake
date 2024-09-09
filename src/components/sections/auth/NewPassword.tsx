@@ -7,7 +7,7 @@ import { OTPProps } from "./OTPPage";
 import { supabase } from "../../../../utils/supabaseClient"; // import Supabase client
 import { useNavigate } from "react-router-dom";
 
-const NewPassword: FC<OTPProps> = ({ user }) => {
+const NewPassword: FC<OTPProps> = () => {
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +35,6 @@ const NewPassword: FC<OTPProps> = ({ user }) => {
 
     setLoading(true);
 
-    console.log(user)
 
     try {
       const { error } = await supabase.auth.updateUser({
