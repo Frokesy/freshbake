@@ -22,7 +22,7 @@ const ForgotPassword: FC<PasswordResetPros> = ({ setActiveScreen }) => {
         </div>
 
       </div>
-        <div className="fixed px-4 bottom-6 w-[100%] space-y-6">
+        <div className="fixed px-4 bottom-6 lg:w-[450px] w-[100%] space-y-6">
         <Button
           filled={true}
           onClick={() => setActiveScreen("otp")}
