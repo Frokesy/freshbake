@@ -12,7 +12,7 @@ import axios from "axios";
 const Address = () => {
   const [newAddress, setNewAddress] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [locLoading, setLocLoading] = useState<boolean>(false); // New state for location loading
+  const [locLoading, setLocLoading] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserDataProps>();
   const [location, setLocation] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -27,23 +27,19 @@ const Address = () => {
 
           try {
             const response = await axios.get(
-              `https://api.opencagedata.com/geocode/v1/json`,
+              `https://maps.googleapis.com/maps/api/geocode/json`,
               {
                 params: {
-                  q: `${lat}+${lng}`,
-                  key: "b5c5f08e58344deb940ca12b3ea1d20f",
+                  latlng: `${lat},${lng}`,
+                  key: "AIzaSyCCXlIglqqq9Bv5buKFFFAmXq5cayRly8M",
                 },
               }
             );
-
             const result = response.data.results[0];
             if (result) {
-              const city = result.components.city || result.components.county;
-              const state = result.components.state;
-              const country = result.components.country;
-              const loc = `${city}, ${state}, ${country}`;
-              setLocation(loc);
-              setNewAddress(loc);
+              const address = result.formatted_address;
+              setLocation(address);
+              setNewAddress(address);
               setError(null);
             } else {
               setLocation(null);
@@ -51,7 +47,7 @@ const Address = () => {
             }
           } catch (error) {
             setLocation(null);
-            console.log(error)
+            console.log(error);
             setError("Error fetching location details.");
           } finally {
             setLocLoading(false);
@@ -132,8 +128,7 @@ const Address = () => {
     setLoading(false);
   };
 
-  console.log(location)
-
+  console.log(location);
   return (
     <MainContainer active="Account">
       <ToastContainer />
@@ -147,7 +142,7 @@ const Address = () => {
       </div>
 
       <div className="px-4 mt-6">
-        <div className="bg-[#e8e8e8] flex items-center px-4 py-3 space-x-3 text-[14px] rounded-md border border-[#ccc]">
+        <div className="bg-[#e8e8e8] flex items-center px-3 py-2 space-x-3 text-[14px] rounded-md border border-[#ccc]">
           <MinAddressIcon />
           <input
             type="text"
@@ -158,7 +153,7 @@ const Address = () => {
           />
           <Button
             filled
-            className="ml-4 px-6 h-[35px]"
+            className="ml-4 px-6 h-[34px]"
             onClick={handleSaveAddress}
             content={loading ? <Spinner /> : "Save"}
           />

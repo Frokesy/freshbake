@@ -28,7 +28,6 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
 
   const handleDayChange = (day: string) => {
     setDeliveryDay(day);
-    // Reset delivery time when day changes
     setDeliveryTime(null);
   };
 
@@ -64,8 +63,8 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
       setLoading(false);
       return;
     }
-    if (quantity === 0) {
-      toast.error("You can't order 0 quantity", {
+    if (quantity < 2) {
+      toast.error("Minimum of 2 items must be ordered", {
         position: "top-right",
         theme: "light",
         autoClose: 2000,
@@ -176,6 +175,14 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
             <hr />
           </div>
 
+          <div className="flex justify-between px-4 py-4 items-center">
+            <div className="">
+              <h2 className="font-semibold">Order Quantity</h2>
+              <p className="text-[14px]">Minimum of 2</p>
+            </div>
+            <h3 className="text-[12px] border border-[#ff0000] py-1 px-2 rounded-md text-[#ff0000]">Required</h3>
+          </div>
+          <hr />
           <div className="px-4 space-y-3 text-[14px]">
             <h2 className="text-[16px] font-semibold mt-6">
               Delivery Schedule
@@ -193,7 +200,7 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
             <hr />
           </div>
 
-          <div className="px-4 space-y-3 pb-[10vh] text-[14px]">
+          <div className="px-4 space-y-3 pb-[20vh] text-[14px]">
             <h2 className="text-[16px] font-semibold mt-6">
               Time of Delivery/Pickup
             </h2>
@@ -213,7 +220,7 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
             <hr />
           </div>
 
-          <div className="px-4 fixed bottom-0 bg-[#fff] w-full flex justify-between py-2">
+          <div className="px-4 fixed bottom-0 pb-6 bg-[#fff] w-full flex justify-between py-2">
             <div className="w-[35%] rounded-lg flex items-center justify-center py-2 space-x-3 border border-[#bdb08a]">
               <p
                 onClick={() => handleClick("decrement")}

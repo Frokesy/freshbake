@@ -4,7 +4,8 @@ import { OrderItemProps } from "../../../pages/orders";
 import { supabase } from "../../../../utils/supabaseClient";
 import ConfirmOrderStatusChange from "../../modals/ConfirmOrderStatusChange";
 import { Bounce, toast, ToastContainer } from "react-toastify";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowDown } from "../../icons";
 
 export interface AllOrdersProps {
   data: { order: OrderItemProps; user: UserDataProps | undefined }[];
@@ -12,11 +13,18 @@ export interface AllOrdersProps {
 
 const NewOrders: FC<AllOrdersProps> = ({ data }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
+  const [option, setOption] = useState<string>("");
   const [selectedOrder, setSelectedOrder] = useState<{
     orderId: number;
     newStatus: string;
-  } | null>(null);
+  } | null>();
   const [openOrderIds, setOpenOrderIds] = useState<number[]>([]);
+  const [openOptions, setOpenOptions] = useState<boolean>(false);
+  const options = [
+    { value: "Processing", label: "Processing" },
+    { value: "Out for Delivery", label: "Out for Delivery" },
+    { value: "Delivered", label: "Delivered" },
+  ];
 
   const formatDate = (timestamp: string): string => {
     const date = new Date(timestamp);
@@ -62,13 +70,15 @@ const NewOrders: FC<AllOrdersProps> = ({ data }) => {
       } catch (error) {
         console.error("Failed to update order status", error);
       }
-    }
-    setSelectedOrder(null);
+    } else setOption("");
+
+    setOpenOptions(false);
   };
 
   const handleStatusChange = (orderId: number, newStatus: string) => {
     setSelectedOrder({ orderId, newStatus });
     setOpenConfirmationModal(true);
+    setOption(newStatus);
   };
 
   return (
@@ -158,32 +168,60 @@ const NewOrders: FC<AllOrdersProps> = ({ data }) => {
                                 <p>${order.deliveryFee}</p>
                               </div>
 
-                              {/* Only show the order status dropdown on the last item */}
                               {isLastItem && (
                                 <div className="flex justify-between items-center">
                                   <h2>Order Status</h2>
-                                  <select
-                                    name="status"
-                                    id="status"
-                                    className="outline-none p-3 rounded-lg bg-[#fff] shadow-lg"
-                                    value={order.orderStatus}
-                                    onChange={(e) => {
-                                      const newStatus = e.target.value;
-                                      handleStatusChange(
-                                        order.transactionId,
-                                        newStatus
-                                      );
-                                    }}
-                                  >
-                                    <option value="">Select</option>
-                                    <option value="Processing">
-                                      Processing
-                                    </option>
-                                    <option value="Out for Delivery">
-                                      Out for Delivery
-                                    </option>
-                                    <option value="Delivered">Delivered</option>
-                                  </select>
+                                  <div className="flex flex-col relative text-[14px]">
+                                    <AnimatePresence>
+                                      {openOptions && (
+                                        <motion.div
+                                          initial={{ opacity: 0, y: -10 }}
+                                          animate={{ opacity: 1, y: 0 }}
+                                          exit={{ opacity: 0, y: -10 }}
+                                          transition={{ duration: 0.3 }}
+                                          className={`flex flex-col absolute top-10 z-50 -left-[80px] space-y-4 pr-10 pl-3 py-3 bg-[#fff] shadow-lg`}
+                                        >
+                                          {options.map((item, index) => (
+                                            <div className="flex" key={index}>
+                                              <p
+                                                className=""
+                                                onClick={() => {
+                                                  handleStatusChange(
+                                                    order.transactionId,
+                                                    item.value
+                                                  );
+                                                  setOpenOptions(false);
+                                                }}
+                                              >
+                                                {item.label}
+                                              </p>
+                                            </div>
+                                          ))}
+                                        </motion.div>
+                                      )}
+                                    </AnimatePresence>
+                                    <div
+                                      onClick={() =>
+                                        setOpenOptions(!openOptions)
+                                      }
+                                      className="flex"
+                                    >
+                                      <div
+                                        className={`${
+                                          option !== ""
+                                            ? "text-[#fff] bg-[#5c501e]"
+                                            : "bg-[#fff]"
+                                        } py-2 px-3 flex items-center space-x-10 rounded-lg shadow-lg`}
+                                      >
+                                        <h2 className="">
+                                          {option ? option : order.orderStatus}
+                                        </h2>
+                                        <div className="scale-75">
+                                          <ArrowDown />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
                               )}
                               <hr />

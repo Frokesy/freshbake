@@ -9,7 +9,8 @@ export async function handleLogin(
     React.SetStateAction<{ input: string; password: string; }>
   >,
   setLoading: React.Dispatch<React.SetStateAction<boolean>>,
-  navigate: ReturnType<typeof useNavigate>
+  navigate: ReturnType<typeof useNavigate>,
+  keepLoggedIn: boolean
 ) {
     const isInputValid = validateField(user.input);
     const isPasswordValid = validateField(user.password);
@@ -22,7 +23,7 @@ export async function handleLogin(
 
     if (isInputValid && isPasswordValid) {
       try {
-        const { error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabase.auth.signInWithPassword({
           email: user.input,
           password: user.password
         });
@@ -30,7 +31,7 @@ export async function handleLogin(
           setLoading(false);
           throw error.message
         }
-        toast.success(`Welcome back!!`, {
+        toast.success(`Welcome back!`, {
           position: "top-right",
           theme: "light",
           autoClose: 2000,
@@ -39,6 +40,11 @@ export async function handleLogin(
           draggable: true,
           transition: Bounce,
         });
+        if (keepLoggedIn) {
+          localStorage.setItem("authToken", data.session.access_token);
+        } else {
+          sessionStorage.setItem("authToken", data.session.access_token);
+        }
         setLoading(false);
         setTimeout(() => {
           navigate("/home");
