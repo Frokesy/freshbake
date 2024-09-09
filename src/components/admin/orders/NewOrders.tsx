@@ -70,9 +70,7 @@ const NewOrders: FC<AllOrdersProps> = ({ data }) => {
       } catch (error) {
         console.error("Failed to update order status", error);
       }
-    } else (
-      setOption("")
-    )
+    } else setOption("");
 
     setOpenOptions(false);
   };
@@ -208,7 +206,13 @@ const NewOrders: FC<AllOrdersProps> = ({ data }) => {
                                       }
                                       className="flex"
                                     >
-                                      <div className={`${option !== "" ? 'text-[#fff] bg-[#5c501e]': 'bg-[#fff]'} py-2 px-3 flex items-center space-x-10 rounded-lg shadow-lg`}>
+                                      <div
+                                        className={`${
+                                          option !== ""
+                                            ? "text-[#fff] bg-[#5c501e]"
+                                            : "bg-[#fff]"
+                                        } py-2 px-3 flex items-center space-x-10 rounded-lg shadow-lg`}
+                                      >
                                         <h2 className="">
                                           {option ? option : order.orderStatus}
                                         </h2>
