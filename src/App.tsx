@@ -18,6 +18,7 @@ import AllProducts from "./pages/admin/AllProducts";
 import AdminProfile from "./pages/admin/AdminProfile";
 import UserInfo from "./pages/admin/UserInfo";
 import AdminDetails from "./pages/admin/AdminDetails";
+import NewPassword from "./components/sections/auth/NewPassword";
 
 function App() {
   const router = createBrowserRouter([
@@ -97,6 +98,10 @@ function App() {
     {
       path: "/reset-password",
       element: <ResetPassword />,
+    },
+    {
+      path: "/new-password",
+      element: <NewPassword />,
     },
 
     //admin routes
