@@ -1,10 +1,13 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import OTPInput from "./OTPInput";
 import Button from "../../defaults/Button";
 import { supabase } from "../../../../utils/supabaseClient";
 import { UserDataProps } from "../../../pages/home";
 import { toast, ToastContainer } from "react-toastify";
 import Spinner from "../../defaults/Spinner";
+import { ForgotPasswordTemplate } from "../../email-templates/ForgotPassword";
+import { render } from "@react-email/render";
+import Plunk from "@plunk/node";
 
 export interface OTPProps {
   user?: UserDataProps | undefined;
@@ -12,12 +15,16 @@ export interface OTPProps {
 
 const OTPPage: FC<OTPProps> = ({ user }) => {
   const [otp, setOtp] = useState<string>("");
+  const [reotp, setReOtp] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const handleOtpChange = (otp: string) => {
     setOtp(otp);
   };
   const webUrl = import.meta.env.VITE_WEB_URL;
+  const plunkClient = new Plunk(
+    "sk_be82d7ea662e6422f5b77d4f9f17153cdf7e2aedd142e35e"
+  );
 
   const validateOTP = async (enteredOtp: string) => {
     try {
@@ -88,8 +95,44 @@ const OTPPage: FC<OTPProps> = ({ user }) => {
     }
   };
 
+  const sendEmail = async (firstname: string | undefined, otp: string) => {
+    try {
+      const emailHtml = render(
+        <ForgotPasswordTemplate firstname={firstname} otp={otp} />
+      );
+
+      await plunkClient.emails.send({
+        to: user?.email as string,
+        subject: "Password Reset",
+        body: await emailHtml,
+      });
+      const now = new Date();
+      const expiresAt = new Date(now.getTime() + 10 * 60000);
+      console.log(reotp)
+
+      const { error } = await supabase.from("otp_requests").insert([
+        {
+          user_id: user?.userId,
+          otp: reotp,
+          expires_at: expiresAt.toISOString(),
+        },
+      ]);
+
+      if (error) {
+        setLoading(false);
+        console.error("Error saving OTP:", error);
+      } else {
+        console.log("sent")
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error("Failed to send email:", error);
+    }
+  };
   const handleResendOTP = async () => {
-    // Logic to resend OTP
+
+    sendEmail(user?.firstname, reotp)
     toast.info("Resending OTP...", {
       position: "top-right",
       autoClose: 2000,
@@ -99,6 +142,19 @@ const OTPPage: FC<OTPProps> = ({ user }) => {
       draggable: true,
     });
   };
+
+  useEffect(() => {
+    const regenerateOTP = (length = 6) => {
+      let otp = "";
+      for (let i = 0; i < length; i++) {
+        otp += Math.floor(Math.random() * 10);
+      }
+      setReOtp(otp);
+      return otp;
+    };
+
+    regenerateOTP();
+  }, []);
 
   return (
     <div className="">

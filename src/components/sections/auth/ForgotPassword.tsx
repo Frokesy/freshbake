@@ -113,6 +113,7 @@ const ForgotPassword: FC<PasswordResetPros> = ({
   };
 
   useEffect(() => {
+    
     if (userData) {
       sendEmail(userData?.firstname, otp);
     }

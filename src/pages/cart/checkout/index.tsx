@@ -130,6 +130,7 @@ const Checkout = () => {
     currency: "NGN",
     payment_options: "card,mobilemoney,ussd",
     customer: {
+      id: userData?.userId,
       email: userData?.email as string,
       phone_number: userData?.phone as string,
       name: `${userData?.firstname} ${userData?.lastname}` as string,

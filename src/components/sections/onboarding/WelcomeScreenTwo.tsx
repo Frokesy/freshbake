@@ -7,7 +7,7 @@ export interface WelcomeScreenProps {
 
 const WelcomeScreenTwo: FC<WelcomeScreenProps> = ({ setActivePage }) => {
   const handlePageSwitch = (screen: string) => {
-    if (screen === "Login") {
+    if (screen === "login") {
       setActivePage(screen)
       localStorage.setItem("hasVisited", "true");
     } else {
@@ -21,15 +21,15 @@ const WelcomeScreenTwo: FC<WelcomeScreenProps> = ({ setActivePage }) => {
         alt="img"
         className="w-[100%] object-cover h-[400px] max-h-[400px]"
       />
-      <h2 className="text-[38px] font-semibold text-center mt-2 leading-tight mb-2">
+      <h2 className="text-[38px] font-semibold text-center mt-6 leading-tight">
         Fresh Bread <br /> Just a Tap Away
       </h2>
-      <p className="text-center px-4">
+      <p className="text-center px-4 pt-6">
         Enjoy the convenience of preordering your favorite agege breads and have
         them delivered fresh to your home.
       </p>
 
-      <div className="px-4 mt-6 space-y-6 pb-20">
+      <div className="px-4 mt-6 space-y-3 pb-20">
         <Button
           filled={true}
           content="Next"

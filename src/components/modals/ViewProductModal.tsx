@@ -63,16 +63,30 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
       setLoading(false);
       return;
     }
-    if (quantity < 2) {
-      toast.error("Minimum of 2 items must be ordered", {
-        position: "top-right",
-        theme: "light",
-        autoClose: 2000,
-        hideProgressBar: true,
-        draggable: true,
-      });
-      setLoading(false);
-      return;
+    if (viewedProduct?.tag !== "Agege") {
+      if (quantity < 2) {
+        toast.error("Minimum of 2 items must be ordered", {
+          position: "top-right",
+          theme: "light",
+          autoClose: 2000,
+          hideProgressBar: true,
+          draggable: true,
+        });
+        setLoading(false);
+        return;
+      }
+    } else {
+      if (quantity === 0) {
+        toast.error("Minimum of 1 item must be ordered", {
+          position: "top-right",
+          theme: "light",
+          autoClose: 2000,
+          hideProgressBar: true,
+          draggable: true,
+        });
+        setLoading(false);
+        return;
+      }
     }
     const orderDetails = {
       id: viewedProduct?.id,
@@ -175,14 +189,20 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
             <hr />
           </div>
 
-          <div className="flex justify-between px-4 py-4 items-center">
+          {viewedProduct?.tag !== "Agege" && (
             <div className="">
-              <h2 className="font-semibold">Order Quantity</h2>
-              <p className="text-[14px]">Minimum of 2</p>
+              <div className="flex justify-between px-4 py-4 items-center">
+                <div className="">
+                  <h2 className="font-semibold">Order Quantity</h2>
+                  <p className="text-[14px]">Minimum of 2</p>
+                </div>
+                <h3 className="text-[12px] border border-[#ff0000] py-1 px-2 rounded-md text-[#ff0000]">
+                  Required
+                </h3>
+              </div>
+              <hr />
             </div>
-            <h3 className="text-[12px] border border-[#ff0000] py-1 px-2 rounded-md text-[#ff0000]">Required</h3>
-          </div>
-          <hr />
+          )}
           <div className="px-4 space-y-3 text-[14px]">
             <h2 className="text-[16px] font-semibold mt-6">
               Delivery Schedule
