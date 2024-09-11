@@ -81,9 +81,9 @@ const OrderDetails: FC<OrderDetailsProps> = ({
                   <p className="">Time of delivery</p>
                   <p className="">{item.deliveryTime}</p>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                   <p className="">Delivery Address</p>
-                  <p className="">{clickedOrder?.deliveryAddress}</p>
+                  <p className="text-[13px]">{clickedOrder?.deliveryAddress}</p>
                 </div>
                 <div className="flex justify-between">
                   <p className="font-semibold">Status</p>
