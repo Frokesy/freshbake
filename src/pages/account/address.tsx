@@ -16,7 +16,8 @@ const Address = () => {
   const [userData, setUserData] = useState<UserDataProps>();
   const [location, setLocation] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-
+  
+  const googleCloudApiKey = import.meta.env.VITE_GOOGLE_CLOUD_API_KEY;
   const handleGetLocation = async () => {
     if (navigator.geolocation) {
       setLocLoading(true);
@@ -24,14 +25,14 @@ const Address = () => {
         async (position) => {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
-
+          
           try {
             const response = await axios.get(
               `https://maps.googleapis.com/maps/api/geocode/json`,
               {
                 params: {
                   latlng: `${lat},${lng}`,
-                  key: "AIzaSyCCXlIglqqq9Bv5buKFFFAmXq5cayRly8M",
+                  key: googleCloudApiKey,
                 },
               }
             );

@@ -7,9 +7,6 @@ import { CartItemProps } from "..";
 import { UserDataProps } from "../../home";
 import { supabase } from "../../../../utils/supabaseClient";
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
-import { PaymentSuccessful } from "../../../components/email-templates/PaymentSuccessful";
-import { render } from "@react-email/render";
-import Plunk from "@plunk/node";
 import Spinner from "../../../components/defaults/Spinner";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 
@@ -31,10 +28,6 @@ const Checkout = () => {
   const idb = window.indexedDB;
 
   const navigate = useNavigate();
-
-  const plunkClient = new Plunk(
-    "sk_be82d7ea662e6422f5b77d4f9f17153cdf7e2aedd142e35e"
-  );
 
   const getCartItems = () => {
     const dbPromise = idb.open("freshbake", 1);
@@ -130,6 +123,7 @@ const Checkout = () => {
     currency: "NGN",
     payment_options: "card,mobilemoney,ussd",
     customer: {
+      id: userData?.userId,
       email: userData?.email as string,
       phone_number: userData?.phone as string,
       name: `${userData?.firstname} ${userData?.lastname}` as string,
@@ -142,38 +136,6 @@ const Checkout = () => {
   };
 
   const handleFlutterPayment = useFlutterwave(config);
-
-  const sendOrderConfirmationEmail = async (
-    userData: UserDataProps | undefined,
-    cartItems: CartItemProps[],
-    finalTotal: number,
-    orderId: number,
-    activeTab: string,
-    deliveryFee: number
-  ) => {
-    try {
-      const emailHtml = render(
-        <PaymentSuccessful
-          userData={userData}
-          cartItems={cartItems}
-          finalTotal={finalTotal}
-          orderId={orderId}
-          activeTab={activeTab}
-          deliveryFee={deliveryFee}
-        />
-      );
-
-      await plunkClient.emails.send({
-        to: userData?.email as string,
-        subject: "Your FreshBake Order Confirmation",
-        body: await emailHtml,
-      });
-
-      console.log("Order confirmation email sent successfully:");
-    } catch (error) {
-      console.error("Failed to send order confirmation email:", error);
-    }
-  };
 
   return (
     <MainContainer active="Cart">
@@ -343,56 +305,22 @@ const Checkout = () => {
           handleFlutterPayment({
             callback: async (response) => {
               if (response.status === "successful") {
-                try {
-                  const { error } = await supabase.from("orders").insert([
-                    {
-                      userId: userData?.userId,
-                      items: cartItems,
-                      totalCost: finalTotal,
-                      paymentStatus: response.status,
-                      transactionId: response.transaction_id,
-                      deliveryOption: activeTab,
-                      deliveryFee: deliveryFee,
-                      orderStatus: "Processing",
-                      deliveryAddress: editedAddress
-                        ? editedAddress
-                        : userData?.defaultAddress,
-                    },
-                  ]);
-
-                  if (error) {
-                    console.error("Error adding order to Supabase:", error);
-                  } else {
-                    setLoading(false);
-                    console.log("Order added successfully:");
-                    await sendOrderConfirmationEmail(
-                      userData,
-                      cartItems,
-                      finalTotal,
-                      response.transaction_id,
-                      activeTab,
-                      deliveryFee
-                    );
-                  }
-
-                  const dbPromise = idb.open("freshbake", 1);
-                  dbPromise.onsuccess = () => {
-                    const db = dbPromise.result;
-                    const tx = db.transaction("cart", "readwrite");
-                    const cart = tx.objectStore("cart");
-                    cart.clear();
-                    tx.oncomplete = () => {
-                      db.close();
-                    };
-                  };
-
-                  navigate("/success", { state: { response } });
-                } catch (err) {
-                  console.error("Error processing order:", err);
-                }
+                const data = {
+                  cartItems: cartItems,
+                  transactionId: response.transaction_id,
+                  totalCost: response.amount,
+                  userData: userData,
+                  deliveryOption: activeTab,
+                  deliveryFee: deliveryFee,
+                  paymentStatus: response.status,
+                  deliveryAddress: editedAddress
+                    ? editedAddress
+                    : userData?.defaultAddress,
+                };
+                setLoading(false);
+                closePaymentModal();
+                navigate("/success", { state: { data } });
               }
-
-              closePaymentModal();
             },
             onClose: () => {},
           })

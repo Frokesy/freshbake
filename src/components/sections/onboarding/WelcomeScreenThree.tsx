@@ -2,9 +2,9 @@ import { FC } from "react";
 import Button from "../../defaults/Button";
 import { WelcomeScreenProps } from "./WelcomeScreenTwo";
 
-const WelcomeScreenThree: FC<WelcomeScreenProps> = ({ setActivePage, }) => {
+const WelcomeScreenThree: FC<WelcomeScreenProps> = ({ setActivePage }) => {
   const handlePageSwitch = (screen: string) => {
-    setActivePage(screen)
+    setActivePage(screen);
     localStorage.setItem("hasVisited", "true");
   };
 
@@ -15,15 +15,15 @@ const WelcomeScreenThree: FC<WelcomeScreenProps> = ({ setActivePage, }) => {
         alt="img"
         className="w-[100%] object-cover h-[400px] max-h-[400px]"
       />
-      <h2 className="text-[38px] font-semibold text-center mt-2 leading-tight mb-2">
+      <h2 className="text-[38px] font-semibold text-center mt-6 leading-tight">
         Start Your <br /> Fresh Experience
       </h2>
-      <p className="text-center px-4">
+      <p className="text-center px-4 pt-6">
         Create an account or sign in to start preordering your favorite breads.
         Freshness is just a tap away!
       </p>
 
-      <div className="px-4 mt-6 space-y-6">
+      <div className="px-4 mt-6 space-y-3">
         <Button
           filled={true}
           content="Login"

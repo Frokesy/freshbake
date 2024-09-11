@@ -3,8 +3,10 @@ import { motion } from "framer-motion";
 import OnboardingContainer from "../../components/containers/OnboardingContainer";
 import ForgotPassword from "../../components/sections/auth/ForgotPassword";
 import OTPPage from "../../components/sections/auth/OTPPage";
+import { UserDataProps } from "../home";
 const ResetPassword = () => {
   const [activeScreen, setActiveScreen] = useState<string>("password-reset");
+  const [user, setUser] = useState<UserDataProps>()
 
   const variants = {
     hidden: { opacity: 0 },
@@ -23,7 +25,7 @@ const ResetPassword = () => {
           variants={variants}
           transition={{ duration: 0.3 }}
         >
-          <ForgotPassword setActiveScreen={setActiveScreen} />
+          <ForgotPassword setUser={setUser} setActiveScreen={setActiveScreen} />
         </motion.div>
       ) : (
         <motion.div
@@ -34,7 +36,7 @@ const ResetPassword = () => {
           variants={variants}
           transition={{ duration: 0.3 }}
         >
-          <OTPPage />
+          <OTPPage user={user} />
         </motion.div>
       )}
     </OnboardingContainer>
