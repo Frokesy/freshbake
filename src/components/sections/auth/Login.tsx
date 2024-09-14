@@ -69,6 +69,7 @@ const Login: FC<LoginProps> = ({ setActiveScreen }) => {
         <Input
           label="Email"
           type="text"
+          placeholder="Enter your email address"
           value={user.input}
           onChange={(e) => setUser({ ...user, input: e.target.value })}
           loginInputErr={error.input}
@@ -76,6 +77,7 @@ const Login: FC<LoginProps> = ({ setActiveScreen }) => {
         <Input
           label="Password"
           type="password"
+          placeholder="Enter your password"
           value={user.password}
           onChange={(e) => setUser({ ...user, password: e.target.value })}
           pwdErr={error.password}
