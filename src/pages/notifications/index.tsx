@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
+import { motion } from "framer-motion";
 import { supabase } from "../../../utils/supabaseClient";
 import MainContainer from "../../components/containers/MainContainer";
-import { motion } from "framer-motion";
+import { InboxIcon, ArrowLeft } from "../../components/icons";
 import Spinner from "../../components/defaults/Spinner";
-import { NavLink } from "react-router-dom";
-import { ArrowLeft, InboxIcon } from "../../components/icons";
 
 interface NotificationProps {
   id: number;
@@ -43,8 +43,34 @@ const Notifications = () => {
     fetchNotifications();
   }, []);
 
+  const markAsRead = async (id: number) => {
+    try {
+      const { error } = await supabase
+        .from("notifications")
+        .update({ read: true })
+        .eq("id", id);
+
+      if (error) {
+        console.error("Error updating read status:", error);
+      } else {
+        setNotifications((prev) =>
+          prev.map((notification) =>
+            notification.id === id ? { ...notification, read: true } : notification
+          )
+        );
+      }
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  };
+
   const toggleExpand = (id: number) => {
     setExpanded(expanded === id ? null : id);
+
+    const notification = notifications.find((n) => n.id === id);
+    if (notification && !notification.read) {
+      markAsRead(id);
+    }
   };
 
   if (loading) {
@@ -74,7 +100,9 @@ const Notifications = () => {
         notifications.map((notification) => (
           <motion.div
             key={notification.id}
-            className="px-4 py-2 border-b border-t mt-6 border-gray-200 cursor-pointer flex space-x-3 items-center"
+            className={`px-4 py-2 border-b border-t mt-6 border-gray-200 cursor-pointer flex space-x-3 items-center ${
+              notification.read ? "bg-gray-100" : "bg-white"
+            }`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
