@@ -54,7 +54,7 @@ const OrderOverview: FC<OrderOverviewProps> = ({
           </p>
         </div>
       ) : (
-        <div className="mt-8">
+        <div className="mt-8 pb-[20vh]">
           {groupedOrders &&
             Object.entries(groupedOrders).map(([transactionId, orders]) => (
               <div key={transactionId} className="mb-4">

@@ -7,6 +7,7 @@ import {
 } from "../icons";
 import { FC } from "react";
 import TextSkeleton from "../skeletons/TextSkeleton";
+import { NavLink } from "react-router-dom";
 
 interface TopNavProps {
   data: UserDataProps | undefined;
@@ -30,7 +31,9 @@ const TopNav: FC<TopNavProps> = ({ data }) => {
         </div>
         <div className="flex items-center space-x-3">
           <CustomerCareIcon />
-          <NotificationIcon />
+          <NavLink to="/notifications">
+            <NotificationIcon />
+          </NavLink>
         </div>
       </div>
     </div>
