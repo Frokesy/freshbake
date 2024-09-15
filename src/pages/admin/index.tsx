@@ -193,7 +193,7 @@ const AdminDashboard = () => {
           <div className="w-[50%] bg-[#fff] rounded-lg p-3 shadow-lg flex items-center justify-between">
             <div className="flex flex-col items-center">
               <h2 className="text-[20px] font-semibold">
-                N{totalRevenue.toLocaleString()}
+                ${totalRevenue.toLocaleString()}
               </h2>
               <p className="text-[12px]">Total Revenue</p>
             </div>
@@ -245,12 +245,12 @@ const AdminDashboard = () => {
         </div>
       </div>
       <div className="pt-10 px-4 flex items-center justify-between pb-4">
-        <h2 className="">Total Revenue(N)</h2>
+        <h2 className="font-semibold">Total Revenue($)</h2>
 
         <select
           value={view}
           onChange={handleViewChange}
-          className="bg-inherit outline-none text-[14px]"
+          className="bg-inherit outline-none text-[14px] border border-[#808080] rounded-md p-1"
         >
           <option value="Last 12 Months">Last 12 Months</option>
           <option value="Last 6 Months">Last 6 Months</option>
