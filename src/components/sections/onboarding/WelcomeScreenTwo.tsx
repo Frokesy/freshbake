@@ -24,7 +24,7 @@ const WelcomeScreenTwo: FC<WelcomeScreenProps> = ({ setActivePage }) => {
       <h2 className="text-[38px] font-semibold text-center mt-6 leading-tight">
         Fresh Bread <br /> Just a Tap Away
       </h2>
-      <p className="text-center px-4 pt-6">
+      <p className="text-center px-4 pt-4 pb-8 leading-tight">
         Enjoy the convenience of preordering your favorite agege breads and have
         them delivered fresh to your home.
       </p>
