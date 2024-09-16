@@ -70,6 +70,7 @@ const Signup: FC<LoginProps> = ({ setActiveScreen }) => {
             <Input
               label="First name"
               type="text"
+              placeholder="Enter your first name"
               value={user.firstname}
               onChange={(e) => setUser({ ...user, firstname: e.target.value })}
               fnErr={error.firstname}
@@ -79,6 +80,7 @@ const Signup: FC<LoginProps> = ({ setActiveScreen }) => {
             <Input
               label="Last name"
               type="text"
+              placeholder="Enter your last name"
               value={user.lastname}
               onChange={(e) => setUser({ ...user, lastname: e.target.value })}
               lnErr={error.lastname}
@@ -90,6 +92,7 @@ const Signup: FC<LoginProps> = ({ setActiveScreen }) => {
           type="email"
           label="Email address"
           value={user.email}
+          placeholder="Enter your email address"
           onChange={(e) => setUser({ ...user, email: e.target.value })}
           emailErr={error.email}
         />
@@ -98,12 +101,14 @@ const Signup: FC<LoginProps> = ({ setActiveScreen }) => {
           type="number"
           label="Phone number"
           value={user.phone}
+          placeholder="Enter your phone number"
           onChange={(e) => setUser({ ...user, phone: e.target.value })}
           phoneErr={error.phone}
         />
         <Input
           type="password"
           label="Password"
+          placeholder="Enter your password"
           value={user.password}
           onChange={(e) => setUser({ ...user, password: e.target.value })}
           pwdErr={error.password}

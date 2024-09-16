@@ -81,6 +81,29 @@ const Success = () => {
     });
   };
 
+  const addNotificationToSupabase = async () => {
+    try {
+      const { error } = await supabase.from("notifications").insert([
+        {
+          userId: data.userData.userId,
+          title: "Order Placed",
+          message: `Your order #${data.transactionId} has been placed successfully.`,
+          timestamp: new Date().toISOString(),
+          read: false,
+        },
+      ]);
+
+      if (error) {
+        console.error("Error adding notification to Supabase:", error);
+        return;
+      }
+
+      console.log("Notification added to Supabase.");
+    } catch (err) {
+      console.error("Error adding notification:", err);
+    }
+  };
+
   const addOrdertoDB = async () => {
     try {
       const { error } = await supabase.from("orders").insert([
@@ -114,6 +137,7 @@ const Success = () => {
       );
 
       await clearCart();
+      await addNotificationToSupabase();
     } catch (err) {
       console.error("Error processing order:", err);
     } finally {
@@ -131,12 +155,11 @@ const Success = () => {
   if (loading) {
     return (
       <div className="h-[100vh] w-[100%] mx-auto flex flex-col items-center justify-center">
-        <Spinner />
+        <Spinner color="#000" />
       </div>
     );
   }
 
-  // Render success message once processing is complete
   return (
     <div className="h-[100vh] w-[100%] mx-auto flex flex-col items-center justify-center">
       <div className="h-[246px] w-[246px]">

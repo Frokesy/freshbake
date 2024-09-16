@@ -44,7 +44,7 @@ const Input: FC<FormProps & React.InputHTMLAttributes<HTMLInputElement>> = ({
             ${phoneErr && "border border-red-500 text-red-500"}
             ${pwdErr && "border border-red-500 text-red-500"}
             ${loginInputErr && "border border-red-500 text-red-500"}
-            border border-[#ccc] bg-inherit py-2 hover:shadow-xl transition-all duration-500 ease-in-out rounded-md shadow-md outline-none px-3`}
+            border border-[#ccc] bg-inherit py-2 hover:shadow-xl transition-all duration-500 ease-in-out rounded-md shadow-md outline-none px-3 placeholder:text-[14px]`}
           {...props}
         />
       </div>

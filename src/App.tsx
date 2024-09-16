@@ -19,6 +19,7 @@ import AdminProfile from "./pages/admin/AdminProfile";
 import UserInfo from "./pages/admin/UserInfo";
 import AdminDetails from "./pages/admin/AdminDetails";
 import NewPassword from "./components/sections/auth/NewPassword";
+import Notifications from "./pages/notifications";
 
 function App() {
   const router = createBrowserRouter([
@@ -103,7 +104,12 @@ function App() {
       path: "/new-password",
       element: <NewPassword />,
     },
+    {
+      path: "/notifications",
+      element: <Notifications />
+    },
 
+    
     //admin routes
     {
       path: "/admin/dashboard",
