@@ -66,6 +66,9 @@ const NewOrders: FC<AllOrdersProps> = ({ data }) => {
               transition: Bounce,
             }
           );
+          setTimeout(() => {
+            window.location.reload();
+          }, 2500)
         }
       } catch (error) {
         console.error("Failed to update order status", error);
@@ -85,7 +88,7 @@ const NewOrders: FC<AllOrdersProps> = ({ data }) => {
     <div>
       <ToastContainer />
       {data.length > 0 ? (
-        <div className="">
+        <div className="pb-[20vh]">
           {data.map(({ order, user }) => (
             <div key={order.id} className="mb-4">
               {order.orderStatus === "Processing" ||
@@ -127,7 +130,7 @@ const NewOrders: FC<AllOrdersProps> = ({ data }) => {
                       className="overflow-hidden"
                     >
                       <hr />
-                      <div className="pb-[20vh] space-y-6">
+                      <div className="space-y-6 pb-10">
                         {order.items.map((item, index) => {
                           const isLastItem = index === order.items.length - 1;
                           return (
@@ -175,11 +178,11 @@ const NewOrders: FC<AllOrdersProps> = ({ data }) => {
                                     <AnimatePresence>
                                       {openOptions && (
                                         <motion.div
-                                          initial={{ opacity: 0, y: -10 }}
+                                          initial={{ opacity: 0, y: 10 }}
                                           animate={{ opacity: 1, y: 0 }}
                                           exit={{ opacity: 0, y: -10 }}
                                           transition={{ duration: 0.3 }}
-                                          className={`flex flex-col absolute top-10 z-50 -left-[80px] space-y-4 pr-10 pl-3 py-3 bg-[#fff] shadow-lg`}
+                                          className={`flex flex-col absolute -top-[18vh] -left-[50px] space-y-4 pr-10 pl-3 py-3 bg-[#fff] shadow-lg`}
                                         >
                                           {options.map((item, index) => (
                                             <div className="flex" key={index}>
@@ -211,7 +214,7 @@ const NewOrders: FC<AllOrdersProps> = ({ data }) => {
                                           option !== ""
                                             ? "text-[#fff] bg-[#5c501e]"
                                             : "bg-[#fff]"
-                                        } py-2 px-3 flex items-center space-x-10 rounded-lg shadow-lg`}
+                                        } py-2 px-3 flex items-center space-x-10 rounded-lg shadow-lg z-50`}
                                       >
                                         <h2 className="">
                                           {option ? option : order.orderStatus}
