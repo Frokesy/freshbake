@@ -39,9 +39,11 @@ const TopNav: FC<TopNavProps> = ({ data }) => {
       }
 
       setNotifications(data);
-        localStorage.setItem("notifications", JSON.stringify(notifications));
-        const unread = data.some((notification: NotificationProps) => !notification.read);
-        setHasUnread(unread);
+      localStorage.setItem("notifications", JSON.stringify(notifications));
+      const unread = data.some(
+        (notification: NotificationProps) => !notification.read
+      );
+      setHasUnread(unread);
     } catch (err) {
       console.error("Error:", err);
     }
@@ -66,7 +68,9 @@ const TopNav: FC<TopNavProps> = ({ data }) => {
           )}
         </div>
         <div className="flex items-center space-x-3">
-          <CustomerCareIcon />
+          <NavLink to="/customer-service">
+            <CustomerCareIcon />
+          </NavLink>
           <NavLink to="/notifications" className="relative">
             <NotificationIcon />
             {hasUnread && (

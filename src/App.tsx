@@ -20,6 +20,7 @@ import UserInfo from "./pages/admin/UserInfo";
 import AdminDetails from "./pages/admin/AdminDetails";
 import NewPassword from "./components/sections/auth/NewPassword";
 import Notifications from "./pages/notifications";
+import LiveSupport from "./pages/customer-service";
 
 function App() {
   const router = createBrowserRouter([
@@ -107,6 +108,10 @@ function App() {
     {
       path: "/notifications",
       element: <Notifications />
+    },
+    {
+      path: "/customer-service",
+      element: <LiveSupport />
     },
 
     
