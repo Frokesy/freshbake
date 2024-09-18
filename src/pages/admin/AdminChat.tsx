@@ -1,44 +1,41 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../../utils/supabaseClient";
+import { MessageProps } from "../customer-service";
+import ChatWindow from "../../components/admin/defaults/ChatWindow";
+import { UserDataProps } from "../home";
 
-interface UserProps {
-  userId: string;
-  firstname: string;
-  lastname: string;
-}
 
 const AdminPanel = () => {
-  const [users, setUsers] = useState<UserProps[]>([]);
-  const [selectedUser, setSelectedUser] = useState<UserProps | null>(null);
+  const [users, setUsers] = useState<UserDataProps[]>([]);
+  const [selectedUser, setSelectedUser] = useState<UserDataProps | null>(null);
   const [messages, setMessages] = useState<MessageProps[]>([]);
   const [replyText, setReplyText] = useState<string>("");
 
   useEffect(() => {
-    // Fetch users who have sent messages
     const fetchUsers = async () => {
-      const { data, error } = await supabase
-        .from("messages")
-        .select("sender")
-        .neq("sender", "admin") // Filter out admin messages
-        .group("sender"); // Group by sender (userId)
-
-      if (error) {
-        console.error("Error fetching users:", error);
-      } else {
-        const userIds = data.map((message) => message.sender);
-        const { data: userData, error: userError } = await supabase
-          .from("users")
-          .select("*")
-          .in("userId", userIds); // Fetch user details
-
-        if (userError) {
-          console.error("Error fetching user details:", userError);
+        const { data, error } = await supabase
+          .from("messages")
+          .select("sender", { count: "exact", head: true })
+          .neq("sender", "admin");
+      
+        if (error) {
+          console.error("Error fetching users:", error);
         } else {
-          setUsers(userData as UserProps[]);
+          const userIds = data.map((message) => message.sender);
+      
+          const { data: userData, error: userError } = await supabase
+            .from("users")
+            .select("*")
+            .in("userId", userIds);
+      
+          if (userError) {
+            console.error("Error fetching user details:", userError);
+          } else {
+            setUsers(userData as UserDataProps[]);
+          }
         }
-      }
-    };
-
+      };
+      
     fetchUsers();
   }, []);
 

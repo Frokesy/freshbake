@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { UserDataProps } from "../home";
 import { supabase } from "../../../utils/supabaseClient";
 
-interface MessageProps {
+export interface MessageProps {
   id?: string;
   timestamp: string | undefined;
   sender: string | undefined;
