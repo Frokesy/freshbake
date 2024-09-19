@@ -21,6 +21,7 @@ import AdminDetails from "./pages/admin/AdminDetails";
 import NewPassword from "./components/sections/auth/NewPassword";
 import Notifications from "./pages/notifications";
 import LiveSupport from "./pages/customer-service";
+import AdminPanel from "./pages/admin/AdminChat";
 
 function App() {
   const router = createBrowserRouter([
@@ -140,6 +141,10 @@ function App() {
       path: "/admin/admin-details",
       element: <AdminDetails />,
     },
+    {
+      path: "/admin/customer-service",
+      element: <AdminPanel />
+    }
   ]);
 
   return (
