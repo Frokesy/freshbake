@@ -1,75 +1,54 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../../utils/supabaseClient";
-import { MessageProps } from "../customer-service";
-import ChatWindow from "../../components/admin/defaults/ChatWindow";
-import { UserDataProps } from "../home";
+import PageTransition from "../../components/defaults/PageTransition";
 
+interface MessageDataProps {
+  id?: string;
+  timestamp: string | undefined;
+  sender: string | undefined;
+  name: string | undefined;
+  message: string | undefined;
+}
 
 const AdminPanel = () => {
-  const [users, setUsers] = useState<UserDataProps[]>([]);
-  const [selectedUser, setSelectedUser] = useState<UserDataProps | null>(null);
-  const [messages, setMessages] = useState<MessageProps[]>([]);
-  const [replyText, setReplyText] = useState<string>("");
+  const [data, setData] = useState<MessageDataProps[]>([]);
+  const [selectedUser, setSelectedUser] = useState<MessageDataProps>()
 
   useEffect(() => {
     const fetchUsers = async () => {
-        const { data, error } = await supabase
-          .from("messages")
-          .select("sender", { count: "exact", head: true })
-          .neq("sender", "admin");
-      
-        if (error) {
-          console.error("Error fetching users:", error);
-        } else {
-          const userIds = data.map((message) => message.sender);
-      
-          const { data: userData, error: userError } = await supabase
-            .from("users")
-            .select("*")
-            .in("userId", userIds);
-      
-          if (userError) {
-            console.error("Error fetching user details:", userError);
-          } else {
-            setUsers(userData as UserDataProps[]);
-          }
-        }
-      };
-      
+      const { data, error } = await supabase
+        .from("messages")
+        .select("*")
+        .neq("sender", "admin");
+
+      if (error) {
+        console.error("Error fetching users:", error);
+      } else {
+        setData(data);
+      }
+    };
+
     fetchUsers();
   }, []);
 
+  console.log(data);
   return (
-    <div className="admin-panel">
+    <PageTransition active="customer-service">
       <div className="user-list">
         <h2>Users</h2>
         <ul>
-          {users.map((user) => (
+          {data.map((msg) => (
             <li
-              key={user.userId}
-              onClick={() => setSelectedUser(user)}
+              key={msg.id}
+              onClick={() => setSelectedUser(msg)}
               className="cursor-pointer"
             >
-              {user.firstname} {user.lastname}
+                {msg.name}
             </li>
           ))}
         </ul>
       </div>
-
-      <div className="chat-box">
-        {selectedUser ? (
-          <ChatWindow
-            user={selectedUser}
-            messages={messages}
-            setMessages={setMessages}
-            replyText={replyText}
-            setReplyText={setReplyText}
-          />
-        ) : (
-          <p>Select a user to view the chat</p>
-        )}
-      </div>
-    </div>
+    </PageTransition>
   );
 };
 
