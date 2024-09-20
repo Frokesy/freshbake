@@ -13,6 +13,7 @@ const AdminProfile = () => {
       id: 1,
       name: "Customer Support",
       icon: <CustomerCareIcon />,
+      route: "/admin/customer-service"
     },
     {
       id: 2,
