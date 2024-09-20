@@ -54,6 +54,7 @@ const LiveSupport = () => {
     const { data, error } = await supabase
       .from("messages")
       .select("*")
+      .eq("sender", userData?.userId)
       .order("timestamp", { ascending: true });
 
     if (error) {
