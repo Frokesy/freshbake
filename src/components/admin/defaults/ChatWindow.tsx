@@ -2,17 +2,21 @@ import { FC, useEffect, useRef, useState } from "react";
 import { supabase } from "../../../../utils/supabaseClient";
 import { MessageProps } from "../../../pages/customer-service";
 import { ArrowLeft, SendIcon } from "../../icons";
+import Spinner from "../../defaults/Spinner";
 
 interface ChatWindowProps {
   chatId: string;
+  setChatId: (chatId: string) => void;
 }
 
-const ChatWindow: FC<ChatWindowProps> = ({ chatId }) => {
+const ChatWindow: FC<ChatWindowProps> = ({ chatId, setChatId }) => {
   const [messages, setMessages] = useState<MessageProps[]>([]);
   const [replyText, setReplyText] = useState<string>("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [loadingMessages, setLoadingMessages] = useState<boolean>(true);
 
   const fetchMessages = async () => {
+    setLoadingMessages(true);
     const { data, error } = await supabase
       .from("messages")
       .select("*")
@@ -24,6 +28,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ chatId }) => {
     } else if (data) {
       setMessages(data as MessageProps[]);
     }
+    setLoadingMessages(false);
   };
 
   useEffect(() => {
@@ -61,39 +66,54 @@ const ChatWindow: FC<ChatWindowProps> = ({ chatId }) => {
     }
   };
 
-  console.log(messages);
+  const handleChatClose = () => {
+    setChatId("");
+  };
 
   return (
     <div className="chat-window">
       <div>
         <div className="msg-body px-4 py-[15vh] text-sm flex flex-col space-y-3">
-          {messages.map((message) => (
-            <div key={message.id} className="">
-              <div className="flex items-center space-x-4 pt-10 fixed top-0 bg-[#fff] w-[100%] pb-3">
-                <div className="flex">
-                  <div className="bg-[#d9d9d9] p-1.5 rounded-full">
-                    <ArrowLeft />
+          {loadingMessages ? (
+            <div className="flex justify-center items-center h-[60vh]">
+              <Spinner color="#000" />
+            </div>
+          ) : (
+            messages.map((message) => (
+              <div key={message.timestamp} className="">
+                <div className="flex items-center space-x-4 pt-10 fixed top-0 bg-[#fff] w-[100%] pb-3">
+                  <div className="flex">
+                    <div
+                      onClick={handleChatClose}
+                      className="bg-[#d9d9d9] p-1.5 rounded-full"
+                    >
+                      <ArrowLeft />
+                    </div>
+                  </div>
+                  <h2 className="font-semibold text-[18px]">
+                    {messages[0].name}
+                  </h2>
+                </div>
+
+                <div
+                  key={message.timestamp}
+                  className={`flex items-start ${
+                    message.sender === "admin" ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  <div
+                    className={`${
+                      message.sender === "admin"
+                        ? "bg-[#98c0c5]"
+                        : "bg-[#f4e8b7]"
+                    } p-3 rounded-lg max-w-[260px]`}
+                  >
+                    <h2>{message.message}</h2>
                   </div>
                 </div>
-                <h2 className="font-semibold text-[18px]">{messages[0].name}</h2>
               </div>
-
-              <div
-                key={message.timestamp}
-                className={`flex items-start ${
-                  message.sender === "admin" ? "justify-end" : "justify-start"
-                }`}
-              >
-                <div
-                  className={`${
-                    message.sender === "admin" ? "bg-[#98c0c5]" : "bg-[#f4e8b7]"
-                  } p-3 rounded-lg max-w-[260px]`}
-                >
-                  <h2>{message.message}</h2>
-                </div>
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
 
         <div className="fixed bottom-0 pb-6 bg-[#fff] pt-2 w-[100%] px-4">

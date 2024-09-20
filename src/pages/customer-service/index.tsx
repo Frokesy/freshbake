@@ -3,6 +3,7 @@ import { ArrowLeft, CustomerAvatar, SendIcon } from "../../components/icons";
 import { useEffect, useState, useRef } from "react";
 import { UserDataProps } from "../home";
 import { supabase } from "../../../utils/supabaseClient";
+import Spinner from "../../components/defaults/Spinner";
 
 export interface MessageProps {
   id?: string;
@@ -18,6 +19,7 @@ const LiveSupport = () => {
   const [messageText, setMessageText] = useState<string>("");
   const [messages, setMessages] = useState<MessageProps[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [loadingMessages, setLoadingMessages] = useState<boolean>(true);
   const hasRun = useRef(false);
 
   const getUser = async () => {
@@ -53,6 +55,7 @@ const LiveSupport = () => {
 
   const fetchMessages = async () => {
     if (!userData) return;
+    setLoadingMessages(true)
 
     const { data: userMessages, error: userError } = await supabase
       .from("messages")
@@ -85,6 +88,7 @@ const LiveSupport = () => {
         ]);
       }
     }
+    setLoadingMessages(false)
   };
 
   useEffect(() => {
@@ -149,40 +153,46 @@ const LiveSupport = () => {
         <h2 className="font-semibold text-[24px]">Customer Support</h2>
       </div>
 
-      <div className="msg-body px-4 py-[15vh] text-sm flex flex-col space-y-3">
-        {messages.map((message) => (
-          <div
-            key={message.timestamp}
-            className={`flex items-start ${
-              message.sender === userData?.userId
-                ? "justify-end"
-                : "justify-start"
-            }`}
-          >
-            {message.sender === userData?.userId ? (
-              <div className="ml-1 order-2">
-                <div className="bg-[#d9d9d9] flex justify-center items-center p-1 rounded-full text-[12px]">
-                  {userData?.firstname?.charAt(0)}
-                  {userData?.lastname?.charAt(0)}
-                </div>
-              </div>
-            ) : (
-              <div className="mr-1">
-                <CustomerAvatar />
-              </div>
-            )}
+      {loadingMessages ? (
+        <div className="flex justify-center items-center h-[90vh]">
+          <Spinner color="#000" />
+        </div>
+      ) : (
+        <div className="msg-body px-4 py-[15vh] text-sm flex flex-col space-y-3">
+          {messages.map((message) => (
             <div
-              className={`${
+              key={message.timestamp}
+              className={`flex items-start ${
                 message.sender === userData?.userId
-                  ? "bg-[#98c0c5]"
-                  : "bg-[#f4e8b7]"
-              } p-3 rounded-lg max-w-[260px]`}
+                  ? "justify-end"
+                  : "justify-start"
+              }`}
             >
-              <h2>{message.message}</h2>
+              {message.sender === userData?.userId ? (
+                <div className="ml-1 order-2">
+                  <div className="bg-[#d9d9d9] flex justify-center items-center p-1 rounded-full text-[12px]">
+                    {userData?.firstname?.charAt(0)}
+                    {userData?.lastname?.charAt(0)}
+                  </div>
+                </div>
+              ) : (
+                <div className="mr-1">
+                  <CustomerAvatar />
+                </div>
+              )}
+              <div
+                className={`${
+                  message.sender === userData?.userId
+                    ? "bg-[#98c0c5]"
+                    : "bg-[#f4e8b7]"
+                } p-3 rounded-lg max-w-[260px]`}
+              >
+                <h2>{message.message}</h2>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       <div className="fixed bottom-0 pb-6 bg-[#fff] pt-2 w-[100%] px-4">
         <div className="flex justify-between px-4 py-3 rounded-lg items-center bg-[#e4e4e4]">

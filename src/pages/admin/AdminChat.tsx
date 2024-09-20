@@ -78,7 +78,7 @@ const AdminPanel = () => {
   return (
     <PageTransition active="customer-service">
       {selectedChatId ? (
-        <ChatWindow chatId={selectedChatId} />
+        <ChatWindow chatId={selectedChatId} setChatId={setSelectedChatId} />
       ) : (
         <div className="user-list">
         <div className="flex items-center space-x-4 px-4 pt-10 bg-[#fff] w-[100%] pb-3">
