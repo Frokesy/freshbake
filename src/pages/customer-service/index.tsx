@@ -54,19 +54,36 @@ const LiveSupport = () => {
   const fetchMessages = async () => {
     if (!userData) return;
 
-    const { data, error } = await supabase
+    const { data: userMessages, error: userError } = await supabase
       .from("messages")
       .select("*")
-      .eq("sender", userData?.userId)
+      .eq("sender", userData.userId)
       .order("timestamp", { ascending: true });
 
-    if (error) {
-      console.error("Error fetching messages:", error);
-    } else if (data) {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        ...(data as MessageProps[]),
-      ]);
+    if (userError) {
+      console.error("Error fetching user messages:", userError);
+      return;
+    }
+
+    if (userMessages) {
+      const chatIds = Array.from(
+        new Set(userMessages.map((msg) => msg.chatId))
+      );
+
+      const { data: allMessages, error: allError } = await supabase
+        .from("messages")
+        .select("*")
+        .in("chatId", chatIds)
+        .order("timestamp", { ascending: true });
+
+      if (allError) {
+        console.error("Error fetching all messages:", allError);
+      } else if (allMessages) {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          ...(allMessages as MessageProps[]),
+        ]);
+      }
     }
   };
 
@@ -96,7 +113,6 @@ const LiveSupport = () => {
     return Math.floor(1000000000 + Math.random() * 9000000000).toString();
   };
 
-
   const sendMessage = async () => {
     const chatId = messages.length > 0 ? messages[1].chatId : generateChatId();
     if (messageText.trim()) {
@@ -107,7 +123,6 @@ const LiveSupport = () => {
         timestamp: new Date().toISOString(),
         chatId: chatId,
       };
-
 
       const { data, error } = await supabase
         .from("messages")
