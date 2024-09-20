@@ -7,6 +7,7 @@ import { supabase } from "../../../utils/supabaseClient";
 export interface MessageProps {
   id?: string;
   timestamp: string | undefined;
+  chatId?: string;
   sender: string | undefined;
   name: string | undefined;
   message: string | undefined;
@@ -51,6 +52,8 @@ const LiveSupport = () => {
   };
 
   const fetchMessages = async () => {
+    if (!userData) return;
+
     const { data, error } = await supabase
       .from("messages")
       .select("*")
@@ -71,9 +74,14 @@ const LiveSupport = () => {
     if (!hasRun.current) {
       hasRun.current = true;
       getUser();
-      fetchMessages();
     }
   }, []);
+
+  useEffect(() => {
+    if (userData) {
+      fetchMessages();
+    }
+  }, [userData]);
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = textareaRef.current;
@@ -84,14 +92,22 @@ const LiveSupport = () => {
     }
   };
 
+  const generateChatId = (): string => {
+    return Math.floor(1000000000 + Math.random() * 9000000000).toString();
+  };
+
+
   const sendMessage = async () => {
+    const chatId = messages.length > 0 ? messages[1].chatId : generateChatId();
     if (messageText.trim()) {
       const newMessage = {
         sender: userData?.userId,
         name: `${userData?.firstname} ${userData?.lastname}`,
         message: messageText,
         timestamp: new Date().toISOString(),
+        chatId: chatId,
       };
+
 
       const { data, error } = await supabase
         .from("messages")

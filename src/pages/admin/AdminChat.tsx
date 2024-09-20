@@ -9,13 +9,14 @@ interface MessageDataProps {
   id?: string;
   timestamp: string;
   sender: string;
+  chatId: string;
   name: string | undefined;
   message: string | undefined;
 }
 
 const AdminPanel = () => {
   const [data, setData] = useState<MessageDataProps[]>([]);
-  const [selectedUserId, setSelectedUserId] = useState<string>("");
+  const [selectedChatId, setSelectedChatId] = useState<string>("");
 
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
@@ -76,8 +77,8 @@ const AdminPanel = () => {
 
   return (
     <PageTransition active="customer-service">
-      {selectedUserId ? (
-        <ChatWindow userId={selectedUserId} />
+      {selectedChatId ? (
+        <ChatWindow chatId={selectedChatId} />
       ) : (
         <div className="user-list">
         <div className="flex items-center space-x-4 px-4 pt-10 bg-[#fff] w-[100%] pb-3">
@@ -96,7 +97,7 @@ const AdminPanel = () => {
             <div key={msg.id} className="border border-[#ccc] px-4 py-2 flex justify-between items-center">
               <div className="max-w-[70%]">
                 <p
-                  onClick={() => setSelectedUserId(msg.sender)}
+                  onClick={() => setSelectedChatId(msg.chatId)}
                   className="cursor-pointer font-semibold"
                 >
                   {msg.name}
