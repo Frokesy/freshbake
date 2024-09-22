@@ -12,16 +12,9 @@ import Address from "./pages/account/address";
 import Success from "./pages/res/Success";
 import Order from "./pages/orders/Order";
 import PrivateRoute from "./components/defaults/PrivateRoute";
-import AdminDashboard from "./pages/admin";
-import AllOrders from "./pages/admin/AllOrders";
-import AllProducts from "./pages/admin/AllProducts";
-import AdminProfile from "./pages/admin/AdminProfile";
-import UserInfo from "./pages/admin/UserInfo";
-import AdminDetails from "./pages/admin/AdminDetails";
 import NewPassword from "./components/sections/auth/NewPassword";
 import Notifications from "./pages/notifications";
 import LiveSupport from "./pages/customer-service";
-import AdminPanel from "./pages/admin/AdminChat";
 
 function App() {
   const router = createBrowserRouter([
@@ -114,37 +107,6 @@ function App() {
       path: "/customer-service",
       element: <LiveSupport />
     },
-
-    
-    //admin routes
-    {
-      path: "/admin/dashboard",
-      element: <AdminDashboard />,
-    },
-    {
-      path: "/admin/all-orders",
-      element: <AllOrders />,
-    },
-    {
-      path: "/admin/all-products",
-      element: <AllProducts />,
-    },
-    {
-      path: "/admin/admin-profile",
-      element: <AdminProfile />,
-    },
-    {
-      path: "/admin/users-info",
-      element: <UserInfo />,
-    },
-    {
-      path: "/admin/admin-details",
-      element: <AdminDetails />,
-    },
-    {
-      path: "/admin/customer-service",
-      element: <AdminPanel />
-    }
   ]);
 
   return (
