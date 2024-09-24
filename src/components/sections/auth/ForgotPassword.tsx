@@ -16,122 +16,111 @@ export interface PasswordResetPros {
 
 const ForgotPassword: FC<PasswordResetPros> = ({
   setActiveScreen,
-  setUser,
+  setUser
+
 }) => {
   const [email, setEmail] = useState<string>("");
   const [otp, setOtp] = useState<string>("");
-  const [userData, setUserData] = useState<UserDataProps>();
+  const [userData, setUserData] = useState<UserDataProps | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [infoMessage, setInfoMessage] = useState<string | null>(null);
+
+  const plunkClient = new Plunk(
+    "sk_be82d7ea662e6422f5b77d4f9f17153cdf7e2aedd142e35e"
+  );
 
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
-  const plunkClient = new Plunk(
-    "sk_be82d7ea662e6422f5b77d4f9f17153cdf7e2aedd142e35e"
-  );
 
-  const sendEmail = async (firstname: string | undefined, otp: string) => {
+  const generateOTP = (length = 6): string => {
+    let otp = "";
+    for (let i = 0; i < length; i++) {
+      otp += Math.floor(Math.random() * 10);
+    }
+    setOtp(otp);
+    return otp;
+  };
+
+  const sendEmail = async (firstname: string | undefined) => {
     try {
       const emailHtml = render(
         <ForgotPasswordTemplate firstname={firstname} otp={otp} />
       );
 
       await plunkClient.emails.send({
-        to: email as string,
+        to: email,
         subject: "Password Reset",
         body: await emailHtml,
       });
 
-      if (userData) {
-        setUser(userData);
-        toast.success("Please check your email for the OTP", {
-          position: "top-right",
-          theme: "light",
-          autoClose: 1000,
-          hideProgressBar: false,
-          pauseOnHover: true,
-          draggable: true,
-          transition: Bounce,
-        });
-        setTimeout(() => setActiveScreen("otp"), 1500);
-      }
-      const now = new Date();
-      const expiresAt = new Date(now.getTime() + 10 * 60000);
+      toast.success("OTP sent! Please check your email.", {
+        position: "top-right",
+        theme: "light",
+        autoClose: 1000,
+        hideProgressBar: false,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Bounce,
+      });
 
-      const { error } = await supabase.from("otp_requests").insert([
-        {
-          user_id: userData?.userId,
-          otp,
-          expires_at: expiresAt.toISOString(),
-        },
-      ]);
+      setTimeout(() => setActiveScreen("otp"), 1500);
 
-      if (error) {
-        setLoading(false);
-        console.error("Error saving OTP:", error);
-      } else {
-        setLoading(false);
-      }
     } catch (error) {
-      setLoading(false);
-      console.error("Failed to send email:", error);
+      console.error("Error sending email:", error);
+      toast.error("Failed to send OTP. Please try again.", {
+        position: "top-right",
+        theme: "light",
+        autoClose: 2000,
+      });
     }
   };
 
   const handleSubmit = async () => {
     setLoading(true);
-    if (!email) {
-      setError("Email is required");
-      return;
-    }
+    setInfoMessage(null);
 
     if (!isValidEmail(email)) {
       setError("Please enter a valid email address");
       setLoading(false);
-      setTimeout(() => {
-        setError("");
-      }, 1000);
       return;
     }
 
-    setError(null);
+    try {
+      setError(null);
+      setInfoMessage("Searching for your account...");
 
-    const { data, error } = await supabase
-      .from("users")
-      .select("*")
-      .eq("email", email);
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("email", email);
 
-      
-      if (!error) {
-        data.map((data) => setUserData(data));
-    } else {
-      console.log(error);
+      if (error || !data.length) {
+        setError("User not found. Please check your email address.");
+        setLoading(false);
+        return;
+      }
+
+      setUserData(data[0]);
+      setUser(data[0])
+    } catch (err) {
+      setError("An unexpected error occurred.");
+      console.error("Error fetching user:", err);
     }
-    
   };
 
   useEffect(() => {
-    
     if (userData) {
-      sendEmail(userData?.firstname, otp);
+      sendEmail(userData.firstname);
+      setInfoMessage("Sending OTP...");
     }
-  }, [userData])
+  }, [userData]);
 
   useEffect(() => {
-    const generateOTP = (length = 6) => {
-      let otp = "";
-      for (let i = 0; i < length; i++) {
-        otp += Math.floor(Math.random() * 10);
-      }
-      setOtp(otp);
-      return otp;
-    };
-
     generateOTP();
   }, []);
-
 
   return (
     <div>
@@ -142,7 +131,7 @@ const ForgotPassword: FC<PasswordResetPros> = ({
           <div className="w-[50%] bg-[#F4E8B7] h-[100%] rounded-md"></div>
         </div>
         <h2 className="text-[24px] font-semibold mt-6">Forgot Password</h2>
-        <p className="text-[15px] mt-2">Enter your email</p>
+        <p className="text-[15px] mt-2">Enter your email to receive an OTP</p>
 
         <div className="mt-4">
           <Input
@@ -155,7 +144,9 @@ const ForgotPassword: FC<PasswordResetPros> = ({
         </div>
 
         {error && <p className="mt-2 text-[#ff0000] text-[13px]">{error}</p>}
+        {infoMessage && <p className="mt-2 text-[#007bff] text-[13px]">{infoMessage}</p>}
       </div>
+
       <div className="fixed px-4 bottom-6 lg:w-[450px] w-[100%] space-y-6">
         <Button
           filled={true}

@@ -108,7 +108,6 @@ const OTPPage: FC<OTPProps> = ({ user }) => {
       });
       const now = new Date();
       const expiresAt = new Date(now.getTime() + 10 * 60000);
-      console.log(reotp)
 
       const { error } = await supabase.from("otp_requests").insert([
         {
