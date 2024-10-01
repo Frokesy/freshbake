@@ -63,7 +63,7 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
       setLoading(false);
       return;
     }
-    if (viewedProduct?.tag !== "Agege") {
+    if (viewedProduct?.tag !== "Butter") {
       if (quantity < 2) {
         toast.error("Minimum of 2 items must be ordered", {
           position: "top-right",
@@ -189,7 +189,7 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
             <hr />
           </div>
 
-          {viewedProduct?.tag !== "Agege" && (
+          {viewedProduct?.tag !== "Butter" && (
             <div className="">
               <div className="flex justify-between px-4 py-4 items-center">
                 <div className="">

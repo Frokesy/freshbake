@@ -13,7 +13,7 @@ const Selector: FC<SelectorProps> = ({ getActiveTab }) => {
   const [activeSelector, changeSelector] = useState<string>("All");
   const varieties: VarietyProps[] = [
     { id: 1, name: "All" },
-    { id: 2, name: "Agege" },
+    { id: 2, name: "Butter" },
     { id: 3, name: "Sardine" },
     { id: 4, name: "Coconut" },
   ];
