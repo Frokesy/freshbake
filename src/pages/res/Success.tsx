@@ -127,6 +127,7 @@ const Success = () => {
 
       console.log("Order added successfully to Supabase.");
 
+      setLoading(false)
       await sendOrderConfirmationEmail(
         data.userData,
         data.cartItems,
