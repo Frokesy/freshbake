@@ -1,6 +1,6 @@
 import { Bounce, toast } from "react-toastify";
-import { supabase } from "./supabaseClient";
 import { useNavigate } from "react-router-dom";
+import { pb } from "./pocketbaseClient";
 
 export async function handleSignup(
   validateField: (value: string) => boolean,
@@ -50,31 +50,18 @@ export async function handleSignup(
     isPasswordValid
   ) {
     try {
-      const { data, error } = await supabase.auth.signUp({
+      const data = {
         email: user.email,
         password: user.password,
-      });
-      if (error) {
-        if (error.message === "User already registered") {
-          setLoading(false)
-          throw error.message;
-        }
-      }
-      if (!error) {
-        const id = data.user?.id;
-        const { error: userError } = await supabase.from("users").insert([
-          {
-            userId: id,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            email: user.email,
-            phone: user.phone,
-          },
-        ]);
-        if (userError) {
-          setLoading(false)
-          throw userError.message;
-        } else {
+        passwordConfirm: user.password,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        phone: user.phone,
+        emailVisibility: true,
+      };
+
+      const record = await pb.collection("users").create(data);
+      if (record) {
           toast.success(`Welcome ${user.firstname}!`, {
             position: "top-right",
             theme: "light",
@@ -88,19 +75,19 @@ export async function handleSignup(
           setTimeout(() => {
             navigate("/home");
           }, 2200);
-        }
       }
     } catch (error) {
       setLoading(false)
-      toast.error(error as string, {
-        position: "top-right",
-        theme: "light",
-        autoClose: 2000,
-        hideProgressBar: false,
-        pauseOnHover: true,
-        draggable: true,
-        transition: Bounce
-      });
+      console.log(error)
+        toast.error("Error creating account, please try again!", {
+          position: "top-right",
+          theme: "light",
+          autoClose: 2000,
+          hideProgressBar: false,
+          pauseOnHover: true,
+          draggable: true,
+          transition: Bounce
+        });
     }
   } else {
     setLoading(false);
