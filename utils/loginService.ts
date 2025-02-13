@@ -36,10 +36,11 @@ export async function handleLogin(
           draggable: true,
           transition: Bounce,
         });
+        const authCookie = pb.authStore.exportToCookie();
         if (keepLoggedIn) {
-          localStorage.setItem("authToken", authData.token);
+          localStorage.setItem("authToken", authCookie);
         } else {
-          sessionStorage.setItem("authToken", authData.token);
+          sessionStorage.setItem("authToken", authCookie);
         }
         setLoading(false);
         setTimeout(() => {
