@@ -2,8 +2,8 @@ import { FC, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Heart } from "../../icons";
 import ViewProductModal from "../../modals/ViewProductModal";
-import { supabase } from "../../../../utils/supabaseClient";
 import ProductSkeleton from "../../skeletons/ProductsSkeleton";
+import { pb } from "../../../../utils/pocketbaseClient";
 
 interface CatalogProps {
   activeTab: string;
@@ -108,21 +108,18 @@ const Catalog: FC<CatalogProps> = ({ activeTab }) => {
   useEffect(() => {
     const getProducts = async () => {
       setLoading(true);
-      const { data, error } = await supabase
-        .from("product-catalog")
-        .select("*");
-
-      if (!error) {
-        setProducts(data);
-      } else {
-        console.log(error);
+      try {
+        const data = await pb.collection("product-catalog").getFullList();
+        setProducts(data as unknown as ProductItemProps[]);
+      } catch (error) {
+        console.error("Error fetching products:", error);
       }
       setLoading(false);
     };
-
+  
     getProducts();
   }, []);
-
+  
   useEffect(() => {
     const filteredProducts = products.reduce(
       (acc: { [key: string]: ProductItemProps[] }, product) => {

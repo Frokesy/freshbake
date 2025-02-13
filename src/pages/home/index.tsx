@@ -3,7 +3,7 @@ import MainContainer from "../../components/containers/MainContainer";
 import Search from "../../components/defaults/Search";
 import TopNav from "../../components/defaults/TopNav";
 import Products from "../../components/sections/products";
-import { supabase } from "../../../utils/supabaseClient";
+import { pb } from "../../../utils/pocketbaseClient";
 
 export interface UserDataProps {
   created_at: string;
@@ -14,28 +14,34 @@ export interface UserDataProps {
   lastname: string;
   phone: string;
   userId: string;
-  password?:string;
+  password?: string;
 }
 
 const Home = () => {
-  const [userData, setUserData] = useState<UserDataProps>()
+  const [userData, setUserData] = useState<UserDataProps | null>(null);
+
   useEffect(() => {
     const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) {
-        const { data, error } = await supabase
-          .from("users")
-          .select("*")
-          .eq("userId", user.id);
-          if (!error) {
-            data.map((data) => setUserData(data))
-          } else {
-            console.log(error)
-          }
+      try {
+        if (!pb.authStore.isValid || !pb.authStore.model) {
+          console.warn("No authenticated user found");
+          return;
+        }
+
+        const userId = pb.authStore.model.id;
+
+        const user = await pb
+          .collection("users")
+          .getFirstListItem(`id="${userId}"`);
+
+          console.log("user", user)
+
+        setUserData(user as unknown as UserDataProps);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
       }
     };
+
     getUser();
   }, []);
 

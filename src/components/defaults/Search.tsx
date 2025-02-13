@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Hamburger, SearchIcon } from "../icons";
-import { supabase } from "../../../utils/supabaseClient";
 import { ProductItemProps } from "../sections/products/Catalog";
 import ViewProductModal from "../modals/ViewProductModal";
+import { pb } from "../../../utils/pocketbaseClient";
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -21,21 +21,23 @@ const Search = () => {
   }, [searchTerm]);
 
   const handleSearch = async () => {
-    if (searchTerm.trim() !== "") {
-      const { data, error } = await supabase
-        .from("product-catalog")
-        .select("*")
-        .ilike("type", `%${searchTerm}%`);
-
-      if (error) {
-        console.error("Error fetching search results:", error.message);
-      } else {
-        setResults(data || []);
+    const trimmedSearch = searchTerm.trim().toLowerCase();
+  
+    if (trimmedSearch !== "") {
+      try {
+        const data = await pb.collection("product-catalog").getList(1, 50, {
+          filter: `LOWER(type) ~ "${trimmedSearch}"`,
+        });
+  
+        setResults(data.items as unknown as ProductItemProps[] || []);
+      } catch (error) {
+        console.error("Error fetching search results:", error);
       }
     } else {
       setResults([]);
     }
   };
+  
 
   const handleProductClick = (product: ProductItemProps) => {
     setSelectedProduct(product);

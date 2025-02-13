@@ -11,7 +11,7 @@ import { NavLink } from "react-router-dom";
 import { supabase } from "../../../utils/supabaseClient";
 
 interface TopNavProps {
-  data: UserDataProps | undefined;
+  data: UserDataProps | null;
 }
 
 interface NotificationProps {
