@@ -109,7 +109,7 @@ const Catalog: FC<CatalogProps> = ({ activeTab }) => {
     const getProducts = async () => {
       setLoading(true);
       try {
-        const data = await pb.collection("product-catalog").getFullList();
+        const data = await pb.collection("product_catalog").getFullList();
         setProducts(data as unknown as ProductItemProps[]);
       } catch (error) {
         console.error("Error fetching products:", error);

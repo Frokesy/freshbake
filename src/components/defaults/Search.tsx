@@ -25,7 +25,7 @@ const Search = () => {
   
     if (trimmedSearch !== "") {
       try {
-        const data = await pb.collection("product-catalog").getList(1, 50, {
+        const data = await pb.collection("product_catalog").getList(1, 50, {
           filter: `LOWER(type) ~ "${trimmedSearch}"`,
         });
   

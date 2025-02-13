@@ -8,14 +8,14 @@ import {
 import { FC, useEffect, useState } from "react";
 import TextSkeleton from "../skeletons/TextSkeleton";
 import { NavLink } from "react-router-dom";
-import { supabase } from "../../../utils/supabaseClient";
+import { pb } from "../../../utils/pocketbaseClient";
 
 interface TopNavProps {
   data: UserDataProps | null;
 }
 
 interface NotificationProps {
-  id: number;
+  id: string;
   title: string;
   message: string;
   timestamp: string;
@@ -28,27 +28,29 @@ const TopNav: FC<TopNavProps> = ({ data }) => {
 
   const fetchNotifications = async () => {
     try {
-      const { data, error } = await supabase
-        .from("notifications")
-        .select("*")
-        .order("timestamp", { ascending: false });
-
-      if (error) {
-        console.error("Error fetching notifications:", error);
-        return;
-      }
-
+      const records = await pb.collection("notifications").getFullList({
+        sort: "-timestamp",
+      });
+  
+      const data: NotificationProps[] = records.map((record) => ({
+        id: record.id,
+        title: record.title,
+        message: record.message,
+        timestamp: record.timestamp,
+        read: record.read,
+      }));
+  
       setNotifications(data);
-      localStorage.setItem("notifications", JSON.stringify(notifications));
-      const unread = data.some(
-        (notification: NotificationProps) => !notification.read
-      );
+      localStorage.setItem("notifications", JSON.stringify(data || notifications));
+  
+      const unread = data.some((notification) => !notification.read);
       setHasUnread(unread);
-    } catch (err) {
-      console.error("Error:", err);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
     }
   };
-
+  
+  
   useEffect(() => {
     fetchNotifications();
   }, []);
