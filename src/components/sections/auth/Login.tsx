@@ -6,6 +6,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import Spinner from "../../defaults/Spinner";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { pb } from "../../../../utils/pocketbaseClient";
 
 export interface LoginProps {
   setActiveScreen: React.Dispatch<React.SetStateAction<string>>;
@@ -42,6 +43,8 @@ const Login: FC<LoginProps> = ({ setActiveScreen }) => {
       keepLoggedIn
     );
   };
+
+  console.log(pb);
 
   useEffect(() => {
     const token =
