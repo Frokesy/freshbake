@@ -21,22 +21,22 @@ const Search = () => {
   }, [searchTerm]);
 
   const handleSearch = async () => {
-    const trimmedSearch = searchTerm.trim().toLowerCase();
-  
-    if (trimmedSearch !== "") {
-      try {
-        const data = await pb.collection("product_catalog").getList(1, 50, {
-          filter: `LOWER(type) ~ "${trimmedSearch}"`,
-        });
-  
-        setResults(data.items as unknown as ProductItemProps[] || []);
-      } catch (error) {
-        console.error("Error fetching search results:", error);
-      }
-    } else {
+    if (!searchTerm) {
       setResults([]);
+      return;
+    }
+  
+    try {
+      const data = await pb.collection("product_catalog").getList(1, 50, {
+        filter: `type ~ "${searchTerm}"`,
+      });
+  
+      setResults(data.items as unknown as ProductItemProps[] || []);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
     }
   };
+  
   
 
   const handleProductClick = (product: ProductItemProps) => {
