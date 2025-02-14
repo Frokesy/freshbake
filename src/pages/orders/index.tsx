@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import MainContainer from "../../components/containers/MainContainer";
 import OrderDetails from "../../components/sections/orders/OrderDetails";
 import OrderOverview from "../../components/sections/orders/OrderOverview";
-import { supabase } from "../../../utils/supabaseClient";
+import { pb } from "../../../utils/pocketbaseClient";
 
 export interface OrderItemProps {
   id: number;
@@ -47,24 +47,24 @@ const Orders = () => {
   const [orderItems, setOrderItems] = useState<OrderItemProps[]>();
   useEffect(() => {
     const getOrder = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (user) {
-        const { data, error } = await supabase
-        .from("orders")
-        .select("*")
-        .eq("userId", user.id);
-      if (!error) {
-         setOrderItems(data);
-      } else {
-        console.log(error);
-      }
+      try {
+        const user = pb.authStore.model;
+  
+        if (user) {
+          const data = await pb.collection("orders").getFullList({
+            filter: `id = "${user.id}"`,
+          });
+  
+          setOrderItems(data as unknown as OrderItemProps[]);
+        }
+      } catch (error) {
+        console.error("Error fetching orders:", error);
       }
     };
+  
     getOrder();
   }, []);
+  
   return (
     <AnimatePresence mode="wait">
       <MainContainer active="Orders">

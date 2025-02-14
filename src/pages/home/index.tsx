@@ -10,7 +10,7 @@ export interface UserDataProps {
   defaultAddress: string;
   email: string;
   firstname: string;
-  id: number;
+  id: string;
   lastname: string;
   phone: string;
   userId: string;

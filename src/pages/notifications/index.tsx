@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
-import { supabase } from "../../../utils/supabaseClient";
 import MainContainer from "../../components/containers/MainContainer";
 import { InboxIcon, ArrowLeft } from "../../components/icons";
 import Spinner from "../../components/defaults/Spinner";
+import { pb } from "../../../utils/pocketbaseClient";
 
 interface NotificationProps {
   id: number;
@@ -21,55 +21,43 @@ const Notifications = () => {
 
   const fetchNotifications = async () => {
     try {
-      const { data, error } = await supabase
-        .from("notifications")
-        .select("*")
-        .order("timestamp", { ascending: false });
-
-      if (error) {
-        console.error("Error fetching notifications:", error);
-        return;
-      }
-
-      setNotifications(data);
+      const data = await pb.collection("notifications").getFullList({
+        sort: "-timestamp",
+      });
+  
+      setNotifications(data as unknown as NotificationProps[]);
     } catch (err) {
-      console.error("Error:", err);
+      console.error("Error fetching notifications:", err);
     } finally {
       setLoading(false);
     }
   };
-
+  
   useEffect(() => {
     fetchNotifications();
   }, []);
-
-  const markAsRead = async (id: number) => {
+  
+  const markAsRead = async (id: string) => {
     try {
-      const { error } = await supabase
-        .from("notifications")
-        .update({ read: true })
-        .eq("id", id);
-
-      if (error) {
-        console.error("Error updating read status:", error);
-      } else {
-        setNotifications((prev) =>
-          prev.map((notification) =>
-            notification.id === id ? { ...notification, read: true } : notification
-          )
-        );
-      }
+      await pb.collection("notifications").update(id, { read: true });
+  
+      setNotifications((prev) =>
+        prev.map((notification) =>
+          notification.id as unknown as string === id ? { ...notification, read: true } : notification
+        )
+      );
     } catch (err) {
-      console.error("Error:", err);
+      console.error("Error updating read status:", err);
     }
   };
+  
 
   const toggleExpand = (id: number) => {
     setExpanded(expanded === id ? null : id);
 
     const notification = notifications.find((n) => n.id === id);
     if (notification && !notification.read) {
-      markAsRead(id);
+      markAsRead(id as unknown as string);
     }
   };
 

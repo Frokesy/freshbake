@@ -2,8 +2,8 @@ import { NavLink } from "react-router-dom";
 import { ArrowLeft, CustomerAvatar, SendIcon } from "../../components/icons";
 import { useEffect, useState, useRef } from "react";
 import { UserDataProps } from "../home";
-import { supabase } from "../../../utils/supabaseClient";
 import Spinner from "../../components/defaults/Spinner";
+import { pb } from "../../../utils/pocketbaseClient";
 
 export interface MessageProps {
   id?: string;
@@ -23,74 +23,63 @@ const LiveSupport = () => {
   const hasRun = useRef(false);
 
   const getUser = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (user) {
-      const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("userId", user.id);
-      if (!error && data.length > 0) {
-        const fetchedUserData = data[0];
-        setUserData(fetchedUserData);
-
-        const adminMsg = [
-          {
-            sender: "admin",
-            name: `${fetchedUserData.firstname} ${fetchedUserData.lastname}`,
-            message: `Hello, ${fetchedUserData.firstname}! \n How can we assist you today?`,
-            timestamp: new Date().toISOString(),
-          },
-        ];
-        setMessages((prevMessages) => [
-          ...(adminMsg as MessageProps[]),
-          ...prevMessages,
-        ]);
-      } else {
-        console.log(error);
-      }
+    try {
+      const user = pb.authStore.model;
+      if (!user) return;
+  
+      const fetchedUserData = await pb.collection("users").getOne(user.id);
+  
+      setUserData(fetchedUserData as unknown as UserDataProps);
+  
+      const adminMsg = [
+        {
+          sender: "admin",
+          name: `${fetchedUserData.firstname} ${fetchedUserData.lastname}`,
+          message: `Hello, ${fetchedUserData.firstname}! \n How can we assist you today?`,
+          timestamp: new Date().toISOString(),
+        },
+      ];
+  
+      setMessages((prevMessages) => [
+        ...(adminMsg as MessageProps[]),
+        ...prevMessages,
+      ]);
+    } catch (error) {
+      console.error("Error fetching user:", error);
     }
   };
+  
 
   const fetchMessages = async () => {
     if (!userData) return;
-    setLoadingMessages(true)
-
-    const { data: userMessages, error: userError } = await supabase
-      .from("messages")
-      .select("*")
-      .eq("sender", userData.userId)
-      .order("timestamp", { ascending: true });
-
-    if (userError) {
-      console.error("Error fetching user messages:", userError);
-      return;
-    }
-
-    if (userMessages) {
-      const chatIds = Array.from(
-        new Set(userMessages.map((msg) => msg.chatId))
-      );
-
-      const { data: allMessages, error: allError } = await supabase
-        .from("messages")
-        .select("*")
-        .in("chatId", chatIds)
-        .order("timestamp", { ascending: true });
-
-      if (allError) {
-        console.error("Error fetching all messages:", allError);
-      } else if (allMessages) {
+    setLoadingMessages(true);
+  
+    try {
+      const userMessages = await pb.collection("messages").getFullList({
+        filter: `sender = "${userData.id}"`,
+        sort: "timestamp",
+      });
+  
+      if (userMessages.length > 0) {
+        const chatIds = Array.from(new Set(userMessages.map((msg) => msg.chatId)));
+  
+        const allMessages = await pb.collection("messages").getFullList({
+          filter: `chatId IN (${chatIds.map((id) => `"${id}"`).join(",")})`,
+          sort: "timestamp",
+        });
+  
         setMessages((prevMessages) => [
           ...prevMessages,
-          ...(allMessages as MessageProps[]),
+          ...(allMessages as unknown as MessageProps[]),
         ]);
       }
+    } catch (error) {
+      console.error("Error fetching messages:", error);
     }
-    setLoadingMessages(false)
+  
+    setLoadingMessages(false);
   };
-
+  
   useEffect(() => {
     if (!hasRun.current) {
       hasRun.current = true;
@@ -119,28 +108,27 @@ const LiveSupport = () => {
 
   const sendMessage = async () => {
     const chatId = messages.length > 0 ? messages[1].chatId : generateChatId();
+  
     if (messageText.trim()) {
       const newMessage = {
-        sender: userData?.userId,
+        sender: userData?.id,
         name: `${userData?.firstname} ${userData?.lastname}`,
         message: messageText,
         timestamp: new Date().toISOString(),
         chatId: chatId,
       };
-
-      const { data, error } = await supabase
-        .from("messages")
-        .insert([newMessage]);
-
-      if (error) {
-        console.error("Error sending message:", error);
-      } else {
-        console.log(data);
+  
+      try {
+        const response = await pb.collection("messages").create(newMessage);
+        console.log(response);
         setMessages((prevMessages) => [...prevMessages, newMessage]);
         setMessageText("");
+      } catch (error) {
+        console.error("Error sending message:", error);
       }
     }
   };
+  
 
   return (
     <div>
@@ -163,12 +151,12 @@ const LiveSupport = () => {
             <div
               key={message.timestamp}
               className={`flex items-start ${
-                message.sender === userData?.userId
+                message.sender === userData?.id
                   ? "justify-end"
                   : "justify-start"
               }`}
             >
-              {message.sender === userData?.userId ? (
+              {message.sender === userData?.id ? (
                 <div className="ml-1 order-2">
                   <div className="bg-[#d9d9d9] flex justify-center items-center p-1 rounded-full text-[12px]">
                     {userData?.firstname?.charAt(0)}
@@ -182,7 +170,7 @@ const LiveSupport = () => {
               )}
               <div
                 className={`${
-                  message.sender === userData?.userId
+                  message.sender === userData?.id
                     ? "bg-[#98c0c5]"
                     : "bg-[#f4e8b7]"
                 } p-3 rounded-lg max-w-[260px]`}

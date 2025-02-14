@@ -3,11 +3,11 @@ import MainContainer from "../../components/containers/MainContainer";
 import { ArrowLeft, Pen } from "../../components/icons";
 import { useEffect, useState } from "react";
 import { UserDataProps } from "../home";
-import { supabase } from "../../../utils/supabaseClient";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import Button from "../../components/defaults/Button";
 import Spinner from "../../components/defaults/Spinner";
 import { motion } from "framer-motion";
+import { pb } from "../../../utils/pocketbaseClient";
 
 const ProfileDetails = () => {
   const [edit, setEdit] = useState<string>("");
@@ -19,30 +19,25 @@ const ProfileDetails = () => {
     phone: "",
   });
   const [loading, setLoading] = useState<boolean>(false);
-
   const getUser = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (user) {
-      const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("userId", user.id)
-        .single();
-      if (!error) {
-        setUserData(data);
-        setInputValues({
-          firstname: data.firstname || "",
-          lastname: data.lastname || "",
-          email: data.email || "",
-          phone: data.phone || "",
-        });
-      } else {
-        console.log(error);
-      }
+    try {
+      const user = pb.authStore.model;
+      if (!user) return;
+  
+      const data = await pb.collection("users").getOne(user.id);
+  
+      setUserData(data as unknown as UserDataProps);
+      setInputValues({
+        firstname: data.firstname || "",
+        lastname: data.lastname || "",
+        email: data.email || "",
+        phone: data.phone || "",
+      });
+    } catch (error) {
+      console.error("Error fetching user:", error);
     }
   };
+  
 
   useEffect(() => {
     getUser();
@@ -56,33 +51,32 @@ const ProfileDetails = () => {
   };
 
   const handleSave = async () => {
-    setLoading(true);
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (user) {
-      const { error } = await supabase
-        .from("users")
-        .update(inputValues)
-        .eq("userId", user.id);
-      if (error) {
-        console.log(error);
-      } else {
-        setEdit("");
-        setLoading(false);
-        getUser();
-        toast.success(`Profile Updated!!`, {
-          position: "top-right",
-          theme: "light",
-          autoClose: 1000,
-          hideProgressBar: true,
-          pauseOnHover: true,
-          draggable: true,
-          transition: Bounce,
-        });
-      }
+    try {
+      setLoading(true);
+  
+      const user = pb.authStore.model;
+      if (!user) return;
+  
+      await pb.collection("users").update(user.id, inputValues);
+  
+      setEdit("");
+      setLoading(false);
+      getUser();
+  
+      toast.success("Profile Updated!!", {
+        position: "top-right",
+        theme: "light",
+        autoClose: 1000,
+        hideProgressBar: true,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Bounce,
+      });
+    } catch (error) {
+      console.error("Error updating profile:", error);
     }
   };
+  
 
   return (
     <MainContainer active="Account">

@@ -3,7 +3,6 @@ import { FC, useEffect, useState } from "react";
 import { OrderItemProps } from "../../../pages/orders";
 import { ArrowLeft, OrderCheck, UncheckedOrder } from "../../icons";
 import PageTransition from "../../defaults/PageTransition";
-import { supabase } from "../../../../utils/supabaseClient";
 import { UserDataProps } from "../../../pages/home";
 import {
   GoogleMap,
@@ -11,6 +10,7 @@ import {
   useJsApiLoader,
 } from "@react-google-maps/api";
 import Spinner from "../../defaults/Spinner";
+import { pb } from "../../../../utils/pocketbaseClient";
 
 interface TrackOrderProps {
   order: OrderItemProps | undefined;
@@ -34,21 +34,22 @@ const TrackOrder: FC<TrackOrderProps> = ({ order, isTracked }) => {
 
   useEffect(() => {
     const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) {
-        const { data, error } = await supabase
-          .from("users")
-          .select("*")
-          .eq("userId", user.id);
-        if (!error && data.length > 0) {
-          setUserData(data[0]);
-          getRoute(order?.deliveryAddress as string);
+      try {
+        const user = pb.authStore.model;
+  
+        if (user) {
+          const data = await pb.collection("users").getFirstListItem(`id="${user.id}"`);
+          
+          if (data) {
+            setUserData(data as unknown as UserDataProps);
+            getRoute(order?.deliveryAddress as string);
+          }
         }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
       }
     };
-
+  
     getUser();
   }, []);
 

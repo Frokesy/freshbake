@@ -9,9 +9,9 @@ import {
 } from "../../components/icons";
 import { UserDataProps } from "../home";
 import { useEffect, useState } from "react";
-import { supabase } from "../../../utils/supabaseClient";
 import LogoutModal from "../../components/modals/LogoutModal";
 import TextSkeleton from "../../components/skeletons/TextSkeleton";
+import { pb } from "../../../utils/pocketbaseClient";
 
 const Account = () => {
   const accountItems = [
@@ -32,26 +32,27 @@ const Account = () => {
   ];
   const [userData, setUserData] = useState<UserDataProps>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  
   useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+  const getUser = async () => {
+    try {
+      const user = pb.authStore.model;
+
       if (user) {
-        const { data, error } = await supabase
-          .from("users")
-          .select("*")
-          .eq("userId", user.id);
-        if (!error) {
-          data.map((data) => setUserData(data));
-        } else {
-          console.log(error);
+        const data = await pb.collection("users").getFirstListItem(`id="${user.id}"`);
+        
+        if (data) {
+          setUserData(data as unknown as UserDataProps);
         }
       }
-    };
-    getUser();
-  }, []);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
 
+
+  getUser();
+}, []);
   return (
     <MainContainer active="Account">
       <div className="bg-[#ffbb1d] min-h-screen pt-[15vh]">

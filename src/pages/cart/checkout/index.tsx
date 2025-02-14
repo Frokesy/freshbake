@@ -5,10 +5,10 @@ import { ArrowLeft, PenEdit } from "../../../components/icons";
 import { NavLink, useNavigate } from "react-router-dom";
 import { CartItemProps } from "..";
 import { UserDataProps } from "../../home";
-import { supabase } from "../../../../utils/supabaseClient";
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 import Spinner from "../../../components/defaults/Spinner";
 import { Bounce, toast, ToastContainer } from "react-toastify";
+import { pb } from "../../../../utils/pocketbaseClient";
 
 interface VendorDetailsProps {
   vendorName: string;
@@ -63,51 +63,53 @@ const Checkout = () => {
         draggable: true,
         transition: Bounce,
       });
-    } else {
-      try {
-        const { data, error } = await supabase
-          .from("users")
-          .update({ defaultAddress: editedAddress })
-          .eq("userId", userData?.userId);
-
-        if (error) throw error;
-        console.log("Address updated:", data);
-      } catch (error) {
-        console.error("Error updating address:", error);
-      }
-      setIsEditingAddress(false);
+      return;
     }
+  
+    try {
+      const user = pb.authStore.model; // Get logged-in user
+      if (!user) return;
+  
+      await pb.collection("users").update(user.id, { defaultAddress: editedAddress });
+  
+      console.log("Address updated successfully!");
+    } catch (error) {
+      console.error("Error updating address:", error);
+    }
+    setIsEditingAddress(false);
   };
+  
+  // Fetch user details
   useEffect(() => {
     const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) {
-        const { data, error } = await supabase
-          .from("users")
-          .select("*")
-          .eq("userId", user.id);
-        if (!error) {
-          data.map((data) => setUserData(data));
-        } else {
-          console.log(error);
-        }
+      try {
+        const user = pb.authStore.model;
+        if (!user) return;
+  
+        const data = await pb.collection("users").getOne(user.id);
+        setUserData(data as unknown as UserDataProps);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
       }
     };
+  
     getUser();
   }, []);
+  
+  // Fetch vendor details
   useEffect(() => {
     const fetchVendorDetails = async () => {
-      const { data, error } = await supabase.from("admin").select("*");
-
-      if (!error) {
-        data.map((data) => setVendorDetails(data));
+      try {
+        const data = await pb.collection("admin").getFullList(); // Fetch all admin records
+        setVendorDetails(data as unknown as VendorDetailsProps);
+      } catch (error) {
+        console.error("Error fetching vendor details:", error);
       }
     };
-
+  
     fetchVendorDetails();
   }, []);
+  
   useEffect(() => {
     getCartItems();
   });
@@ -123,7 +125,7 @@ const Checkout = () => {
     currency: "NGN",
     payment_options: "card,mobilemoney,ussd",
     customer: {
-      id: userData?.userId,
+      id: userData?.id,
       email: userData?.email as string,
       phone_number: userData?.phone as string,
       name: `${userData?.firstname} ${userData?.lastname}` as string,

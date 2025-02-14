@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import MainContainer from "../../components/containers/MainContainer";
 import { ArrowLeft, CurLoc, MinAddressIcon } from "../../components/icons";
-import { supabase } from "../../../utils/supabaseClient";
 import Button from "../../components/defaults/Button";
 import Spinner from "../../components/defaults/Spinner";
 import { toast, ToastContainer, Bounce } from "react-toastify";
 import { UserDataProps } from "../home";
 import axios from "axios";
+import { pb } from "../../../utils/pocketbaseClient";
 
 const Address = () => {
   const [newAddress, setNewAddress] = useState<string>("");
@@ -69,23 +69,22 @@ const Address = () => {
     }, 2000);
   };
 
-  const getUser = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (user) {
-      const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("userId", user.id);
-      if (!error) {
-        data.map((data) => setUserData(data));
-      } else {
-        console.log(error);
+    const getUser = async () => {
+      try {
+        const user = pb.authStore.model;
+  
+        if (user) {
+          const data = await pb.collection("users").getFirstListItem(`id="${user.id}"`);
+          
+          if (data) {
+            setUserData(data as unknown as UserDataProps);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
       }
-    }
-  };
-
+    };
+  
   useEffect(() => {
     getUser();
   }, []);
@@ -97,24 +96,12 @@ const Address = () => {
   const handleSaveAddress = async () => {
     setLoading(true);
     if (!userData) return;
-
-    const { error } = await supabase
-      .from("users")
-      .update({ defaultAddress: newAddress })
-      .eq("userId", userData.userId);
-
-    if (error) {
-      console.log(error);
-      toast.error("Failed to update address.", {
-        position: "top-right",
-        theme: "light",
-        autoClose: 2000,
-        hideProgressBar: true,
-        pauseOnHover: true,
-        draggable: true,
-        transition: Bounce,
+  
+    try {
+      await pb.collection("users").update(userData.id, {
+        defaultAddress: newAddress,
       });
-    } else {
+  
       toast.success("Address updated successfully!", {
         position: "top-right",
         theme: "light",
@@ -124,10 +111,24 @@ const Address = () => {
         draggable: true,
         transition: Bounce,
       });
+  
       getUser();
+    } catch (error) {
+      console.error("Failed to update address:", error);
+      toast.error("Failed to update address.", {
+        position: "top-right",
+        theme: "light",
+        autoClose: 2000,
+        hideProgressBar: true,
+        pauseOnHover: true,
+        draggable: true,
+        transition: Bounce,
+      });
     }
+  
     setLoading(false);
   };
+  
 
   console.log(location);
   return (

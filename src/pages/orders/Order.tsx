@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { supabase } from "../../../utils/supabaseClient";
 import OrderDetails from "../../components/sections/orders/OrderDetails";
 import { OrderItemProps } from ".";
+import { pb } from "../../../utils/pocketbaseClient";
 
 const Order = () => {
   const { transactionId } = useParams();
@@ -10,19 +10,24 @@ const Order = () => {
   const [data, setData] = useState<OrderItemProps>();
   useEffect(() => {
     const getOrder = async () => {
-      const { data, error } = await supabase
-        .from("orders")
-        .select("*")
-        .eq("transactionId", transactionId);
-      if (!error) {
-        data.map((data) => setData(data));
-      } else {
-        console.log(error);
+      try {
+        const data = await pb.collection("orders").getFullList({
+          filter: `transactionId = "${transactionId}"`,
+        });
+  
+        if (data.length > 0) {
+          setData(data[0] as unknown as OrderItemProps); 
+        }
+      } catch (error) {
+        console.error("Error fetching order:", error);
       }
     };
-    getOrder();
+  
+    if (transactionId) {
+      getOrder();
+    }
   }, [transactionId]);
-
+  
   return (
     <div>
       <OrderDetails fromOrderPage clickedOrder={data as OrderItemProps} setClickedOrder={setData} />

@@ -1,6 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
 import Button from "../../components/defaults/Button";
-import { supabase } from "../../../utils/supabaseClient";
 import { useEffect, useState, useRef } from "react";
 import { UserDataProps } from "../home";
 import { CartItemProps } from "../cart";
@@ -8,6 +7,7 @@ import { render } from "@react-email/render";
 import { PaymentSuccessful } from "../../components/email-templates/PaymentSuccessful";
 import Plunk from "@plunk/node";
 import Spinner from "../../components/defaults/Spinner";
+import { pb } from "../../../utils/pocketbaseClient";
 
 const Success = () => {
   const location = useLocation();
@@ -81,53 +81,44 @@ const Success = () => {
     });
   };
 
-  const addNotificationToSupabase = async () => {
+  const addNotificationToPocketBase = async () => {
     try {
-      const { error } = await supabase.from("notifications").insert([
-        {
-          userId: data.userData.userId,
-          title: "Order Placed",
-          message: `Your order #${data.transactionId} has been placed successfully.`,
-          timestamp: new Date().toISOString(),
-          read: false,
-        },
-      ]);
-
-      if (error) {
-        console.error("Error adding notification to Supabase:", error);
-        return;
-      }
-
-      console.log("Notification added to Supabase.");
+      const notificationData = {
+        userId: data.userData.id,
+        title: "Order Placed",
+        message: `Your order #${data.transactionId} has been placed successfully.`,
+        timestamp: new Date().toISOString(),
+        read: false,
+      };
+  
+      await pb.collection("notifications").create(notificationData);
+  
+      console.log("Notification added to PocketBase.");
     } catch (err) {
       console.error("Error adding notification:", err);
     }
   };
-
-  const addOrdertoDB = async () => {
+  
+  const addOrderToDB = async () => {
     try {
-      const { error } = await supabase.from("orders").insert([
-        {
-          userId: data.userData.userId,
-          items: data.cartItems,
-          totalCost: data.totalCost,
-          paymentStatus: data.paymentStatus,
-          transactionId: data.transactionId,
-          deliveryOption: data.deliveryOption,
-          deliveryFee: data.deliveryFee,
-          orderStatus: "Processing",
-          deliveryAddress: data.deliveryAddress,
-        },
-      ]);
-
-      if (error) {
-        console.error("Error adding order to Supabase:", error);
-        return;
-      }
-
-      console.log("Order added successfully to Supabase.");
-
-      setLoading(false)
+      const orderData = {
+        userId: data.userData.id,
+        items: JSON.stringify(data.cartItems),
+        totalCost: data.totalCost,
+        paymentStatus: data.paymentStatus,
+        transactionId: data.transactionId,
+        deliveryOption: data.deliveryOption,
+        deliveryFee: data.deliveryFee,
+        orderStatus: "Processing",
+        deliveryAddress: data.deliveryAddress,
+      };
+  
+      await pb.collection("orders").create(orderData);
+  
+      console.log("Order added successfully to PocketBase.");
+  
+      setLoading(false);
+  
       await sendOrderConfirmationEmail(
         data.userData,
         data.cartItems,
@@ -136,20 +127,21 @@ const Success = () => {
         data.activeTab,
         data.deliveryFee
       );
-
+  
       await clearCart();
-      await addNotificationToSupabase();
+      await addNotificationToPocketBase();
     } catch (err) {
       console.error("Error processing order:", err);
     } finally {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     if (!hasRun.current) {
       hasRun.current = true;
-      addOrdertoDB();
+      addOrderToDB();
     }
   }, []);
 
