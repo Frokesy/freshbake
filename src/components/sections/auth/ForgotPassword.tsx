@@ -2,12 +2,12 @@ import { FC, useEffect, useState } from "react";
 import Button from "../../defaults/Button";
 import Input from "../../defaults/Input";
 import { Bounce, toast, ToastContainer } from "react-toastify";
-import { supabase } from "../../../../utils/supabaseClient";
 import { UserDataProps } from "../../../pages/home";
 import { render } from "@react-email/render";
 import { ForgotPasswordTemplate } from "../../email-templates/ForgotPassword";
 import Plunk from "@plunk/node";
 import Spinner from "../../defaults/Spinner";
+import { pb } from "../../../../utils/pocketbaseClient";
 
 export interface PasswordResetPros {
   setActiveScreen: React.Dispatch<React.SetStateAction<string>>;
@@ -16,8 +16,7 @@ export interface PasswordResetPros {
 
 const ForgotPassword: FC<PasswordResetPros> = ({
   setActiveScreen,
-  setUser
-
+  setUser,
 }) => {
   const [email, setEmail] = useState<string>("");
   const [otp, setOtp] = useState<string>("");
@@ -25,10 +24,9 @@ const ForgotPassword: FC<PasswordResetPros> = ({
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [infoMessage, setInfoMessage] = useState<string | null>(null);
+  const plunkSecret = import.meta.env.VITE_PLUNK_SECRET;
 
-  const plunkClient = new Plunk(
-    "sk_be82d7ea662e6422f5b77d4f9f17153cdf7e2aedd142e35e"
-  );
+  const plunkClient = new Plunk(plunkSecret);
 
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -67,7 +65,6 @@ const ForgotPassword: FC<PasswordResetPros> = ({
       });
 
       setTimeout(() => setActiveScreen("otp"), 1500);
-
     } catch (error) {
       console.error("Error sending email:", error);
       toast.error("Failed to send OTP. Please try again.", {
@@ -92,22 +89,23 @@ const ForgotPassword: FC<PasswordResetPros> = ({
       setError(null);
       setInfoMessage("Searching for your account...");
 
-      const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("email", email);
+      const records = await pb.collection("users").getList(1, 1, {
+        filter: `email = "${email}"`,
+      });
 
-      if (error || !data.length) {
+      if (!records || records.items.length === 0) {
         setError("User not found. Please check your email address.");
         setLoading(false);
         return;
       }
 
-      setUserData(data[0]);
-      setUser(data[0])
+      setUserData(records.items[0] as unknown as UserDataProps);
+      setUser(records.items[0] as unknown as UserDataProps);
     } catch (err) {
       setError("An unexpected error occurred.");
       console.error("Error fetching user:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -144,7 +142,9 @@ const ForgotPassword: FC<PasswordResetPros> = ({
         </div>
 
         {error && <p className="mt-2 text-[#ff0000] text-[13px]">{error}</p>}
-        {infoMessage && <p className="mt-2 text-[#007bff] text-[13px]">{infoMessage}</p>}
+        {infoMessage && (
+          <p className="mt-2 text-[#007bff] text-[13px]">{infoMessage}</p>
+        )}
       </div>
 
       <div className="fixed px-4 bottom-6 lg:w-[450px] w-[100%] space-y-6">

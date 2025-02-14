@@ -4,8 +4,8 @@ import { FC, useState } from "react";
 import Button from "../../defaults/Button";
 import Spinner from "../../defaults/Spinner";
 import { OTPProps } from "./OTPPage";
-import { supabase } from "../../../../utils/supabaseClient"; // import Supabase client
 import { useNavigate } from "react-router-dom";
+import { pb } from "../../../../utils/pocketbaseClient";
 
 const NewPassword: FC<OTPProps> = () => {
   const [newPassword, setNewPassword] = useState<string>("");
@@ -14,57 +14,63 @@ const NewPassword: FC<OTPProps> = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const navigate = useNavigate();
-
+  
   const handleSubmit = async () => {
     setError(null);
-
+  
     if (!newPassword || !confirmPassword) {
       setError("Please fill in both password fields.");
       return;
     }
-
+  
     if (newPassword !== confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
-
+  
     if (newPassword.length < 8) {
       setError("Password must be at least 8 characters long.");
       return;
     }
-
+  
     setLoading(true);
-
-
+  
     try {
-      const { error } = await supabase.auth.updateUser({
+      const user = pb.authStore.model;
+      if (!user) {
+        setError("User not authenticated. Please log in again.");
+        return;
+      }
+  
+      const updatedUser = await pb.collection("users").update(user.id, {
         password: newPassword,
+        passwordConfirm: confirmPassword,
       });
 
-      if (error) {
-        setError("Failed to reset password. Please try again.");
-        console.error("Error resetting password:", error);
-      } else {
-        toast.success("Password reset successful!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-
-        setTimeout(() => {
-            navigate("/")
-        }, 2000)
+      if (!updatedUser) {
+        return;
       }
+  
+      toast.success("Password reset successful!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+  
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
     } catch (err) {
-      console.log(err);
+      console.error("Error resetting password:", err);
       setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div>
