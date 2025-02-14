@@ -52,7 +52,7 @@ const Orders = () => {
   
         if (user) {
           const data = await pb.collection("orders").getFullList({
-            filter: `id = "${user.id}"`,
+            filter: `userId = "${user.id}"`,
           });
   
           setOrderItems(data as unknown as OrderItemProps[]);

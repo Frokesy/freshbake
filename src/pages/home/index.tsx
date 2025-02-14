@@ -34,8 +34,6 @@ const Home = () => {
           .collection("users")
           .getFirstListItem(`id="${userId}"`);
 
-          console.log("user", user)
-
         setUserData(user as unknown as UserDataProps);
       } catch (error) {
         console.error("Error fetching user data:", error);

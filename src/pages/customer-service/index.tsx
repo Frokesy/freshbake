@@ -107,7 +107,17 @@ const LiveSupport = () => {
   };
 
   const sendMessage = async () => {
-    const chatId = messages.length > 0 ? messages[1].chatId : generateChatId();
+    if (!Array.isArray(messages)) {
+      console.error("Messages array is undefined");
+      return;
+    }
+  
+    const chatId = messages.length > 1 && messages[1]?.chatId ? messages[1].chatId : generateChatId();
+    
+    if (!chatId) {
+      console.error("Failed to get or generate chatId");
+      return;
+    }
   
     if (messageText.trim()) {
       const newMessage = {
@@ -128,6 +138,7 @@ const LiveSupport = () => {
       }
     }
   };
+  
   
 
   return (
