@@ -55,6 +55,7 @@ export async function handleSignup(
         password: user.password,
         passwordConfirm: user.password,
         firstname: user.firstname,
+        defaultAddress: "not set, update in profile",
         lastname: user.lastname,
         phone: user.phone,
         emailVisibility: true,
