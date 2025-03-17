@@ -131,9 +131,9 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
 
   const availableTimes = () => {
     switch (deliveryDay) {
+      case "Friday":
+        return ["10:00 am", "12:00 pm", "06:00 pm"];
       case "Saturday":
-        return ["09:00 am", "06:00 pm"];
-      case "Wednesday":
       case "Sunday":
         return ["06:00 pm"];
       default:
@@ -207,7 +207,7 @@ const ViewProductModal: FC<ViewedProductModalProps> = ({
             <h2 className="text-[16px] font-semibold mt-6">
               Delivery Schedule
             </h2>
-            {["Wednesday", "Saturday", "Sunday"].map((day) => (
+            {["Friday", "Saturday", "Sunday"].map((day) => (
               <div className="flex justify-between items-center mt-4" key={day}>
                 <label htmlFor={day}>{day}</label>
                 <input
