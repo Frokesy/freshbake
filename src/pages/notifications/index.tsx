@@ -88,7 +88,7 @@ const Notifications = () => {
         notifications.map((notification) => (
           <motion.div
             key={notification.id}
-            className={`px-4 py-2 border-b border-t mt-6 border-gray-200 cursor-pointer flex space-x-3 items-center ${
+            className={`px-4 py-2 border-b border-t mt-3 border-gray-200 cursor-pointer flex space-x-3 items-center ${
               notification.read ? "bg-gray-100" : "bg-white"
             }`}
             initial={{ opacity: 0, y: 20 }}

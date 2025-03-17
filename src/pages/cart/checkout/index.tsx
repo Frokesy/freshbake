@@ -4,6 +4,8 @@ import { CartItemProps } from "..";
 import { UserDataProps } from "../../home";
 import { pb } from "../../../../utils/pocketbaseClient";
 import PreCheckout from "../../../components/sections/checkout/PreCheckout";
+import Payment from "../../../components/sections/checkout/Payment";
+import { motion } from "framer-motion";
 
 export interface VendorDetailsProps {
   vendorName: string;
@@ -21,12 +23,18 @@ export interface CheckoutDataProps {
   deliveryAddress: string | undefined;
 }
 
+const fadeVariants = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+};
+
 const Checkout = () => {
   const [userData, setUserData] = useState<UserDataProps>();
   const [cartItems, setCartItems] = useState<CartItemProps[]>([]);
   const [vendorDetails, setVendorDetails] = useState<VendorDetailsProps>();
   const [checkoutData, setCheckoutData] = useState<CheckoutDataProps>();
-  const [activeScreen, setActiveScreen] = useState<string>("prechekout");
+  const [activeScreen, setActiveScreen] = useState<string>("precheckout");
 
   const idb = window.indexedDB;
 
@@ -86,13 +94,29 @@ const Checkout = () => {
 
   return (
     <MainContainer active="Cart">
-      <PreCheckout
-        cartItems={cartItems}
-        userData={userData}
-        vendorDetails={vendorDetails}
-        setCheckoutData={setCheckoutData}
-        setActiveScreen={setActiveScreen}
-      />
+      <motion.div
+        key={activeScreen ? "precheckout" : "payment"}
+        variants={fadeVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={{ duration: 0.5 }}
+      >
+        {activeScreen === "precheckout" ? (
+          <PreCheckout
+            cartItems={cartItems}
+            userData={userData}
+            vendorDetails={vendorDetails}
+            setCheckoutData={setCheckoutData}
+            setActiveScreen={setActiveScreen}
+          />
+        ) : (
+          <Payment
+            setActiveScreen={setActiveScreen}
+            checkoutData={checkoutData}
+          />
+        )}
+      </motion.div>
     </MainContainer>
   );
 };

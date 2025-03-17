@@ -44,12 +44,14 @@ export const PaymentSuccessful: FC<EmailTemplateProps> = ({
           </Heading>
           <Section>
             <Text>
-              We have received your order <strong>#{orderId}</strong> and it's
-              being processed.
+              We have received your order <strong>#{orderId}</strong> and it'll
+              be processed as soon as your payment is confirmed. You'll receive
+              a prompt notification once your order is ready for pickup or
+              delivery.
             </Text>
             <Section>
               <Heading style={{ fontSize: "18px", fontWeight: "bold" }}>
-                Order Details
+                Here are your Order Details below:
               </Heading>
               <Hr />
               {cartItems.map((item) => (
