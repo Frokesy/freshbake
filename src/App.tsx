@@ -9,7 +9,7 @@ import Orders from "./pages/orders";
 import Account from "./pages/account";
 import ProfileDetails from "./pages/account/profile-details";
 import Address from "./pages/account/address";
-import Success from "./pages/res/Success";
+import Success from "./pages/res/success";
 import Order from "./pages/orders/Order";
 import PrivateRoute from "./components/defaults/PrivateRoute";
 import NewPassword from "./components/sections/auth/NewPassword";

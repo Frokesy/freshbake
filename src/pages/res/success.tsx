@@ -105,7 +105,7 @@ const Success = () => {
         userId: data.userData.id,
         items: JSON.stringify(data.cartItems),
         totalCost: data.totalCost,
-        paymentStatus: data.paymentStatus,
+        paymentStatus: "successful",
         transactionId: data.transactionId,
         deliveryOption: data.deliveryOption,
         deliveryFee: data.deliveryFee,

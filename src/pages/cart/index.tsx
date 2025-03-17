@@ -68,11 +68,11 @@ const Cart = () => {
     <MainContainer active="Cart">
       <div className="px-4 pt-10">
         <div className="flex items-center space-x-4">
-          <div className="flex">
+          <NavLink to="/home" className="flex">
             <div className="bg-[#ccc] p-1.5 rounded-full">
               <ArrowLeft />
             </div>
-          </div>
+          </NavLink>
           <h2 className="font-semibold text-[24px]">My Cart</h2>
         </div>
         {cartItems.length > 0 ? (
