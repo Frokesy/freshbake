@@ -15,11 +15,10 @@ const Payment: FC<PaymentProps> = ({ checkoutData, setActiveScreen }) => {
   const navigate = useNavigate();
 
   const handlePayment = () => {
-      setLoading(true);
-      const data = checkoutData;
-      navigate("/success", { state: { data } });
-      
-    };
+    setLoading(true);
+    const data = checkoutData;
+    navigate("/success", { state: { data } });
+  };
 
   return (
     <>
@@ -52,23 +51,20 @@ const Payment: FC<PaymentProps> = ({ checkoutData, setActiveScreen }) => {
             </div>
             <div className="flex text-[14px] space-y-4 flex-col">
               <p className="font-semibold">
-                Subtotal ${parseInt(item.price) * item.quantity}
+                Subtotal ${parseFloat(item.price) * item.quantity}
               </p>
               <p className="font-semibold">
                 Delivery Fee ${checkoutData.deliveryFee}
               </p>
-              <p className="font-semibold">Total ${checkoutData.totalCost + checkoutData.deliveryFee}</p>
+              <p className="font-semibold">
+                Total ${checkoutData.totalCost + checkoutData.deliveryFee}
+              </p>
             </div>
             <hr />
           </div>
         ))}
         <h2 className="mt-6">
-          To complete your order, you need to make a payment of
-          <span className="text-[#7d6c3a] font-semibold">
-            {" "}
-            ${checkoutData?.totalCost}
-          </span>{" "}
-          to this Interac account:
+          Interac account:
           <span className="text-[#7d6c3a] font-semibold">
             {" "}
             freshlagosbread@gmail.com
@@ -76,7 +72,10 @@ const Payment: FC<PaymentProps> = ({ checkoutData, setActiveScreen }) => {
           .
         </h2>
       </div>
-      <div onClick={() => handlePayment()} className="fixed px-4 bottom-6 lg:w-[450px] w-[100%] z-50 space-y-6">
+      <div
+        onClick={() => handlePayment()}
+        className="fixed px-4 bottom-6 lg:w-[450px] w-[100%] z-50 space-y-6"
+      >
         <Button
           filled={true}
           content={loading ? <Spinner /> : `Click after making payment`}

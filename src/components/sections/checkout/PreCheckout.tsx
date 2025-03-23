@@ -32,8 +32,8 @@ const PreCheckout: FC<PreCheckoutProps> = ({
   const [activeTab, setActiveTab] = useState<string>("delivery");
 
   const totalCost = cartItems.reduce((sum, item) => sum + item.totalCost, 0);
-  const deliveryFee = activeTab === "delivery" ? 4 : 0;
-  const finalTotal = totalCost + deliveryFee;
+  const deliveryFee = activeTab === "delivery" ? vendorDetails?.deliveryFee : 0;
+  const finalTotal = totalCost + parseFloat(deliveryFee as string);
 
   const toggleEditAddress = () => setIsEditingAddress((prev) => !prev);
 
@@ -80,22 +80,12 @@ const PreCheckout: FC<PreCheckoutProps> = ({
       totalCost: totalCost,
       userData: userData,
       deliveryOption: activeTab,
-      deliveryFee: deliveryFee,
+      deliveryFee: parseFloat(deliveryFee as string),
       deliveryAddress: editedAddress ? editedAddress : userData?.defaultAddress,
     };
     setCheckoutData(data)
     setActiveScreen("payment");
     setLoading(false);
-    // handleFlutterPayment({
-    //   callback: async (response) => {
-    //     if (response.status === "successful") {
-
-    //       closePaymentModal();
-    //       navigate("/success", { state: { data } });
-    //     }
-    //   },
-    //   onClose: () => {},
-    // })
   };
 
   return (

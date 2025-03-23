@@ -11,6 +11,7 @@ export interface VendorDetailsProps {
   vendorName: string;
   pickupAddress: string;
   phoneNumber: string;
+  deliveryFee: string;
 }
 
 export interface CheckoutDataProps {
@@ -32,7 +33,7 @@ const fadeVariants = {
 const Checkout = () => {
   const [userData, setUserData] = useState<UserDataProps>();
   const [cartItems, setCartItems] = useState<CartItemProps[]>([]);
-  const [vendorDetails, setVendorDetails] = useState<VendorDetailsProps>();
+  const [vendorDetails, setVendorDetails] = useState<VendorDetailsProps[]>();
   const [checkoutData, setCheckoutData] = useState<CheckoutDataProps>();
   const [activeScreen, setActiveScreen] = useState<string>("precheckout");
 
@@ -79,7 +80,7 @@ const Checkout = () => {
     const fetchVendorDetails = async () => {
       try {
         const data = await pb.collection("admin").getFullList();
-        setVendorDetails(data as unknown as VendorDetailsProps);
+        setVendorDetails(data as unknown as VendorDetailsProps[]);
       } catch (error) {
         console.error("Error fetching vendor details:", error);
       }
@@ -106,7 +107,7 @@ const Checkout = () => {
           <PreCheckout
             cartItems={cartItems}
             userData={userData}
-            vendorDetails={vendorDetails}
+            vendorDetails={vendorDetails?.[0]}
             setCheckoutData={setCheckoutData}
             setActiveScreen={setActiveScreen}
           />
